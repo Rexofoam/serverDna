@@ -1,4 +1,10 @@
 # SERVER DNA
+
+#### A system that allows game hosts and players to connect seemlesly
+###### Game hosts can create new tournaments
+###### Players can scout for tournaments
+
+
 ## project backlog
 
 ####Setup

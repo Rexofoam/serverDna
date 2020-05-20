@@ -17,9 +17,8 @@
     $Email = $_POST["email"]; 
     $password = $_POST["password"];
     
-    /*assign values to session variable*/
 
-	$sql = mysqli_query($con,"SELECT * FROM users JOIN user_tournament ON users.id = user_tournament.user_id WHERE email = '$Email' AND password = '$password'");
+	$sql = mysqli_query($con,"SELECT * FROM users WHERE email = '$Email' AND password = '$password'");
 
 	$result = mysqli_fetch_array($sql);
 	

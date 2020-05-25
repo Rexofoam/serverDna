@@ -25,7 +25,6 @@
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="css/util.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
-	<link rel="stylesheet" href="css/form.css" />
 <!--===============================================================================================-->
 </head>
 <body>
@@ -40,16 +39,16 @@
 					<span class="login100-form-title p-b-34 p-t-27">
 						Log in
 					</span>
+					<p>
+					<?php 
+					session_start();
+			      	if(isset($_SESSION["Credential_text"])){
+			      		echo $_SESSION["Credential_text"];
+			      		$_SESSION["Credential_text"] = "";
+			      	}else{
 
-					<p style="text-align: center; color:white">
-						<?php 
-							session_start();
-					      	if(isset($_SESSION["Credential_text"])){
-					      		echo $_SESSION["Credential_text"];
-					      		//$_SESSION["Credential_text"] = "";
-					      	}
-			      		?>
-			      	</p>
+			      	}
+			      	?></p>
 
 					<div class="wrap-input100 validate-input" data-validate = "Enter email">
 						<input class="input100" type="text" name="email" placeholder="Email">
@@ -75,7 +74,7 @@
 					</div>
 
 					<div class="text-center p-t-90">
-						<a class="txt1" href="#" onclick="document.getElementById('id01').style.display='block'">
+						<a class="txt1" href="#">
 							Sign up, here!
 						</a>
 						<br>
@@ -87,32 +86,7 @@
 			</div>
 		</div>
 	</div>
-	<!-- FORM SECTION -->
-	<div id="id01" class="modal">
-  
-			  <form class="modal-content animate" action="user_create.php" method="post">
-			    <div class="imgcontainer">
-			      <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
-			      <img src="images/user-icon.png" alt="Avatar" class="avatar" style="max-height: 150px; width: auto">
-			    </div>
-
-			    <div class="containerForm">
-			      <label for="name"><b>Full Name</b></label>
-			      <input type="textForm" name="name" required>
-
-			      <label for="phone"><b>Phone Number</b></label>
-			      <input type="textForm" name="phone" required>
-
-			      <label for="email"><b>Email</b></label>
-			      <input type="textForm" name="email" required>
-			    </div>
-			    <br> 
-			    <div class="containerForm" style="background-color: white">
-			      <button type="submit" class="sub-btn">Submit</button>
-			      <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancel-btn">Cancel</button>
-			    </div>
-			  </form>
-			</div>
+	
 
 	<div id="dropDownSelect1"></div>
 	
@@ -132,18 +106,6 @@
 	<script src="vendor/countdowntime/countdowntime.js"></script>
 <!--===============================================================================================-->
 	<script src="js/main.js"></script>
-
-	<script>
-			// Get the modal
-			var modal = document.getElementById('id01');
-
-			// When the user clicks anywhere outside of the modal, close it
-			window.onclick = function(event) {
-			    if (event.target == modal) {
-			        modal.style.display = "none";
-			    }
-			}
-	</script>
 
 </body>
 </html>

@@ -3,6 +3,7 @@
 <body>
 <?php
 	include 'DBconnect.php';
+	include 'passwordHelper.php';
   	session_start();
 
   	//connection to database
@@ -14,11 +15,18 @@
 	$AccessTime = $date->format('Y-m-d H:i:s');
 
 	
-    $Email = $_POST["email"]; 
-    $password = sha1($_POST["password"]);
-    
+    $name = $_POST["name"]; 
+    $mobile_number = $_POST["phone"];
+    $email = $_POST["email"]; 
+    $password = generateRandomString();
 
-	$sql = mysqli_query($con,"SELECT * FROM users WHERE email = '$Email' AND password = '$password'");
+    echo $name;
+    echo $mobile_number;
+    echo $email;
+    echo $password;
+    
+    /*
+	$sql = mysqli_query($con,"INSERT INTO users VALUES ('$name', '$mobile_number', '$email', );");
 
 	$result = mysqli_fetch_array($sql);
 	
@@ -33,6 +41,8 @@
 	else {
 		
 	}
+	*/
+	
 
 ?>
 

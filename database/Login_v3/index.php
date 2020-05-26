@@ -94,7 +94,6 @@
 			    <div class="imgcontainer">
 			      <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
 			      <img src="images/user-icon.png" alt="Avatar" class="avatar" style="max-height: 150px; width: auto">
-			      <h3 class="text-white">New user</h3>
 			    </div>
 
 			    <div class="containerForm">
@@ -109,7 +108,7 @@
 			    </div>
 			    <br> 
 			    <div class="containerForm" style="background-color: white">
-			      <button type="submit" class="sub-btn" >Submit</button>
+			      <button type="submit" class="sub-btn">Submit</button>
 			      <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancel-btn">Cancel</button>
 			    </div>
 			  </form>

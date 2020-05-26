@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.0.1
+-- version 4.9.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 17, 2020 at 02:37 PM
--- Server version: 10.3.16-MariaDB
--- PHP Version: 7.1.30
+-- Generation Time: May 26, 2020 at 08:46 AM
+-- Server version: 10.4.8-MariaDB
+-- PHP Version: 7.3.11
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `severdna`
+-- Database: `serverdna`
 --
 
 -- --------------------------------------------------------
@@ -96,9 +96,16 @@ CREATE TABLE `users` (
   `email` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `password` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `status` enum('created','authenticated','inactive','') COLLATE utf8_unicode_ci NOT NULL,
-  `created_at` datetime NOT NULL,
+  `accessed_at` datetime DEFAULT NULL,
   `updated_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `full_name`, `mobile_number`, `email`, `password`, `status`, `accessed_at`, `updated_at`) VALUES
+(1, 'SUDO ADMIN', '0123456789', 'sudo@serverdna.com', '123', 'authenticated', '2020-05-08 00:00:00', '2020-03-17 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -127,7 +134,7 @@ CREATE TABLE `user_tournament` (
   `role` enum('sudoadmin','tournament_admin','staff','player') COLLATE utf8_unicode_ci NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
-  `deleted_at` datetime NOT NULL
+  `deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -208,7 +215,7 @@ ALTER TABLE `tournament`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `user_teams`
@@ -220,7 +227,7 @@ ALTER TABLE `user_teams`
 -- AUTO_INCREMENT for table `user_tournament`
 --
 ALTER TABLE `user_tournament`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

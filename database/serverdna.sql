@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.1
+-- version 4.9.0.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 26, 2020 at 08:46 AM
--- Server version: 10.4.8-MariaDB
--- PHP Version: 7.3.11
+-- Generation Time: May 26, 2020 at 11:42 AM
+-- Server version: 10.3.16-MariaDB
+-- PHP Version: 7.1.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -36,7 +36,7 @@ CREATE TABLE `games` (
   `end_datetime` datetime NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
-  `deleted_at` datetime NOT NULL
+  `deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -49,7 +49,7 @@ CREATE TABLE `teams` (
   `id` int(11) NOT NULL,
   `name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` datetime NOT NULL,
-  `delete_at` datetime NOT NULL
+  `delete_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -63,7 +63,7 @@ CREATE TABLE `team_game` (
   `team_id` int(11) NOT NULL,
   `game_id` int(11) NOT NULL,
   `created_at` datetime NOT NULL,
-  `delete_at` datetime NOT NULL
+  `delete_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -80,7 +80,7 @@ CREATE TABLE `tournament` (
   `end_datetime` datetime NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
-  `deleted_at` datetime NOT NULL
+  `deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -95,17 +95,22 @@ CREATE TABLE `users` (
   `mobile_number` varchar(15) COLLATE utf8_unicode_ci NOT NULL,
   `email` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `password` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `DoB` date NOT NULL,
+  `gender` enum('male','female') COLLATE utf8_unicode_ci NOT NULL,
+  `street` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `status` enum('created','authenticated','inactive','') COLLATE utf8_unicode_ci NOT NULL,
   `accessed_at` datetime DEFAULT NULL,
-  `updated_at` datetime NOT NULL
+  `updated_at` datetime NOT NULL,
+  `city` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `state` varchar(100) COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `full_name`, `mobile_number`, `email`, `password`, `status`, `accessed_at`, `updated_at`) VALUES
-(1, 'SUDO ADMIN', '0123456789', 'sudo@serverdna.com', '123', 'authenticated', '2020-05-08 00:00:00', '2020-03-17 00:00:00');
+INSERT INTO `users` (`id`, `full_name`, `mobile_number`, `email`, `password`, `DoB`, `gender`, `street`, `status`, `accessed_at`, `updated_at`, `city`, `state`) VALUES
+(1, 'SUDO ADMIN', '0123456789', 'sudo@serverdna.com', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', '0000-00-00', 'male', '', 'authenticated', '2020-05-08 00:00:00', '2020-03-17 00:00:00', '', '');
 
 -- --------------------------------------------------------
 
@@ -118,7 +123,7 @@ CREATE TABLE `user_teams` (
   `team_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `role` enum('captain','vice','player','') COLLATE utf8_unicode_ci NOT NULL,
-  `delete_at` datetime NOT NULL
+  `delete_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -215,7 +220,7 @@ ALTER TABLE `tournament`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `user_teams`

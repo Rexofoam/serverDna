@@ -105,6 +105,30 @@
 
 			    <label for="email" class="text-white"><b>Email</b></label>
 			    <input type="textForm" name="email" required>
+
+			    <div class="row" style="margin: 5px 0px 5px 0px">
+				    <label class="text-white" style="margin-right: 190px"><b>Gender</b></label>
+				    <label class="text-white"><b>Date of Birth</b></label>
+				</div>
+			    <div class="row" style="margin: 5px 0px 5px 0px">
+				    <select name="gender" id="gender" style="margin-right: 50px;" placeholder="Gender" required>
+					  <option value="male">Male</option>
+					  <option value="female">Female</option>
+					</select>
+
+				    <input type="date" id="birthday" name="birthday" required>
+				</div>
+
+			    <label for="address" class="text-white"><b>Address</b></label>
+			    <input type="textForm" name="address" required>
+			    <div class="row" style="margin: 5px 0px 5px 0px">
+				    <label class="text-white" style="margin-right: 270px"><b>City</b></label>
+				    <label class="text-white"><b>State</b></label>
+				</div>
+			    <div class="row" style="margin: 5px 0px 5px 0px">
+				    <input type="half-text" name="city" style="margin-right: 50px" required>
+				    <input type="half-text" name="state" required>
+				</div>
 			</div>
 			<br> 
 			<div class="containerForm" style="background-color: white">

@@ -24,11 +24,16 @@
     // Fetch user inputs
     $name = $_POST["name"]; 
     $mobile_number = $_POST["phone"];
-    $email = $_POST["email"]; 
+    $email = $_POST["email"];
+    $gender = $_POST["gender"];
+    $birthday = $_POST["birthday"];
+    $address = $_POST["address"];
+    $city = $_POST["city"];
+    $state = $_POST["state"];
     $password = generateRandomString();
 
-
     // Check is account exists
+    
     $return_val = mysqli_query($con,"SELECT COUNT(*) AS 'Number' FROM `users` WHERE (email = '$email' OR mobile_number = '$mobile_number') AND status = 'authenticated'");
 
     $val_result = mysqli_fetch_array($return_val);
@@ -40,14 +45,13 @@
 
     } else {
 
-    $sql = "INSERT INTO `users` VALUES (NULL, '$name', '$mobile_number', '$email', '$password', 'created', NULL, '$AccessTime');";
+    $sql = "INSERT INTO `users` VALUES (NULL, '$name', '$mobile_number', '$email', '$birthday', '$gender', '$address', '$password', 'created', NULL, '$AccessTime', '$city', '$state');";
 
         if(!mysqli_query($con,$sql))
         {
 
-            echo $sql;
-            //$_SESSION["Credential_text"] = "Failed to register. Please try again later!";
-            //header("Location: index.php");
+            $_SESSION["Credential_text"] = "Failed to register. Please try again later!";
+            header("Location: index.php");
 
         } else {
 
@@ -96,7 +100,6 @@
         } 
         
     }
-    
 
 ?>
 

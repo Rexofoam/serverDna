@@ -48,6 +48,7 @@
 					      		echo $_SESSION["Credential_text"];
 					      		$_SESSION["Credential_text"] = "";
 					      	}
+					      	session_destroy();
 			      		?>
 			      	</p>
 

@@ -10,6 +10,7 @@
 
     include 'DBconnect.php';
     include 'passwordHelper.php';
+    include 'callbackHelper.php';
 
     session_start();
 
@@ -31,6 +32,7 @@
     $city = $_POST["city"];
     $state = $_POST["state"];
     $password = generateRandomString();
+    
 
     // Check is account exists
     
@@ -54,8 +56,8 @@
             header("Location: index.php");
 
         } else {
+            $fallbackURL = getCreateUserAccount($con->insert_id);
 
-            echo "SUCCESS";
             $mail = new PHPMailer(true);
 
             try{
@@ -74,7 +76,7 @@
             $mail->Body = 'Greetings,'.'Mr/Mrs.'.$name.
                             '<br><br> You have recently registered for an account under ServerDNA,<br>
                             To get started with your account please click the button below. <br><br>
-                            <button style="padding: 10px; background-color: #2bb673; border: transparent; color: white;">Authenticate Account</button> <br><br>
+                            <a style="padding: 10px; background-color: #2bb673; border: transparent; color: white;" href="'.$fallbackURL.'">Authenticate Account</a> <br><br>
                             If you did not create this account, you may ignore this email, your account<br>
                             will be deactivated after 7 days.<br><br>
                             Regards,<br>ServerDNA Team.';

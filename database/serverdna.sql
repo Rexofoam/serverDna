@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 26, 2020 at 11:42 AM
+-- Generation Time: Jun 08, 2020 at 02:24 PM
 -- Server version: 10.3.16-MariaDB
 -- PHP Version: 7.1.30
 
@@ -92,12 +92,12 @@ CREATE TABLE `tournament` (
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `full_name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `user_id` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `mobile_number` varchar(15) COLLATE utf8_unicode_ci NOT NULL,
   `email` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `password` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `DoB` date NOT NULL,
   `gender` enum('male','female') COLLATE utf8_unicode_ci NOT NULL,
-  `street` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `status` enum('created','authenticated','inactive','') COLLATE utf8_unicode_ci NOT NULL,
   `accessed_at` datetime DEFAULT NULL,
   `updated_at` datetime NOT NULL,
@@ -109,8 +109,8 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `full_name`, `mobile_number`, `email`, `password`, `DoB`, `gender`, `street`, `status`, `accessed_at`, `updated_at`, `city`, `state`) VALUES
-(1, 'SUDO ADMIN', '0123456789', 'sudo@serverdna.com', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', '0000-00-00', 'male', '', 'authenticated', '2020-05-08 00:00:00', '2020-03-17 00:00:00', '', '');
+INSERT INTO `users` (`id`, `full_name`, `user_id`, `mobile_number`, `email`, `password`, `DoB`, `gender`, `status`, `accessed_at`, `updated_at`, `city`, `state`) VALUES
+(1, 'sudoadmin', '222', '0123456789', 'sudo@serverdna.com', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', '0000-00-00', 'male', 'authenticated', '2020-05-08 00:00:00', '2020-06-08 20:23:58', 'Petaling Jaya', 'SARAWAK');
 
 -- --------------------------------------------------------
 
@@ -220,7 +220,7 @@ ALTER TABLE `tournament`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 
 --
 -- AUTO_INCREMENT for table `user_teams`

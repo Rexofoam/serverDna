@@ -1,6 +1,3 @@
-<!DOCTYPE html>
-<html>
-<body>
 <?php
 
     use PHPMailer\PHPMailer\PHPMailer;
@@ -8,9 +5,9 @@
 
     require 'vendor/autoload.php';
 
-    include 'DBconnect.php';
-    include 'passwordHelper.php';
-    include 'callbackHelper.php';
+    include '../public/DBconnect.php';
+    include '../public/passwordHelper.php';
+    include '../public/callbackHelper.php';
 
     session_start();
 
@@ -23,7 +20,8 @@
     $AccessTime = $date->format('Y-m-d H:i:s');
 
     // Fetch user inputs
-    $name = $_POST["name"]; 
+    $name = $_POST["name"];
+    $userId = $_POST["user_id"];  
     $mobile_number = $_POST["phone"];
     $email = $_POST["email"];
     $gender = $_POST["gender"];
@@ -47,7 +45,7 @@
 
     } else {
 
-    $sql = "INSERT INTO `users` VALUES (NULL, '$name', '$mobile_number', '$email', '$password', '$birthday', '$gender', '$address', 'created', NULL, '$AccessTime', '$city', '$state');";
+    $sql = "INSERT INTO `users` VALUES (NULL, '$name', '$userId', '$mobile_number', '$email', '$password', '$birthday', '$gender','created', NULL, '$AccessTime', '$city', '$state');";
 
         if(!mysqli_query($con,$sql))
         {
@@ -104,6 +102,3 @@
     }
 
 ?>
-
-</body>
-</html>

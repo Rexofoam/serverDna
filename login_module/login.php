@@ -2,7 +2,7 @@
 <html>
 <body>
 <?php
-	include 'DBconnect.php';
+	include '../public/DBconnect.php';
   	session_start();
 
   	//connection to database

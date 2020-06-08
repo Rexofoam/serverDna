@@ -1,18 +1,7 @@
-<!--
-=========================================================
-Material Dashboard - v2.1.2
-=========================================================
-
-Product Page: https://www.creative-tim.com/product/material-dashboard
-Copyright 2020 Creative Tim (https://www.creative-tim.com)
-Coded by Creative Tim
-
-=========================================================
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. -->
 <!DOCTYPE html>
 <html lang="en">
 <?php 
-  include '../login_module/DBconnect.php';
+  include '../public/DBconnect.php';
 
   session_start();
   $con = DatabaseConn();
@@ -185,7 +174,7 @@ The above copyright notice and this permission notice shall be included in all c
               <div class="card card-plain">
                 <div class="card-header card-header-primary">
                   <h4 class="card-title mt-0"> Authenticated Accounts </h4>
-                  <p class="card-category"> Here is a subtitle for this table</p>
+                  <p class="card-category">Accounts that are email authenticated</p>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
@@ -220,7 +209,7 @@ The above copyright notice and this permission notice shall be included in all c
               <div class="card">
                 <div class="card-header card-header-primary">
                   <h4 class="card-title ">Unauthenticated Accounts</h4>
-                  <p class="card-category"> Here is a subtitle for this table</p>
+                  <p class="card-category">Accounts that are not yet email authenticated</p>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
@@ -242,8 +231,8 @@ The above copyright notice and this permission notice shall be included in all c
                           <td><span><?php echo $row2[2];?></span></td>
                           <td><span><?php echo $row2[3];?></span></td>
                           <td><span><?php echo $row2[4];?></span></td>
-                          <td style="max-width: 75px;"><button style="border-color: transparent;" class ="btn-success" onclick="auth(<?php echo $row2[5];?>)">Authenticate</button></td>
-                          <td><button style="border-color: transparent;" class ="btn-danger" onclick="remove(<?php echo $row2[5];?>)">Delete</button></td>
+                          <td style="max-width: 75px;"><button style="border-color: transparent;" class ="btn-primary" onclick="manage(<?php echo $row2[5];?>)">Manage</button>
+                          </td>
                         </tr>
                         <?php endwhile;?>
                         </tr>
@@ -304,17 +293,10 @@ The above copyright notice and this permission notice shall be included in all c
   <script src="assets/demo/demo.js"></script>
   <script>
     function manage(id) {
-      console.log(id);
-    }
-  </script>
-  <script>
-    function auth(id) {
-      console.log(id);
-    }
-  </script>
-  <script>
-    function remove(id) {
-      console.log(id);
+      var edit_url = "admin_edit_user_form_front.php"
+
+      // redirect to edit page
+      window.location.replace(edit_url + "?id=" + id);
     }
   </script>
 

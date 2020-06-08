@@ -98,8 +98,11 @@
 			</div>
 
 			<div class="containerForm">
-			    <label for="name" class="text-white"><b>Full Name</b></label>
+				<label for="name" class="text-white"><b>Full Name</b></label>
 			    <input type="textForm" name="name" required>
+
+			    <label for="name" class="text-white"><b>User ID (Optional)</b></label>
+			    <input type="textForm" name="user_id">
 
 			    <label for="phone" class="text-white"><b>Phone Number</b></label>
 			    <input type="textForm" name="phone" required>
@@ -119,16 +122,28 @@
 
 				    <input type="date" id="birthday" name="birthday" required>
 				</div>
-
-			    <label for="address" class="text-white"><b>Address</b></label>
-			    <input type="textForm" name="address" required>
 			    <div class="row" style="margin: 5px 0px 5px 0px">
 				    <label class="text-white" style="margin-right: 270px"><b>City</b></label>
 				    <label class="text-white"><b>State</b></label>
 				</div>
 			    <div class="row" style="margin: 5px 0px 5px 0px">
 				    <input type="half-text" name="city" style="margin-right: 50px" required>
-				    <input type="half-text" name="state" required>
+				    <select name="state" id="state" style="min-width: 250px" required>
+					  <option value="PERLIS">Perlis</option>
+                      <option value="PERAK">Perak</option>
+                      <option value="KEDAH">Kedah</option>
+                      <option value="PENANG">Penang</option>
+                      <option value="KELANTAN">Kelantan</option>
+                      <option value="TERENGGANU">Terengganu</option>
+                      <option value="PAHANG">Pahang</option>
+                      <option value="SELANGOR">Selangor</option>
+                      <option value="MELAKA">Melaka</option>
+                      <option value="NEGERI SEMBILAN">Negeri Sembilan</option>
+                      <option value="JOHOR">Johor</option>
+                      <option value="SABAH">Sabah</option>
+                      <option value="SARAWAK">Sarawak</option>
+                      <option value="WILAYAH PERSEKUTUAN">Wilayah Persekutuan</option>
+					</select>
 				</div>
 			</div>
 			<br> 

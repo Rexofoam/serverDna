@@ -1,13 +1,12 @@
 <?php
-    // TODO - Move these files out of login module
-    use \login_module\PHPMailer\PHPMailer\PHPMailer;
-    use \login_module\PHPMailer\PHPMailer\Exception;
+    use PHPMailer\PHPMailer\PHPMailer;
+    use PHPMailer\PHPMailer\Exception;
 
     require '../login_module/vendor/autoload.php';
 
-    include '../login_module/DBconnect.php';
-    include '../login_module/passwordHelper.php';
-    include '../login_module/callbackHelper.php';
+    include '../public/DBconnect.php';
+    include '../public/passwordHelper.php';
+    include '../public/callbackHelper.php';
     
     session_start();
 
@@ -38,32 +37,24 @@
     $val_result = mysqli_fetch_array($return_val);
 
     if($val_result[0] > 0){
-        //Same login details exist in database
-        //$_SESSION["Reg_status_text"] = "<b>Registration Failed!</b><br>An account with the same email/phone number already exists!";
-        //header("Location: admin_create_user_front.php");
-        echo "<b>Registration Failed!</b><br>An account with the same email/phone number already exists!";
+        $res = array(
+                "statusCode" => 0, 
+                "msg" => "<b>Registration Failed!</b><br>This email OR phone number is alreadyy in use. !"
+            );
+            
+            echo json_encode($res);
     } else {
 
         //Add new user statement
-        $sql = "INSERT INTO `users` VALUES (NULL, '$name', '$mobile_number', '$email', 
-                    '$password', '$birthday', '$gender', '$address', 'created', NULL, 
+        $sql = "INSERT INTO `users` VALUES (NULL, '$name', '$userid', '$mobile_number', '$email', 
+                    '$password', '$birthday', '$gender', 'created', NULL, 
                     '$AccessTime', '$city', '$state');";
 
         if (!mysqli_query($con, $sql)) {
             echo "Error! Unable to connect to database";
-            //$_SESSION["Reg_status_text"] = "Error! Unable to connect to database";
-            //console.log(mysqli_error($con));
-            //header("Location: admin_create_user_front.php");
-        } else {
-            $res = array(
-                "statusCode" => 1, 
-                "msg" => "<b>Registration Success!</b><br>An authentication email has been sent to the associated email address"
-            );
             
-            echo json_encode($res);
-
-            //TODO - Uncomment after PHPMailer is fixed
-            /*$fallbackURL = getCreateUserAccount($con->insert_id);
+        } else {
+            $fallbackURL = getCreateUserAccount($con->insert_id);
 
             $mail = new PHPMailer(true);
             
@@ -92,26 +83,33 @@
                 $mail->Send();
             }
             catch (Exception $e){
-                // Registration failed
-                //$_SESSION["Reg_status_text"] = "<b>Registration Failed!</b><br>Please try again later";
-                //header("Location: admin_create_user_front.php"); 
-                echo "<b>Registration Failed!</b><br>Please try again later";
+            $res = array(
+                "statusCode" => 0, 
+                "msg" => "<b>Registration Failed!</b><br>Please try again later !"
+            );
+            
+            echo json_encode($res);
             }
 
             if(!$mail->Send()) {
-                // Registration failed
-                //$_SESSION["Reg_status_text"] = "<b>egistration Failed!</b><br>Please try again later";
-                //header("Location: admin_create_user_front.php");
-                echo "<b>Registration Failed!</b><br>Please try again later";
+            $res = array(
+                "statusCode" => 0, 
+                "msg" => "<b>Registration Failed!</b><br>Please try again later !"
+            );
+            
+            echo json_encode($res);
             } else {
-                // Registration success
-                //$_SESSION["Reg_status_text"] = "<b>Registration Success!</b><br>An authentication email has been sent to the associated email address";
-                //header("Location: admin_create_user_front.php"); 
-                echo "<b>Registration Success!</b><br>An authentication email has been sent to the associated email address";
-            }
-          */  
-        } 
+
+            $res = array(
+                "statusCode" => 1, 
+                "msg" => "<b>Registration Success!</b><br>An authentication email has been sent to the associated email address"
+            );
+            
+            echo json_encode($res);
+          
+            } 
         
     }
+}
 
 ?>

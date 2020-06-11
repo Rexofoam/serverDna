@@ -25,7 +25,6 @@
     $email = $_POST["email"];
     $gender = $_POST["gender"];
     $birthday = $_POST["birthday"];
-    $address = "";
     $city = $_POST["city"];
     $state = $_POST["state"];
     $password = generateRandomString();

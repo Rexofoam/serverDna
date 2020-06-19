@@ -26,12 +26,12 @@
 		$_SESSION["Credential_text"] = "Incorrect Username or Password !!!";
     	header("Location: index.php");
 	}
-	// TODO: remove hard code
-	if($result['id'] == 1) {
+
+	if($result['is_admin'] == 1) {
 		header("Location: ../dashboard_module/dashboard.html");
 	}
 	else {
-		
+		header("Location: ../user_dashboard_module/dashboard.html");
 	}
 
 ?>

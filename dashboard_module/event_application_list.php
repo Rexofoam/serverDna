@@ -229,7 +229,7 @@
                         <th>Action</th>
                       </thead>
                       <tbody>
-                        <?php while($row1 = mysqli_fetch_array($pending_applications)):;?>
+                        <?php while($row1 = mysqli_fetch_array($approved_applications)):;?>
                         <tr>
                           <td><span><?php echo $row1[0];?></span></td>
                           <td><span><?php echo $row1[1];?></span></td>

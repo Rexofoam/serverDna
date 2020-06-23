@@ -50,7 +50,12 @@
                     '$AccessTime', '$city', '$state');";
 
         if (!mysqli_query($con, $sql)) {
-            echo "Error! Unable to connect to database";
+            $res = array(
+                "statusCode" => 0, 
+                "msg" => "<b>Error!</b><br>Unable to connect to database. Please try again later"
+            );
+            
+            echo json_encode($res);
             
         } else {
             $fallbackURL = getCreateUserAccount($con->insert_id);

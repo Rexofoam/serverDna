@@ -223,12 +223,12 @@ The above copyright notice and this permission notice shall be included in all c
                                             </div>
                                             <div class="col-md-9">
                                                 <div class="form-group">
-                                                    <label class="bmd-label-floating">Full Name</label>
+                                                    <label class="bmd-label-floating">Full Name*</label>
                                                     <input type="text" class="form-control" name="name" required>
                                                 </div>
                                                 <br>
                                                 <div class="form-group">
-                                                    <label class="bmd-label-floating">User ID</label>
+                                                    <label class="bmd-label-floating">User ID*</label>
                                                     <input type="text" class="form-control" name="userid" required>
                                                 </div>
                                             </div>
@@ -237,12 +237,12 @@ The above copyright notice and this permission notice shall be included in all c
                                         <div class="row">
                                             <div class="col-md-8">
                                                 <div class="form-group">
-                                                    <label class="bmd-label-floating">Date of Birth</label>
+                                                    <label class="bmd-label-floating">Date of Birth*</label>
                                                     <input placeholder="" class="form-control" type="text" onfocus="(this.type='date')" onblur="dateInputBehavior(this)" name="birthday" required>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
-                                                Gender
+                                                Gender*
                                                 <select class="select2 form-control" name="gender" required>
                                                     <option value="M">Male</option>
                                                     <option value="F">Female</option>
@@ -253,13 +253,13 @@ The above copyright notice and this permission notice shall be included in all c
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label class="bmd-label-floating">Phone Number (eg 0123456789)</label>
+                                                    <label class="bmd-label-floating">Phone Number* (eg 0123456789)</label>
                                                     <input type="tel" class="form-control" name="phone" pattern="01[0-9]{8,9}" required>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label class="bmd-label-floating">Email Address</label>
+                                                    <label class="bmd-label-floating">Email Address*</label>
                                                     <input type="email" class="form-control" name="email" required>
                                                 </div>
                                             </div>
@@ -268,12 +268,12 @@ The above copyright notice and this permission notice shall be included in all c
                                         <div class="row">
                                             <div class="col-md-8">
                                                 <div class="form-group">
-                                                    <label class="bmd-label-floating">City</label>
+                                                    <label class="bmd-label-floating">City*</label>
                                                     <input type="text" class="form-control" name="city" required>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
-                                                State
+                                                State*
                                                 <select class="select2 form-control" name="state" required>
                                                     <option value="PERLIS">Perlis</option>
                                                     <option value="PERAK">Perak</option>
@@ -293,7 +293,8 @@ The above copyright notice and this permission notice shall be included in all c
                                             </div>
                                         </div>
                                         <br><br><br>
-                                        <button type="submit" class="btn btn-primary pull-right" name="submitBtn">Create New User</button>
+                                        <span style="color: red;">* Fields are compulsory</span>
+                                        <button style="inline-block" type="submit" class="btn btn-primary pull-right" name="submitBtn">Create New User</button>
                                         <div class="clearfix"></div>
                                     </form>
                                 </div>
@@ -520,8 +521,10 @@ The above copyright notice and this permission notice shall be included in all c
                                 });
                             }
                             
-                            $('#createUserForm').trigger('reset'); //Empty all the form fields
-                            $('[name="birthday"]').prop('type', 'text'); //Remove 'dd/mm/yyyy' placeholder from date of birth
+                            if (data['statusCode'] == 1) { //Only reset the form if success code is returned
+                                $('#createUserForm').trigger('reset'); //Empty all the form fields
+                                $('[name="birthday"]').prop('type', 'text'); //Remove 'dd/mm/yyyy' placeholder from date of birth
+                            }
                         },
                         error: function(res) {
                             $.notify("An error has ocurred! Please try again later");

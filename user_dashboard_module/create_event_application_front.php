@@ -193,6 +193,7 @@ The above copyright notice and this permission notice shall be included in all c
                 </div>
                 <br>
                 <div class="card-body">
+                  <form id="createEventAppForm">
                     <div class="row">
                       <div class="col-md-12">
                         <div class="form-group">
@@ -227,7 +228,7 @@ The above copyright notice and this permission notice shall be included in all c
                       <div class="col-md-3">
                         <div class="form-group">
                           <label class="bmd-label-floating">Teams/Players</label>
-                          <input type="number" class="form-control" name="teams">
+                          <input type="number" min="0" class="form-control" name="teams">
                         </div>
                       </div>
                     </div>
@@ -295,16 +296,16 @@ The above copyright notice and this permission notice shall be included in all c
                     <div class="row">
                       <div class="col-md-6">
                         Phone Number*
-                        <select class="select2 form-control" name="contact_no" required>
-                            <option value="CALL">Use my current number</option>
-                            <option value="WHATSAPP">Enter a different number</option>
-                            <option value="EMAIL">Do not use phone</option>
+                        <select class="select2 form-control" name="phone_select" required>
+                            <option value="0">Use my current number</option>
+                            <option value="1">Enter a different number</option>
+                            <option value="-1">Do not use phone</option>
                         </select>
                       </div>
                       <div class="col-md-6">
                         <div class="form-group">
-                          <label class="bmd-label-floating">If different number, please state</label>
-                          <input type="text" class="form-control" name="contact_method_oth">
+                          <label name="contact_no_label" class="bmd-label-floating">If different number, please state*</label>
+                          <input type="tel" class="form-control" name="contact_no" pattern="01[0-9]{8,9}" required>
                         </div>
                       </div>
                     </div>
@@ -312,23 +313,24 @@ The above copyright notice and this permission notice shall be included in all c
                     <div class="row">
                       <div class="col-md-6">
                         Email Address*
-                        <select class="select2 form-control" name="contact_no" required>
-                            <option value="CALL">Use my current email</option>
-                            <option value="WHATSAPP">Enter a different email</option>
-                            <option value="EMAIL">Do not use email</option>
+                        <select class="select2 form-control" name="email_select" required>
+                            <option value="0">Use my current email</option>
+                            <option value="1">Enter a different email</option>
+                            <option value="-1">Do not use email</option>
                         </select>
                       </div>
                       <div class="col-md-6">
                         <div class="form-group">
-                          <label class="bmd-label-floating">If different email, please state</label>
-                          <input type="text" class="form-control" name="contact_method_oth">
+                          <label name="email_label" class="bmd-label-floating">If different email, please state*</label>
+                          <input type="email" class="form-control" name="email_address" required>
                         </div>
                       </div>
                     </div>
                     <br><br>
                     <span style="color: red;">* Fields are compulsory</span>
-                    <button style="inline-block" type="submit" class="btn btn-primary pull-right">Submit</button>
+                    <button style="inline-block" type="submit" class="btn btn-primary pull-right" name="submitBtn">Submit</button>
                     <div class="clearfix"></div>
+                  </form>
                 </div>
               </div>
             </div>
@@ -492,7 +494,16 @@ The above copyright notice and this permission notice shall be included in all c
     $('.select2').select2({
       minimumResultsForSearch: -1
     });
-  })
+
+    // Default contact number and contact email states
+    $('select[name="phone_select"]').val('0').trigger('change');
+    $('select[name="email_select"]').val('0').trigger('change');
+  });
+
+  $(document).on('submit', '#createEventAppForm', function() {
+    // do not refresh form on submit so that notifications can be shown
+    return false;
+  });
 
   $(document) //Code to expand textarea based on contents
     .one('focus.autoExpand', 'textarea.autoExpand', function(){
@@ -508,13 +519,117 @@ The above copyright notice and this permission notice shall be included in all c
         this.rows = minRows + rows;
   });
 
-  function dateInputBehavior(e) {
-    if (e.value == "" || e.value == null) {
-        e.type = "text"; //Change input back to text to remove 'dd/mm/yyyy' placeholder
-    } else {
-        e.type = "date";
+  $(":button[name='submitBtn']").click(function(){
+    var app_name = $("input[name='app_name']").val();
+    var app_desc = $("textarea[name='app_desc']").val();
+    var org = $("input[name='org']").val();
+    var game = $("input[name='game']").val();
+    var teams = $("input[name='teams']").val()
+    var venue = $("input[name='venue']").val();
+    var city = $("input[name='city']").val();
+    var state = $("select[name='state']").val();
+    var startDate = $("input[name='startDate']").val();
+    var endDate = $("input[name='endDate']").val();
+    var contact_method = $("select[name='contact_method']").val();
+    var phone_select = $("select[name='phone_select']").val();
+    var contact_no = $("input[name='contact_no']").val();
+    var email_select = $("select[name='email_select']").val();
+    var email_address = $("input[name='email_address']").val();
+
+    if (app_name != "" && app_desc != "" && org != "" && venue != "" &&
+        city != "" && state != "" && startDate != "" && endDate != "" &&
+        contact_method != "" && phone_select != "" && contact_no != "" &&
+        email_select != "" && email_address != "") {
+            
+        $.ajax({
+            url: 'create_event_application_back.php',
+            type: 'POST',
+            data: {app_name: app_name, app_desc: app_desc, org: org,
+                    game: game, teams: teams, venue: venue,
+                    city: city, state: state, startDate: startDate,
+                    endDate: endDate, contact_method: contact_method, phone_select: phone_select,
+                    contact_no: contact_no, email_select: email_select, email_address: email_address},
+            success: function(res) {
+                var data = JSON.parse(res);
+
+                if (data['statusCode'] == 1) { //'1' is set as success code ('0' for fail)
+                    $.notify({
+                        message: data['msg']
+                    }, {
+                        type: 'success',
+                        allow_dismiss: true
+                    });
+                } else {
+                    $.notify({
+                        message: data['msg']
+                    }, {
+                        type: 'danger',
+                        allow_dismiss: true
+                    });
+                }
+                
+                if (data['statusCode'] == 1) { //Only reset the form if success code is returned
+                  $('#createEventAppForm').trigger('reset'); //Empty all the form fields
+                  $('[name="startDate"]').prop('type', 'text');
+                  $('[name="endDate"]').prop('type', 'text'); //Remove 'dd/mm/yyyy' placeholder from start/end date
+
+                  // Reset contact no and email address states
+                  $('select[name="phone_select"]').val('0').trigger('change');
+                  $('select[name="email_select"]').val('0').trigger('change');
+                }
+            },
+            error: function(res) {
+                $.notify("An error has ocurred! Please try again later");
+            }
+            });
     }
+});
+
+$("select[name='phone_select']").on('change', function() {
+  /* Function to fill in phone number based on user selection
+   * 0  - Use current user's account phone number and disable contact_no input
+   * 1  - Use new phone number, enable and make contact_no input ""
+   * -1 - Don't input phone number, disable and make contact_no input "-"
+   */
+
+    if ($("select[name='phone_select']").val() == '0') {
+      $("input[name='contact_no']").show().val('0186632500').prop("disabled", true).prop("required", true); //TODO: Replace this with user's phone no
+      $("label[name='contact_no_label']").hide();
+    } else if ($("select[name='phone_select']").val() == '1') {
+      $("input[name='contact_no']").show().val('').prop("disabled", false).prop("required", true); 
+      $("label[name='contact_no_label']").show();
+    } else {
+      $("input[name='contact_no']").hide().val('-').prop("disabled", true).prop("required", false); 
+      $("label[name='contact_no_label']").hide();
+    }
+});
+
+$("select[name='email_select']").on('change', function() {
+  /* Function to fill in email address based on user selection
+   * 0  - Use current user's account phone number and disable contact_no input
+   * 1  - Use new phone number, enable and make contact_no input ""
+   * -1 - Don't input phone number, disable and make contact_no input "-"
+   */
+
+    if ($("select[name='email_select']").val() == '0') {
+      $("input[name='email_address']").show().val('ad@gmail.com').prop("disabled", true).prop("required", true); //TODO: Replace this with user's phone no
+      $("label[name='email_label']").hide();
+    } else if ($("select[name='email_select']").val() == '1') {
+      $("input[name='email_address']").show().val('').prop("disabled", false).prop("required", true); 
+      $("label[name='email_label']").show();
+    } else {
+      $("input[name='email_address']").hide().val('-').prop("disabled", true).prop("required", false); 
+      $("label[name='email_label']").hide();
+    }
+});
+
+function dateInputBehavior(e) {
+  if (e.value == "" || e.value == null) {
+      e.type = "text"; //Change input back to text to remove 'dd/mm/yyyy' placeholder
+  } else {
+      e.type = "date";
   }
+}
   </script>
 </body>
 

@@ -25,14 +25,16 @@
 	if($result == null) {
 		$_SESSION["Credential_text"] = "Incorrect Username or Password !!!";
     	header("Location: index.php");
+	} else {
+		$_SESSION["Curr_user"] = $result['id'];
+
+		if($result['is_admin'] == 1) {
+			header("Location: ../dashboard_module/dashboard.html");
+		} else {
+			header("Location: ../user_dashboard_module/dashboard.html");
+		}
 	}
 
-	if($result['is_admin'] == 1) {
-		header("Location: ../dashboard_module/dashboard.html");
-	}
-	else {
-		header("Location: ../user_dashboard_module/dashboard.html");
-	}
 
 ?>
 

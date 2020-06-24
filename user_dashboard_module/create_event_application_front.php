@@ -1,6 +1,20 @@
 <?php
+  include '../public/DBconnect.php';
   session_start();
 
+  //connection to database
+  $con = DatabaseConn();
+
+  $curUser = $_SESSION['Curr_user'];
+
+  $sql = mysqli_query($con,"SELECT mobile_number, email FROM users WHERE id = '$curUser'");
+  $result = mysqli_fetch_array($sql);
+
+  //Assign variables
+  $userNo = $result['mobile_number'];
+  $userEmail = $result['email'];
+
+  //Help message initialization
   $help_msg = "Submitting this form will send an event application with the entered details to our representative(s) for review.<br><br>Please ensure you have included your contact details so that the creation of this event may be discussed/approved/finalized";
 ?>
 
@@ -591,9 +605,10 @@ $("select[name='phone_select']").on('change', function() {
    * 1  - Use new phone number, enable and make contact_no input ""
    * -1 - Don't input phone number, disable and make contact_no input "-"
    */
+    var user_phone = '<?php echo $userNo; ?>';
 
     if ($("select[name='phone_select']").val() == '0') {
-      $("input[name='contact_no']").show().val('0186632500').prop("disabled", true).prop("required", true); //TODO: Replace this with user's phone no
+      $("input[name='contact_no']").show().val(user_phone).prop("disabled", true).prop("required", true); //TODO: Replace this with user's phone no
       $("label[name='contact_no_label']").hide();
     } else if ($("select[name='phone_select']").val() == '1') {
       $("input[name='contact_no']").show().val('').prop("disabled", false).prop("required", true); 
@@ -610,9 +625,10 @@ $("select[name='email_select']").on('change', function() {
    * 1  - Use new phone number, enable and make contact_no input ""
    * -1 - Don't input phone number, disable and make contact_no input "-"
    */
+    var user_email = '<?php echo $userEmail; ?>';
 
     if ($("select[name='email_select']").val() == '0') {
-      $("input[name='email_address']").show().val('ad@gmail.com').prop("disabled", true).prop("required", true); //TODO: Replace this with user's phone no
+      $("input[name='email_address']").show().val(user_email).prop("disabled", true).prop("required", true); //TODO: Replace this with user's phone no
       $("label[name='email_label']").hide();
     } else if ($("select[name='email_select']").val() == '1') {
       $("input[name='email_address']").show().val('').prop("disabled", false).prop("required", true); 

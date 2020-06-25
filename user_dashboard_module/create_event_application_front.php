@@ -549,6 +549,7 @@ The above copyright notice and this permission notice shall be included in all c
     var contact_no = $("input[name='contact_no']").val();
     var email_select = $("select[name='email_select']").val();
     var email_address = $("input[name='email_address']").val();
+    var created_by = '<?php echo $curUser; ?>';
 
     if (app_name != "" && app_desc != "" && org != "" && venue != "" &&
         city != "" && state != "" && startDate != "" && endDate != "" &&
@@ -562,7 +563,8 @@ The above copyright notice and this permission notice shall be included in all c
                     game: game, teams: teams, venue: venue,
                     city: city, state: state, startDate: startDate,
                     endDate: endDate, contact_method: contact_method, phone_select: phone_select,
-                    contact_no: contact_no, email_select: email_select, email_address: email_address},
+                    contact_no: contact_no, email_select: email_select, email_address: email_address,
+                    created_by: created_by},
             success: function(res) {
                 var data = JSON.parse(res);
 

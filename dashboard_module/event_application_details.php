@@ -14,7 +14,7 @@
   $game_id = $app_details['game_id'];
 
   //Fetch creator username
-  $sql_user = "SELECT full_name FROM `users` WHERE `user_id` = '$creator'";
+  $sql_user = "SELECT full_name FROM `users` WHERE `id` = '$creator'";
   $user_details = mysqli_fetch_array(mysqli_query($con, $sql_user));
 
   //Fetch game name

@@ -31,6 +31,7 @@
     $contact_no = $_POST["contact_no"];
     $email_select = $_POST["email_select"];
     $email_address = $_POST["email_address"];
+    $created_by = $_POST["created_by"];
 
     // If user selects call or whatsapp as preferred contact method but doesnt enter a number
     if (($contact_method == 'CALL' || $contact_method == 'WHATSAPP') && ($contact_no == '-' || $contact_no == '')) {
@@ -50,7 +51,7 @@
     } else {
         //Add new event application statement
         $sql = "INSERT INTO `event_application` VALUES (NULL, '$app_name', '$app_desc', '$game', '$teams', 
-                '$startDate', '$endDate', '$venue', '$city', '$state', '$org', '1', 
+                '$startDate', '$endDate', '$venue', '$city', '$state', '$org', '$created_by', 
                 '$AccessTime', '$contact_method', '$contact_no', '$email_address', 'pending',
                 NULL, NULL);";
 

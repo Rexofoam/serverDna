@@ -284,18 +284,18 @@ The above copyright notice and this permission notice shall be included in all c
                     <div class="row">
                       <div class="col-md-6">
                         <div class="form-group">
-                          <label class="bmd-label-floating">Start Date*</label>
-                          <input placeholder="" class="form-control" type="text" onfocus="(this.type='date')" onblur="dateInputBehavior(this)" name="startDate" required>
+                          <label class="bmd-label-floating">Start Time*</label>
+                          <input placeholder="" class="form-control" type="text" onfocus="(this.type='datetime-local')" onblur="dateInputBehavior(this)" name="startDate" required>
                         </div>
                       </div>
                       <div class="col-md-6">
                         <div class="form-group">
-                          <label class="bmd-label-floating">End Date*</label>
-                          <input placeholder="" class="form-control" type="text" onfocus="(this.type='date')" onblur="dateInputBehavior(this)" name="endDate" required>
+                          <label class="bmd-label-floating">End Time*</label>
+                          <input placeholder="" class="form-control" type="text" onfocus="(this.type='datetime-local')" onblur="dateInputBehavior(this)" name="endDate" required>
                         </div>
                       </div>
                     </div>
-                    <br>
+                    <br><br>
                     <div class="row">
                       <div class="col-md-6">
                         Preferred Method of Contact*
@@ -598,56 +598,56 @@ The above copyright notice and this permission notice shall be included in all c
                 $.notify("An error has ocurred! Please try again later");
             }
             });
-    }
-});
+      }
+  });
 
-$("select[name='phone_select']").on('change', function() {
-  /* Function to fill in phone number based on user selection
-   * 0  - Use current user's account phone number and disable contact_no input
-   * 1  - Use new phone number, enable and make contact_no input ""
-   * -1 - Don't input phone number, disable and make contact_no input "-"
-   */
-    var user_phone = '<?php echo $userNo; ?>';
+  $("select[name='phone_select']").on('change', function() {
+    /* Function to fill in phone number based on user selection
+    * 0  - Use current user's account phone number and disable contact_no input
+    * 1  - Use new phone number, enable and make contact_no input ""
+    * -1 - Don't input phone number, disable and make contact_no input "-"
+    */
+      var user_phone = '<?php echo $userNo; ?>';
 
-    if ($("select[name='phone_select']").val() == '0') {
-      $("input[name='contact_no']").show().val(user_phone).prop("disabled", true).prop("required", true); //TODO: Replace this with user's phone no
-      $("label[name='contact_no_label']").hide();
-    } else if ($("select[name='phone_select']").val() == '1') {
-      $("input[name='contact_no']").show().val('').prop("disabled", false).prop("required", true); 
-      $("label[name='contact_no_label']").show();
+      if ($("select[name='phone_select']").val() == '0') {
+        $("input[name='contact_no']").show().val(user_phone).prop("disabled", true).prop("required", true); //TODO: Replace this with user's phone no
+        $("label[name='contact_no_label']").hide();
+      } else if ($("select[name='phone_select']").val() == '1') {
+        $("input[name='contact_no']").show().val('').prop("disabled", false).prop("required", true); 
+        $("label[name='contact_no_label']").show();
+      } else {
+        $("input[name='contact_no']").hide().val('-').prop("disabled", true).prop("required", false); 
+        $("label[name='contact_no_label']").hide();
+      }
+  });
+
+  $("select[name='email_select']").on('change', function() {
+    /* Function to fill in email address based on user selection
+    * 0  - Use current user's account phone number and disable contact_no input
+    * 1  - Use new phone number, enable and make contact_no input ""
+    * -1 - Don't input phone number, disable and make contact_no input "-"
+    */
+      var user_email = '<?php echo $userEmail; ?>';
+
+      if ($("select[name='email_select']").val() == '0') {
+        $("input[name='email_address']").show().val(user_email).prop("disabled", true).prop("required", true); //TODO: Replace this with user's phone no
+        $("label[name='email_label']").hide();
+      } else if ($("select[name='email_select']").val() == '1') {
+        $("input[name='email_address']").show().val('').prop("disabled", false).prop("required", true); 
+        $("label[name='email_label']").show();
+      } else {
+        $("input[name='email_address']").hide().val('-').prop("disabled", true).prop("required", false); 
+        $("label[name='email_label']").hide();
+      }
+  });
+
+  function dateInputBehavior(e) {
+    if (e.value == "" || e.value == null) {
+        e.type = "text"; //Change input back to text to remove 'dd/mm/yyyy' placeholder
     } else {
-      $("input[name='contact_no']").hide().val('-').prop("disabled", true).prop("required", false); 
-      $("label[name='contact_no_label']").hide();
+        e.type = "datetime-local";
     }
-});
-
-$("select[name='email_select']").on('change', function() {
-  /* Function to fill in email address based on user selection
-   * 0  - Use current user's account phone number and disable contact_no input
-   * 1  - Use new phone number, enable and make contact_no input ""
-   * -1 - Don't input phone number, disable and make contact_no input "-"
-   */
-    var user_email = '<?php echo $userEmail; ?>';
-
-    if ($("select[name='email_select']").val() == '0') {
-      $("input[name='email_address']").show().val(user_email).prop("disabled", true).prop("required", true); //TODO: Replace this with user's phone no
-      $("label[name='email_label']").hide();
-    } else if ($("select[name='email_select']").val() == '1') {
-      $("input[name='email_address']").show().val('').prop("disabled", false).prop("required", true); 
-      $("label[name='email_label']").show();
-    } else {
-      $("input[name='email_address']").hide().val('-').prop("disabled", true).prop("required", false); 
-      $("label[name='email_label']").hide();
-    }
-});
-
-function dateInputBehavior(e) {
-  if (e.value == "" || e.value == null) {
-      e.type = "text"; //Change input back to text to remove 'dd/mm/yyyy' placeholder
-  } else {
-      e.type = "date";
   }
-}
   </script>
 </body>
 

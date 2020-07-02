@@ -27,8 +27,8 @@
   $app_desc = $app_details['app_description'];
   //$game_name = $game_details['name'];
   $team_count = $app_details['team_count'];
-  $startTime = date("d F Y", strtotime($app_details['start_datetime']));
-  $endTime = date("d F Y", strtotime($app_details['end_datetime']));
+  $startTime = date("d F Y h:i A", strtotime($app_details['start_datetime']));
+  $endTime = date("d F Y h:i A", strtotime($app_details['end_datetime']));
   $venue = $app_details['venue'];
   $city = $app_details['city'];
   $state = $app_details['state'];

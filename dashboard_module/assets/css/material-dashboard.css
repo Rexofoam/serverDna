@@ -13,6 +13,19 @@
 
  */
 
+.icon-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    outline: none;
+    border: 0;
+    background: transparent;
+    padding: 0px;
+}
+
 
 /*     brand Colors              */
 

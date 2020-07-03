@@ -70,16 +70,48 @@ CREATE TABLE `team_game` (
 
 --
 -- Table structure for table `tournament`
+-- NOTE: Gonna replace this with an 'event' table so that it can potentially capture more types of events in the future
+
+-- CREATE TABLE `tournament` (
+--   `id` int(11) NOT NULL,
+--   `name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+--   `description` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+--   `start_datetime` datetime NOT NULL,
+--   `end_datetime` datetime NOT NULL,
+--   `created_at` datetime NOT NULL,
+--   `updated_at` datetime NOT NULL,
+--   `deleted_at` datetime DEFAULT NULL
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `event`
 --
 
-CREATE TABLE `tournament` (
-  `id` int(11) NOT NULL,
-  `name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `description` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+CREATE TABLE `event` (
+  `ev_id` int(11) NOT NULL,
+  `ev_name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `ev_description` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `ev_type` varchar(30) COLLATE utf8_unicode_ci NOT NULL, -- Event type (tournament/talk/pubstomp/etc) different events may be included at another time
+  `game_id` int(11),
+  `reg_type` varchar(10) COLLATE utf8_unicode_ci NOT NULL, -- Registration type (TEAMS or INDIVIDUAL)
+  `reg_max_count` int(3) NOT NULL,
+  `reg_cur_count` int(3) DEFAULT 0,
   `start_datetime` datetime NOT NULL,
   `end_datetime` datetime NOT NULL,
+  `venue` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `city` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `state` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `organisers` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `ev_admins` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `ev_staff` varchar(100) COLLATE utf8_unicode_ci,
+  `created_by` int(11) NOT NULL,
   `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
+  `approved_by` int(11) NOT NULL,
+  `app_id` int (11),
+  `status` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -107,13 +139,13 @@ CREATE TABLE `event_application` (
   `contact_no` varchar(15) COLLATE utf8_unicode_ci,
   `contact_email` varchar(100) COLLATE utf8_unicode_ci,
   `status` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `event_id` varchar(11),
+  `status_upd_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `event_application` (`app_id`, `app_name`, `app_description`, `game_id`, `team_count`, `start_datetime`, `end_datetime`, `venue`, `city`, `state`, `organiser`, `created_by`, `contact_method`, `contact_no`, `contact_email`, `status`, `event_id`, `deleted_at`) VALUES
 (1, 'Some Dota 2 Tournament with a randomly long name', 'Some Dota 2 Tournament with a randomly long name', '222', '16', '2020-06-11', '2020-06-13', 'Taylor\'s University', 'Petaling Jaya', 'Selangor', 'ONE Esports', '1', 
-'Email', '0186632500', 'oneesports@gmail.com', 'pending',  NULL, NULL);
+'Email', '0186632500', 'oneesports@gmail.com', 'pending', NULL);
 
 
 -- --------------------------------------------------------

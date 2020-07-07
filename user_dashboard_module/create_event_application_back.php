@@ -16,13 +16,13 @@
     $AccessTime = $date->format('Y-m-d H:i:s');
     
     //Fetch user inputs
-    $app_name = $_POST["app_name"]; 
-    $app_desc = $_POST["app_desc"];
-    $org = $_POST["org"];
+    $app_name = mysqli_real_escape_string($con, $_POST["app_name"]); 
+    $app_desc = mysqli_real_escape_string($con, $_POST["app_desc"]);
+    $org = mysqli_real_escape_string($con, $_POST["org"]);
     $game = $_POST["game"];
     $teams = $_POST["teams"];
-    $venue = $_POST["venue"];
-    $city = $_POST["city"];
+    $venue = mysqli_real_escape_string($con, $_POST["venue"]);
+    $city = mysqli_real_escape_string($con, $_POST["city"]);
     $state = $_POST["state"];
     $startDate = $_POST["startDate"];
     $endDate = $_POST["endDate"];
@@ -30,7 +30,7 @@
     $phone_select = $_POST["phone_select"];
     $contact_no = $_POST["contact_no"];
     $email_select = $_POST["email_select"];
-    $email_address = $_POST["email_address"];
+    $email_address = mysqli_real_escape_string($con, $_POST["email_address"]);
     $created_by = $_POST["created_by"];
 
     // If user selects call or whatsapp as preferred contact method but doesnt enter a number

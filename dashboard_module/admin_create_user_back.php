@@ -19,13 +19,13 @@
     $AccessTime = $date->format('Y-m-d H:i:s');
     
     //Fetch user inputs
-    $name = $_POST["name"]; 
-    $userid = $_POST["userid"];
+    $name = mysqli_real_escape_string($con, $_POST["name"]); 
+    $userid = mysqli_real_escape_string($con, $_POST["userid"]);
     $mobile_number = $_POST["phone"];
-    $email = $_POST["email"];
+    $email = mysqli_real_escape_string($con, $_POST["email"]);
     $gender = $_POST["gender"];
     $birthday = $_POST["birthday"];
-    $city = $_POST["city"];
+    $city = mysqli_real_escape_string($con, $_POST["city"]);
     $state = $_POST["state"];
     $password = generateRandomString();
 

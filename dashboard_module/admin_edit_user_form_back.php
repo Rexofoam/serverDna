@@ -12,15 +12,14 @@
     $AccessTime = $date->format('Y-m-d H:i:s');
     
     //Fetch user inputs
-    $user_id = $_POST["user_id"];
-    $name = $_POST["name"]; 
-    $userid = $_POST["userid"];
+    $user_id = mysqli_real_escape_string($con, $_POST["user_id"]);
+    $name = mysqli_real_escape_string($con, $_POST["name"]); 
+    $userid = mysqli_real_escape_string($con, $_POST["userid"]);
     $mobile_number = $_POST["phone"];
-    $email = $_POST["email"];
+    $email = mysqli_real_escape_string($con, $_POST["email"]);
     $gender = $_POST["gender"];
     $birthday = $_POST["birthday"];
-    $address = "";
-    $city = $_POST["city"];
+    $city = mysqli_real_escape_string($con, $_POST["city"]);
     $state = $_POST["state"];
 
     // Check if the same account exists

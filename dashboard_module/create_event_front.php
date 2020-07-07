@@ -4,24 +4,27 @@
 
   //connection to database
   $con = DatabaseConn();
+  $appID = isset($_GET['app']) ? $_GET['app'] : '';
   $userOptions = '';
 
   $curUser = $_SESSION['Curr_user'];
 
-  $application_data = mysqli_query($con, "SELECT app_name, app_description, game_id, team_count, start_datetime, end_datetime, venue, city, state, organiser FROM event_application WHERE app_id = '1'");
+  $application_data = mysqli_query($con, "SELECT app_name, app_description, game_id, team_count, start_datetime, end_datetime, venue, city, state, organiser, created_by 
+                                          FROM event_application WHERE app_id = '$appID'");
   $data = mysqli_fetch_array($application_data);
 
   //Assign variables
-  $app_name = $data['app_name'];
-  $app_desc = $data['app_description'];
-  $game = $data['game_id'];
-  $max_reg_cnt = $data['team_count'];
-  $startDate = $data['start_datetime'];
-  $endDate = $data['end_datetime'];
-  $venue = $data['venue'];
-  $city = $data['city'];
-  $state = strtoupper($data['state']);
-  $org = $data['organiser'];
+  $app_name = isset($data['app_name']) ? $data['app_name'] : '';
+  $app_desc = isset($data['app_description']) ? $data['app_description'] : '';
+  $game = isset($data['game_id']) ? $data['game_id'] : '';
+  $max_reg_cnt = isset($data['team_count']) ? $data['team_count'] : '';
+  $startDate = isset($data['start_datetime']) ? $data['start_datetime'] : '';
+  $endDate = isset($data['end_datetime']) ? $data['end_datetime'] : '';
+  $venue = isset($data['venue']) ? $data['venue'] : '';
+  $city = isset($data['city']) ? $data['city'] : '';
+  $state = isset($data['state']) ? strtoupper($data['state']) : '';
+  $org = isset($data['organiser']) ? $data['organiser'] : '';
+  $created_by = isset($data['created_by']) ? $data['created_by'] : '';
 
   //Generating options for the event admins and event staff selects
   $users = mysqli_query($con,"SELECT id, full_name, user_id FROM users WHERE status='authenticated' AND is_admin = '0'");
@@ -338,7 +341,7 @@ The above copyright notice and this permission notice shall be included in all c
                       </div>
                       <div class="col-md-6">
                         <h6>Event Staff</h6>
-                        <select class="select2 select2-ev-staff form-control" name="ev_staff" multiple="multiple" required>
+                        <select class="select2 select2-ev-staff form-control" name="ev_staff" multiple="multiple">
                           <?php echo $userOptions; ?>
                         </select>
                       </div>
@@ -547,37 +550,37 @@ The above copyright notice and this permission notice shall be included in all c
   });
 
   $(":button[name='submitBtn']").click(function(){
-    var app_name = $("input[name='app_name']").val();
-    var app_desc = $("textarea[name='app_desc']").val();
+    var ev_name = $("input[name='ev_name']").val();
+    var ev_desc = $("textarea[name='ev_desc']").val();
+    var ev_type = $("select[name='ev_type']").val();
     var org = $("input[name='org']").val();
     var game = $("input[name='game']").val();
-    var teams = $("input[name='teams']").val()
+    var reg_type = $("select[name='reg_type']").val();
+    var reg_max = $("input[name='reg_max']").val()
     var venue = $("input[name='venue']").val();
     var city = $("input[name='city']").val();
     var state = $("select[name='state']").val();
     var startDate = $("input[name='startDate']").val();
     var endDate = $("input[name='endDate']").val();
-    var contact_method = $("select[name='contact_method']").val();
-    var phone_select = $("select[name='phone_select']").val();
-    var contact_no = $("input[name='contact_no']").val();
-    var email_select = $("select[name='email_select']").val();
-    var email_address = $("input[name='email_address']").val();
-    var created_by = '<?php echo $curUser; ?>';
+    var ev_admins = $("select[name='ev_admins']").val();
+    var ev_staff = $("select[name='ev_staff']").val();
+    var applied_by = '<?php echo $created_by; ?>';
+    var approved_by = '<?php echo $curUser; ?>';
+    var app_id = '<?php echo $appID; ?>';
 
-    if (app_name != "" && app_desc != "" && org != "" && venue != "" &&
-        city != "" && state != "" && startDate != "" && endDate != "" &&
-        contact_method != "" && phone_select != "" && contact_no != "" &&
-        email_select != "" && email_address != "") {
+    if (ev_name != "" && ev_desc != "" && ev_type != "" && org != "" && 
+        reg_type != "" && reg_max != "" && venue != "" && city != "" && 
+        state != "" && startDate != "" && endDate != "" && ev_admins != "" ) {
             
         $.ajax({
-            url: 'create_event_application_back.php',
+            url: 'create_event_back.php',
             type: 'POST',
-            data: {app_name: app_name, app_desc: app_desc, org: org,
-                    game: game, teams: teams, venue: venue,
-                    city: city, state: state, startDate: startDate,
-                    endDate: endDate, contact_method: contact_method, phone_select: phone_select,
-                    contact_no: contact_no, email_select: email_select, email_address: email_address,
-                    created_by: created_by},
+            data: {ev_name: ev_name, ev_desc: ev_desc, ev_type: ev_type, 
+                    org: org, game: game, reg_type: reg_type, reg_max: reg_max,
+                    venue: venue, city: city, state: state, startDate: startDate,
+                    endDate: endDate, ev_admins: ev_admins, ev_staff: ev_staff,
+                    applied_by: applied_by, approved_by: approved_by, app_id: app_id
+                  },
             success: function(res) {
                 var data = JSON.parse(res);
 

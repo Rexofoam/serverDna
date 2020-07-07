@@ -192,6 +192,7 @@
                         <th>Action</th>
                       </thead>
                       <tbody>
+                        <?php if ($pending_applications) { ?>
                         <?php while($row1 = mysqli_fetch_array($pending_applications)):;?>
                         <tr>
                           <td><span><?php echo $row1[0];?></span></td>
@@ -203,6 +204,7 @@
                           <td><button  class ="btn-primary" style="border-color: transparent;" onclick="manage_app(<?php echo $row1[6];?>)">Manage</button>
                         </tr>
                         <?php endwhile;?>
+                        <?php } ?>
                       </tbody>
                     </table>
                   </div>
@@ -229,6 +231,7 @@
                         <th>Action</th>
                       </thead>
                       <tbody>
+                        <?php if ($approved_applications) { ?>
                         <?php while($row1 = mysqli_fetch_array($approved_applications)):;?>
                         <tr>
                           <td><span><?php echo $row1[0];?></span></td>
@@ -240,6 +243,7 @@
                           <td><button  class ="btn-primary" style="border-color: transparent;" onclick="view(<?php echo $row1[6];?>)">View</button>
                         </tr>
                         <?php endwhile;?>
+                        <?php } ?>
                       </tbody>
                     </table>
                   </div>
@@ -299,7 +303,7 @@
       var manage_url = "event_application_details.php"
 
       // redirect to edit page
-      window.location.replace(manage_url + "?id=" + id);
+      window.location.href = manage_url + "?id=" + id;
     }
 
     //TODO Add redirection to event page
@@ -307,7 +311,7 @@
       var event_url = ""
 
       // redirect to edit page
-      window.location.replace(edit_url + "?id=" + id);
+      window.location.href = edit_url + "?id=" + id;
     }
   </script>
 

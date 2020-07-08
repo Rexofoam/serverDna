@@ -462,17 +462,27 @@ The above copyright notice and this permission notice shall be included in all c
   <!-- Material Dashboard DEMO methods, don't include it in your project! -->
   <script src="assets/demo/demo.js"></script>
   <script>
-    function create_event(id) {
+    function create_event(id) { //If 'approve' button is pressed, move to event creation screen
       var create_event_url = "create_event_front.php"
 
       // redirect to edit page
       window.location.href = create_event_url + "?app=" + id;
     }
 
-    function reject_app(id) {
+    function reject_app(id) { //If 'reject' button is pressed, provide warning and move back to dashboard after
       var app_id = '<?php echo $appID; ?>';
 
-      $.ajax({
+      Swal.fire({ //Display warning dialog
+        title: 'WARNING!',
+        text: 'This action cannot be reversed, are you sure you want to reject this application?',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, reject it!'
+      }).then((result) => {
+        if (result.value) {
+          $.ajax({
             url: 'event_application_reject.php',
             type: 'POST',
             data: {app_id: app_id},
@@ -486,6 +496,11 @@ The above copyright notice and this permission notice shall be included in all c
                         type: 'success',
                         allow_dismiss: true
                     });
+
+                    Swal.fire({title: 'Operation Complete!', text: 'This event application has been rejected.', //Display success dialog
+                      type: 'success'}).then(function(){
+                        window.location.replace("dashboard.html"); //Return to dashboard once application has been rejected
+                    })
                 } else {
                     $.notify({
                         message: data['msg']
@@ -498,7 +513,9 @@ The above copyright notice and this permission notice shall be included in all c
             error: function(res) {
                 $.notify("An error has ocurred! Please try again later");
             }
-        });
+          });
+        }
+      })
     }
   </script>
 </body>

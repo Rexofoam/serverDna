@@ -490,28 +490,30 @@ The above copyright notice and this permission notice shall be included in all c
                 var data = JSON.parse(res);
 
                 if (data['statusCode'] == 1) { //'1' is set as success code ('0' for fail)
-                    $.notify({
-                        message: data['msg']
-                    }, {
-                        type: 'success',
-                        allow_dismiss: true
-                    });
+                    // $.notify({
+                    //     message: data['msg']
+                    // }, {
+                    //     type: 'success',
+                    //     allow_dismiss: true
+                    // });
 
-                    Swal.fire({title: 'Operation Complete!', text: 'This event application has been rejected.', //Display success dialog
+                    Swal.fire({title: 'Operation Complete!', html: data['msg'], //Display success dialog
                       type: 'success'}).then(function(){
                         window.location.replace("dashboard.html"); //Return to dashboard once application has been rejected
                     })
                 } else {
-                    $.notify({
-                        message: data['msg']
-                    }, {
-                        type: 'danger',
-                        allow_dismiss: true
-                    });
+                    // $.notify({
+                    //     message: data['msg']
+                    // }, {
+                    //     type: 'danger',
+                    //     allow_dismiss: true
+                    // });
+
+                    Swal.fire({title: 'Error!', html: data['msg'], type: 'error'}); //Display error dialog
                 }
             },
             error: function(res) {
-                $.notify("An error has ocurred! Please try again later");
+              Swal.fire({title: 'Error!', html: 'We were unable to complete the operation.<br>Please try again later', type: 'error'});
             }
           });
         }

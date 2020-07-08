@@ -20,7 +20,7 @@
     if (!mysqli_query($con, $sql)) {
         $res = array(
             "statusCode" => 0, 
-            "msg" => "<b>Error!</b><br>We were unable to perform the operation. Please try again later"
+            "msg" => "We were unable to perform the operation.<br>Please try again later"
         );
         
         echo json_encode($res);
@@ -28,7 +28,7 @@
     } else {
         $res = array(
             "statusCode" => 1, 
-            "msg" => "Event application has been rejected and will no longer appear in the event applications list"
+            "msg" => "This event application has been rejected and will no longer appear in the event applications list"
         );
         
         echo json_encode($res);

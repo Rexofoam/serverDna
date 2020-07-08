@@ -57,7 +57,7 @@
     if (!mysqli_query($con, $sql)) {
         $res = array(
             "statusCode" => 0, 
-            "msg" => "<b>Error!</b><br>We were unable to submit your event details. Please try again later"
+            "msg" => "We were unable to submit your event details.<br>Please try again later"
         );
 
         echo json_encode($res);
@@ -69,7 +69,7 @@
         if (!mysqli_query($con, $sql2)) {
             $res = array(
                 "statusCode" => 0, 
-                "msg" => "<b>Error!</b><br>Event successfully created but event application could not be updated.<br><br>Please contact a site admin regarding this issue"
+                "msg" => "Event successfully created but event application could not be updated. Please contact a site admin regarding this issue"
             );
     
             echo json_encode($res);
@@ -77,7 +77,7 @@
         } else {
             $res = array(
                 "statusCode" => 1, 
-                "msg" => "<b>Success!</b><br>Event details have been finalized and the event page is now available for viewing and management by related users"
+                "msg" => "Event details have been finalized and the event page is now available for viewing and management by related users"
             );
     
             echo json_encode($res);

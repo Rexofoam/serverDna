@@ -32,7 +32,7 @@
         
         $res = array(
                 "statusCode" => 0, 
-                "msg" => "<b>Error updating user with existing email or mobile number"
+                "msg" => "Failed to save changes.<br>Another user exists with the same email or mobile number"
             );
         echo json_encode($res);
     } else {
@@ -43,7 +43,7 @@
         if (!mysqli_query($con, $sql)) {
             $res = array(
                 "statusCode" => 0, 
-                "msg" => "<b>Unknown error while updating user"
+                "msg" => "We were unable to perform the operation.<br>Please try again later"
             );
             
             echo json_encode($res);
@@ -51,7 +51,7 @@
         } else {
             $res = array(
                 "statusCode" => 1, 
-                "msg" => "<b>Account Updated"
+                "msg" => "Account details updated"
             );
             
             echo json_encode($res);

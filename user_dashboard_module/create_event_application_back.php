@@ -37,14 +37,14 @@
     if (($contact_method == 'CALL' || $contact_method == 'WHATSAPP') && ($contact_no == '-' || $contact_no == '')) {
         $res = array(
             "statusCode" => 0, 
-            "msg" => "<b>Warning!</b><br>You have selected either Call or Whatsapp as your preferred method of contact, but have not entered a mobile number to contact.<br><br>Please enter a phone number or change your preferred method of contact to proceed."
+            "msg" => "You have selected either Call or Whatsapp as your preferred method of contact, but have not entered a mobile number to contact.<br><br>Please enter a phone number or change your preferred method of contact to proceed."
         );
         
         echo json_encode($res);
     } else if ($contact_method == 'EMAIL' && ($email_address == '-' || $email_address == '')) { //If user selects email as preferred but doesn enter an email
         $res = array(
             "statusCode" => 0, 
-            "msg" => "<b>Warning!</b><br>You have selected Email as your preferred method of contact, but have not entered an email address to contact.<br><br>Please enter a email address or change your preferred method of contact to proceed."
+            "msg" => "You have selected Email as your preferred method of contact, but have not entered an email address to contact.<br><br>Please enter a email address or change your preferred method of contact to proceed."
         );
         
         echo json_encode($res);
@@ -58,7 +58,7 @@
         if (!mysqli_query($con, $sql)) {
             $res = array(
             "statusCode" => 0, 
-            "msg" => "<b>Error!</b><br>We were unable to submit your application details. Please try again later"
+            "msg" => "We were unable to submit your application details.<br>Please try again later"
             );
 
             echo json_encode($res);
@@ -66,7 +66,7 @@
         } else {
             $res = array(
             "statusCode" => 1, 
-            "msg" => "<b>Success!</b><br>Your event application has been submitted and will be reviewed by our administrators.<br><br>Please wait to be contacted to finalize the event details"
+            "msg" => "Your event application has been submitted and will be reviewed by our administrators.<br><br>Please wait to be contacted to finalize the event details"
             );
 
             echo json_encode($res);

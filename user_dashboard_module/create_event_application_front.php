@@ -569,19 +569,23 @@ The above copyright notice and this permission notice shall be included in all c
                 var data = JSON.parse(res);
 
                 if (data['statusCode'] == 1) { //'1' is set as success code ('0' for fail)
-                    $.notify({
-                        message: data['msg']
-                    }, {
-                        type: 'success',
-                        allow_dismiss: true
-                    });
+                    // $.notify({
+                    //     message: data['msg']
+                    // }, {
+                    //     type: 'success',
+                    //     allow_dismiss: true
+                    // });
+
+                    Swal.fire({title: 'Success!', html: data['msg'], type: 'success'});
                 } else {
-                    $.notify({
-                        message: data['msg']
-                    }, {
-                        type: 'danger',
-                        allow_dismiss: true
-                    });
+                    // $.notify({
+                    //     message: data['msg']
+                    // }, {
+                    //     type: 'danger',
+                    //     allow_dismiss: true
+                    // });
+
+                    Swal.fire({title: 'Error!', html: data['msg'], type: 'error'});
                 }
                 
                 if (data['statusCode'] == 1) { //Only reset the form if success code is returned
@@ -595,7 +599,7 @@ The above copyright notice and this permission notice shall be included in all c
                 }
             },
             error: function(res) {
-                $.notify("An error has ocurred! Please try again later");
+              Swal.fire({title: 'Error!', html: 'We were unable to complete the operation.<br>Please try again later', type: 'error'});
             }
             });
       }

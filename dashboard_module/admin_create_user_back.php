@@ -38,7 +38,7 @@
     if($val_result[0] > 0){
         $res = array(
                 "statusCode" => 0, 
-                "msg" => "<b>Registration Failed!</b><br>This email OR phone number is alreadyy in use. !"
+                "msg" => "User creation failed!<br>This email OR phone number is already in use."
             );
             
             echo json_encode($res);
@@ -52,7 +52,7 @@
         if (!mysqli_query($con, $sql)) {
             $res = array(
                 "statusCode" => 0, 
-                "msg" => "<b>Error!</b><br>Unable to connect to database. Please try again later"
+                "msg" => "We were unable to perform the operation.<br>Please try again later"
             );
             
             echo json_encode($res);
@@ -89,7 +89,7 @@
             catch (Exception $e){
             $res = array(
                 "statusCode" => 0, 
-                "msg" => "<b>Registration Failed!</b><br>Please try again later !"
+                "msg" => "Registration Failed!<br>Please try again later !"
             );
             
             echo json_encode($res);
@@ -98,7 +98,7 @@
             if(!$mail->Send()) {
             $res = array(
                 "statusCode" => 0, 
-                "msg" => "<b>Registration Failed!</b><br>Please try again later !"
+                "msg" => "Registration Failed!<br>Please try again later !"
             );
             
             echo json_encode($res);
@@ -106,7 +106,7 @@
 
             $res = array(
                 "statusCode" => 1, 
-                "msg" => "<b>Registration Success!</b><br>An authentication email has been sent to the associated email address"
+                "msg" => "New user successfully registered!<br>An authentication email has been sent to the registered email address for authentication"
             );
             
             echo json_encode($res);

@@ -609,7 +609,7 @@ The above copyright notice and this permission notice shall be included in all c
             error: function(res) {
                 $.notify("An error has ocurred! Please try again later");
             }
-            });
+        });
       }
   });
 

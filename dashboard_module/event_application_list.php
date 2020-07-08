@@ -6,10 +6,13 @@
   session_start();
   $con = DatabaseConn();
 
-  $sql_pending = "SELECT `app_name`,`organiser`,`start_datetime`,`end_datetime`, `created_by`, `status`, `app_id` 
-          FROM `event_application` WHERE `status` = 'pending'";
-  $sql_approved = "SELECT `app_name`,`organiser`,`start_datetime`,`end_datetime`, `created_by`, `status`, `event_id` 
-          FROM `event_application` WHERE `status` = 'approved'";
+  $sql_pending = "SELECT app.`app_name`,app.`organiser`,app.`start_datetime`,app.`end_datetime`,u.`full_name`,app.`status`,app.`app_id` 
+                  FROM `event_application` app JOIN `users` u ON app.`created_by` = u.`id` 
+                  WHERE app.`status` = 'pending'";
+
+  $sql_approved = "SELECT app.`app_name`,app.`organiser`,app.`start_datetime`,app.`end_datetime`,u.`full_name`,app.`status`,ev.`ev_id` 
+                  FROM `event_application` app JOIN `users` u ON app.`created_by` = u.`id` JOIN `events` ev ON app.`app_id` = ev.`app_id`
+                  WHERE app.`status` = 'approved'";
 
   $pending_applications = mysqli_query($con, $sql_pending);
   $approved_applications = mysqli_query($con, $sql_approved);
@@ -308,10 +311,11 @@
 
     //TODO Add redirection to event page
     function view(id) {
-      var event_url = ""
+      alert("This should go to an event page :3");
+      //var event_url = ""
 
       // redirect to edit page
-      window.location.href = edit_url + "?id=" + id;
+      //window.location.href = edit_url + "?id=" + id;
     }
   </script>
 

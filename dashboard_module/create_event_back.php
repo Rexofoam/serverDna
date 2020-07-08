@@ -29,7 +29,7 @@
     $startDate = $_POST["startDate"];
     $endDate = $_POST["endDate"];
     $ev_admins_arr = $_POST["ev_admins"];
-    $ev_staff_arr = $_POST["ev_staff"];
+    $ev_staff_arr = isset($_POST["ev_staff"]) ? $_POST["ev_staff"] : array();
     $applied_by = $_POST["applied_by"];
     $approved_by = $_POST["approved_by"];
     $app_id = $_POST["app_id"];
@@ -56,20 +56,32 @@
 
     if (!mysqli_query($con, $sql)) {
         $res = array(
-        "statusCode" => 0, 
-        "msg" => "<b>Error!</b><br>We were unable to submit your event details. Please try again later"
+            "statusCode" => 0, 
+            "msg" => "<b>Error!</b><br>We were unable to submit your event details. Please try again later"
         );
 
-        echo mysqli_error($con);
         echo json_encode($res);
 
     } else {
-        $res = array(
-        "statusCode" => 1, 
-        "msg" => "<b>Success!</b><br>Event details have been finalized and the event page is now available for viewing and management by related users"
-        );
+        //Update event application statement
+        $sql2 = "UPDATE `event_application` SET `status` = 'approved', `status_upd_at` = '$AccessTime' WHERE app_id = '$app_id'";
 
-        echo json_encode($res);
+        if (!mysqli_query($con, $sql2)) {
+            $res = array(
+                "statusCode" => 0, 
+                "msg" => "<b>Error!</b><br>Event successfully created but event application could not be updated.<br><br>Please contact a site admin regarding this issue"
+            );
+    
+            echo json_encode($res);
+
+        } else {
+            $res = array(
+                "statusCode" => 1, 
+                "msg" => "<b>Success!</b><br>Event details have been finalized and the event page is now available for viewing and management by related users"
+            );
+    
+            echo json_encode($res);
+        }
     }
 
 ?>

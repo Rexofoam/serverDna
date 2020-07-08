@@ -282,8 +282,8 @@ The above copyright notice and this permission notice shall be included in all c
                       </div>
                     </div>
                     <br><br>
-                    <button type="submit" class="btn btn-primary pull-right" name="btnApprove" onClick="create_event(<?php echo $app_id;?>)">Approve</button>
-                    <button type="submit" class="btn btn-primary pull-right" name="btnReject">Reject</button>
+                    <button type="submit" class="btn btn-primary pull-right" name="btnApprove" onClick="create_event('<?php echo $app_id;?>')">Approve</button>
+                    <button type="submit" class="btn btn-primary pull-right" name="btnReject" onClick="reject_app('<?php echo $app_id;?>')">Reject</button>
                     <div class="clearfix"></div>
                 </div>
               </div>
@@ -467,6 +467,38 @@ The above copyright notice and this permission notice shall be included in all c
 
       // redirect to edit page
       window.location.href = create_event_url + "?app=" + id;
+    }
+
+    function reject_app(id) {
+      var app_id = '<?php echo $appID; ?>';
+
+      $.ajax({
+            url: 'event_application_reject.php',
+            type: 'POST',
+            data: {app_id: app_id},
+            success: function(res) {
+                var data = JSON.parse(res);
+
+                if (data['statusCode'] == 1) { //'1' is set as success code ('0' for fail)
+                    $.notify({
+                        message: data['msg']
+                    }, {
+                        type: 'success',
+                        allow_dismiss: true
+                    });
+                } else {
+                    $.notify({
+                        message: data['msg']
+                    }, {
+                        type: 'danger',
+                        allow_dismiss: true
+                    });
+                }
+            },
+            error: function(res) {
+                $.notify("An error has ocurred! Please try again later");
+            }
+        });
     }
   </script>
 </body>

@@ -215,10 +215,6 @@
                                                         <img class="img" src="assets/img/faces/marc.jpg" />
                                                     </a>
                                                 </div>
-                                                    <a style="margin-top: -50px; margin-left: 100px;" href="javascript:;" 
-                                                        class="btn btn-round btn-just-icon">
-                                                        <i class="material-icons md-light">camera_alt</i>
-                                                    </a>
                                             </div>
                                             <div class="col-md-9">
                                                 <div class="form-group">

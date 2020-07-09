@@ -18,7 +18,7 @@
     $password = sha1($_POST["password"]);
     
 
-	$sql = mysqli_query($con,"SELECT * FROM users WHERE email = '$Email' AND password = '$password'");
+	$sql = mysqli_query($con,"SELECT * FROM users WHERE email = '$Email' AND password = '$password' AND status = 'authenticated' ");
 
 	$result = mysqli_fetch_array($sql);
 	

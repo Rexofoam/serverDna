@@ -29,14 +29,13 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `games` (
-  `id` int(11) NOT NULL,
-  `name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `description` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
-  `start_datetime` datetime NOT NULL,
-  `end_datetime` datetime NOT NULL,
+  `game_id` int(11) NOT NULL,
+  `game_name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `platforms` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `genres` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
+  `created_by` int(11) NOT NULL,
   `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  `deleted_at` datetime DEFAULT NULL
+  `updated_at` datetime
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -202,7 +201,7 @@ CREATE TABLE `user_tournament` (
 -- Indexes for table `games`
 --
 ALTER TABLE `games`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`game_id`);
 
 --
 -- Indexes for table `teams`
@@ -254,7 +253,7 @@ ALTER TABLE `user_tournament`
 -- AUTO_INCREMENT for table `games`
 --
 ALTER TABLE `games`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `game_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `teams`

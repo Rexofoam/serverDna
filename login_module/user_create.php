@@ -26,7 +26,6 @@
     $email = $_POST["email"];
     $gender = $_POST["gender"];
     $birthday = $_POST["birthday"];
-    $address = $_POST["address"];
     $city = $_POST["city"];
     $state = $_POST["state"];
     $password = generateRandomString();
@@ -45,13 +44,14 @@
 
     } else {
 
-    $sql = "INSERT INTO `users` VALUES (NULL, '$name', '$userId', '$mobile_number', '$email', '$password', '$birthday', '$gender','created', NULL, '$AccessTime', '$city', '$state');";
+    $sql = "INSERT INTO `users` VALUES (NULL, '$name', '$userId', '$mobile_number', '$email', '$password', '$birthday', '$gender','created', NULL, '$AccessTime', '$city', '$state', 0);";
 
         if(!mysqli_query($con,$sql))
         {
 
-            $_SESSION["Credential_text"] = "Failed to register. Please try again later!";
-            header("Location: index.php");
+            echo $sql;
+            //$_SESSION["Credential_text"] = "Failed to register. Please try again later!";
+            //header("Location: index.php");
 
         } else {
             $fallbackURL = getCreateUserAccount($con->insert_id);

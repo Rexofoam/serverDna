@@ -47,7 +47,7 @@
         //Add new user statement
         $sql = "INSERT INTO `users` VALUES (NULL, '$name', '$userid', '$mobile_number', '$email', 
                     '$password', '$birthday', '$gender', 'created', NULL, 
-                    '$AccessTime', '$city', '$state');";
+                    '$AccessTime', '$city', '$state', 0);";
 
         if (!mysqli_query($con, $sql)) {
             $res = array(

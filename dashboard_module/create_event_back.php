@@ -64,7 +64,7 @@
 
     } else {
         //Update event application statement
-        $sql2 = "UPDATE `event_application` SET `status` = 'approved', `status_upd_at` = '$AccessTime' WHERE app_id = '$app_id'";
+        $sql2 = "UPDATE `event_application` SET `status` = 'approved', `status_upd_at` = '$AccessTime', `status_upd_by` = '$approved_by' WHERE app_id = '$app_id'";
 
         if (!mysqli_query($con, $sql2)) {
             $res = array(

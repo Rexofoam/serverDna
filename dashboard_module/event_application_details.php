@@ -18,15 +18,15 @@
   $user_details = mysqli_fetch_array(mysqli_query($con, $sql_user));
 
   //Fetch game name
-  $sql_game = "SELECT name FROM `games` WHERE `id` = '$game_id'";
-  //$game_details = mysqli_fetch_array(mysqli_query($con, $sql_game));
+  $sql_game = "SELECT game_name FROM `games` WHERE `game_id` = '$game_id'";
+  $game_details = mysqli_fetch_array(mysqli_query($con, $sql_game));
 
 
   // assign variable
   $app_id = $app_details['app_id'];
   $app_name = $app_details['app_name'];
   $app_desc = $app_details['app_description'];
-  //$game_name = $game_details['name'];
+  $game_name = $game_details['game_name'];
   $team_count = $app_details['team_count'];
   $startTime = date("d F Y h:i A", strtotime($app_details['start_datetime']));
   $endTime = date("d F Y h:i A", strtotime($app_details['end_datetime']));
@@ -241,7 +241,7 @@ The above copyright notice and this permission notice shall be included in all c
                       <div class="col-md-3">
                         <div class="form-group">
                           <h6 class="card-category">Game</h6>
-                          <label><?php echo $game_id;?></label>
+                          <label><?php echo $game_name;?></label>
                         </div>
                       </div>
                       <div class="col-md-3">

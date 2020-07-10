@@ -5,18 +5,20 @@
   //connection to database
   $con = DatabaseConn();
   $appID = isset($_GET['app']) ? $_GET['app'] : '';
+  $gameOptions = '';
   $userOptions = '';
 
   $curUser = $_SESSION['Curr_user'];
 
-  $application_data = mysqli_query($con, "SELECT app_name, app_description, game_id, team_count, start_datetime, end_datetime, venue, city, state, organiser, created_by 
-                                          FROM event_application WHERE app_id = '$appID'");
+  $application_data = mysqli_query($con, "SELECT app.app_name, app.app_description, g.game_id, g.game_name, app.team_count, app.start_datetime, app.end_datetime, app.venue, app.city, app.state, app.organiser, app.created_by 
+                                          FROM event_application app JOIN games g ON app.game_id = g.game_id WHERE app_id = '$appID'");
   $data = mysqli_fetch_array($application_data);
 
   //Assign variables
   $app_name = isset($data['app_name']) ? $data['app_name'] : '';
   $app_desc = isset($data['app_description']) ? $data['app_description'] : '';
-  $game = isset($data['game_id']) ? $data['game_id'] : '';
+  $game_id = isset($data['game_id']) ? $data['game_id'] : '';
+  $game = isset($data['game_name']) ? $data['game_name'] : '';
   $max_reg_cnt = isset($data['team_count']) ? $data['team_count'] : '';
   $startDate = isset($data['start_datetime']) ? $data['start_datetime'] : '';
   $endDate = isset($data['end_datetime']) ? $data['end_datetime'] : '';
@@ -25,6 +27,17 @@
   $state = isset($data['state']) ? strtoupper($data['state']) : '';
   $org = isset($data['organiser']) ? $data['organiser'] : '';
   $created_by = isset($data['created_by']) ? $data['created_by'] : '';
+
+  //Generating options for games
+  $sql_games = mysqli_query($con,"SELECT game_id, game_name FROM games");
+  while($row = mysqli_fetch_array($sql_games)) {
+    $selected = '';
+    if ($row['game_id'] == $game_id) {
+      $selected = ' selected="selected"';
+    } 
+
+    $gameOptions .= '<option value="'.$row['game_id'].'"'.$selected.'>'.$row['game_name'].'</option>';
+  }
 
   //Generating options for the event admins and event staff selects
   $users = mysqli_query($con,"SELECT id, full_name, user_id FROM users WHERE status='authenticated' AND is_admin = '0'");
@@ -222,7 +235,7 @@ The above copyright notice and this permission notice shall be included in all c
                 </div>
                 <br>
                 <div class="card-body">
-                  <form id="createEventAppForm">
+                  <form id="createEventForm">
                     <div class="row">
                       <div class="col-md-12">
                         <div class="form-group">
@@ -258,10 +271,10 @@ The above copyright notice and this permission notice shall be included in all c
                     <br>
                     <div class="row">
                       <div class="col-md-3">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Game</label>
-                          <input type="text" class="form-control" name="game" value="<?php echo $game; ?>">
-                        </div>
+                        Game*
+                        <select class="select2 select2-game form-control" name="game" required>
+                          <?php echo $gameOptions; ?>
+                        </select>
                       </div>
                       <div class="col-md-3">
                         Registration Type*
@@ -525,12 +538,16 @@ The above copyright notice and this permission notice shall be included in all c
       minimumResultsForSearch: 20
     });
 
+    $('.select2-game').select2({
+      minimumResultsForSearch: 1
+    });
+
     $('.select2-ev-admin, .select2-ev-staff').select2({
       placeholder: 'Search for users using their name or user ID'
     });
   });
 
-  $(document).on('submit', '#createEventAppForm', function() {
+  $(document).on('submit', '#createEventForm', function() {
     // do not refresh form on submit so that notifications can be shown
     return false;
   });
@@ -554,7 +571,7 @@ The above copyright notice and this permission notice shall be included in all c
     var ev_desc = $("textarea[name='ev_desc']").val();
     var ev_type = $("select[name='ev_type']").val();
     var org = $("input[name='org']").val();
-    var game = $("input[name='game']").val();
+    var game = $("select[name='game']").val();
     var reg_type = $("select[name='reg_type']").val();
     var reg_max = $("input[name='reg_max']").val()
     var venue = $("input[name='venue']").val();
@@ -592,7 +609,10 @@ The above copyright notice and this permission notice shall be included in all c
                     //     allow_dismiss: true
                     // });
 
-                    Swal.fire({title: 'Success!', html: data['msg'], type: 'success'}); //Display error dialog
+                    Swal.fire({title: 'Success!', html: data['msg'], 
+                      type: 'success'}).then(function(){
+                        window.location.replace("create_event_front.php"); //Refresh page, remove get variable if exists
+                      });
                 } else {
                     // $.notify({
                     //     message: data['msg']
@@ -602,12 +622,6 @@ The above copyright notice and this permission notice shall be included in all c
                     // });
 
                     Swal.fire({title: 'Error!', html: data['msg'], type: 'error'}); //Display error dialog
-                }
-                
-                if (data['statusCode'] == 1) { //Only reset the form if success code is returned
-                  $('#createEventAppForm').trigger('reset'); //Empty all the form fields
-                  $('[name="startDate"]').prop('type', 'text');
-                  $('[name="endDate"]').prop('type', 'text'); //Remove 'dd/mm/yyyy' placeholder from start/end date
                 }
             },
             error: function(res) {

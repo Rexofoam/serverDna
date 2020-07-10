@@ -6,12 +6,13 @@
   session_start();
   $con = DatabaseConn();
 
-  $sql_pending = "SELECT app.`app_name`,app.`organiser`,app.`start_datetime`,app.`end_datetime`,u.`full_name`,app.`status`,app.`app_id` 
-                  FROM `event_application` app JOIN `users` u ON app.`created_by` = u.`id` 
+  $sql_pending = "SELECT app.`app_name`,g.`game_name`,app.`organiser`,app.`start_datetime`,app.`end_datetime`,u.`full_name`,app.`status`,app.`app_id` 
+                  FROM `event_application` app JOIN `users` u ON app.`created_by` = u.`id` JOIN `games` g ON app.`game_id` = g.`game_id`
                   WHERE app.`status` = 'pending'";
 
-  $sql_approved = "SELECT app.`app_name`,app.`organiser`,app.`start_datetime`,app.`end_datetime`,u.`full_name`,app.`status`,ev.`ev_id` 
-                  FROM `event_application` app JOIN `users` u ON app.`created_by` = u.`id` JOIN `events` ev ON app.`app_id` = ev.`app_id`
+  $sql_approved = "SELECT app.`app_name`,g.`game_name`,app.`organiser`,app.`start_datetime`,app.`end_datetime`,u.`full_name`,approved.`full_name`,app.`status`,ev.`ev_id`
+                  FROM `event_application` app JOIN `users` u ON app.`created_by` = u.`id` JOIN `events` ev ON app.`app_id` = ev.`app_id` JOIN `games` g ON app.`game_id` = g.`game_id`
+                    JOIN (SELECT app.`app_id`, u.`full_name` FROM `event_application` app JOIN `users` u ON app.`status_upd_by` = u.`id`) approved ON app.`app_id` = approved.`app_id`
                   WHERE app.`status` = 'approved'";
 
   $pending_applications = mysqli_query($con, $sql_pending);
@@ -187,9 +188,9 @@
                     <table class="table table-hover">
                       <thead class="">
                         <th>Event Name</th>
+                        <th>Game</th>
                         <th>Organiser</th>
-                        <th>Start Time</th>
-                        <th>End Time</th>
+                        <th>Date(s)</th>
                         <th>Created by</th>
                         <th>Status</th>
                         <th>Action</th>
@@ -201,10 +202,10 @@
                           <td><span><?php echo $row1[0];?></span></td>
                           <td><span><?php echo $row1[1];?></span></td>
                           <td><span><?php echo $row1[2];?></span></td>
-                          <td><span><?php echo $row1[3];?></span></td>
-                          <td><span><?php echo $row1[4];?></span></td>
+                          <td><span><?php echo date("d F Y", strtotime($row1[3])).' - '.date("d F Y", strtotime($row1[4]));?></span></td>
+                          <td><span><?php echo $row1[5];?></span></td>
                           <td style="color: red; font-weight: bold;"><span>Pending Review</span></td>
-                          <td><button  class ="btn-primary" style="border-color: transparent;" onclick="manage_app(<?php echo $row1[6];?>)">Manage</button>
+                          <td><button  class ="btn-primary" style="border-color: transparent;" onclick="manage_app(<?php echo $row1[7];?>)">Manage</button>
                         </tr>
                         <?php endwhile;?>
                         <?php } ?>
@@ -226,10 +227,11 @@
                     <table class="table table-hover">
                       <thead class="">
                         <th>Event Name</th>
+                        <th>Game</th>
                         <th>Organiser</th>
-                        <th>Start Time</th>
-                        <th>End Time</th>
+                        <th>Date(s)</th>
                         <th>Created by</th>
+                        <th>Approved by</th>
                         <th>Status</th>
                         <th>Action</th>
                       </thead>
@@ -240,10 +242,11 @@
                           <td><span><?php echo $row1[0];?></span></td>
                           <td><span><?php echo $row1[1];?></span></td>
                           <td><span><?php echo $row1[2];?></span></td>
-                          <td><span><?php echo $row1[3];?></span></td>
-                          <td><span><?php echo $row1[4];?></span></td>
+                          <td><span><?php echo date("d F Y", strtotime($row1[3])).' - '.date("d F Y", strtotime($row1[4]));?></span></td>
+                          <td><span><?php echo $row1[5];?></span></td>
+                          <td><span><?php echo $row1[6];?></span></td>
                           <td style="color: green; font-weight: bold;"><span>Approved</span></td>
-                          <td><button  class ="btn-primary" style="border-color: transparent;" onclick="view(<?php echo $row1[6];?>)">View</button>
+                          <td><button  class ="btn-primary" style="border-color: transparent;" onclick="view(<?php echo $row1[8];?>)">View</button>
                         </tr>
                         <?php endwhile;?>
                         <?php } ?>

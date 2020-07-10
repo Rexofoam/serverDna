@@ -6,6 +6,13 @@
   $con = DatabaseConn();
 
   $curUser = $_SESSION['Curr_user'];
+  $gameOptions = '';
+
+  //Generating options for games
+  $sql_games = mysqli_query($con,"SELECT game_id, game_name FROM games");
+  while($row = mysqli_fetch_array($sql_games)) {
+    $gameOptions .= '<option value="'.$row['game_id'].'">'.$row['game_name'].'</option>';
+  }
 
   $sql = mysqli_query($con,"SELECT mobile_number, email FROM users WHERE id = '$curUser'");
   $result = mysqli_fetch_array($sql);
@@ -234,10 +241,10 @@ The above copyright notice and this permission notice shall be included in all c
                         </div>
                       </div>
                       <div class="col-md-3">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Game</label>
-                          <input type="text" class="form-control" name="game">
-                        </div>
+                        Game
+                        <select class="select2 select2-game form-control" name="game">
+                          <?php echo $gameOptions; ?>
+                        </select>
                       </div>
                       <div class="col-md-3">
                         <div class="form-group">
@@ -509,6 +516,10 @@ The above copyright notice and this permission notice shall be included in all c
       minimumResultsForSearch: -1
     });
 
+    $('.select2-game').select2({
+      minimumResultsForSearch: 1
+    });
+
     // Default contact number and contact email states
     $('select[name="phone_select"]').val('0').trigger('change');
     $('select[name="email_select"]').val('0').trigger('change');
@@ -537,7 +548,7 @@ The above copyright notice and this permission notice shall be included in all c
     var app_name = $("input[name='app_name']").val();
     var app_desc = $("textarea[name='app_desc']").val();
     var org = $("input[name='org']").val();
-    var game = $("input[name='game']").val();
+    var game = $("select[name='game']").val();
     var teams = $("input[name='teams']").val()
     var venue = $("input[name='venue']").val();
     var city = $("input[name='city']").val();

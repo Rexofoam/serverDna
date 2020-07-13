@@ -18,7 +18,7 @@ The above copyright notice and this permission notice shall be included in all c
     <link rel="icon" type="image/png" href="assets/img/favicon.png">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <title>
-        Material Dashboard by Creative Tim
+        User Dashboard
     </title>
     <meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
     <!--     Fonts and icons     -->
@@ -56,33 +56,9 @@ The above copyright notice and this permission notice shall be included in all c
                         </a>
                     </li>
                     <li class="nav-item ">
-                        <a class="nav-link" href="./admin_create_user_front.php">
-                            <i class="material-icons">person_add</i>
-                            <p>Create New User</p>
-                        </a>
-                    </li>
-                    <li class="nav-item ">
-                        <a class="nav-link" href="./create_event_front.php">
-                            <i class="material-icons">emoji_events</i>
-                            <p>Create New Event</p>
-                        </a>
-                    </li>
-                    <li class="nav-item ">
-                        <a class="nav-link" href="./user_list.php">
-                            <i class="material-icons">content_paste</i>
-                            <p>Users List</p>
-                        </a>
-                    </li>
-                    <li class="nav-item ">
-                        <a class="nav-link" href="./event_application_list.php">
+                        <a class="nav-link" href="./create_event_application_front.php">
                             <i class="material-icons">insert_drive_file</i>
-                            <p>Event Applications</p>
-                        </a>
-                    </li>
-                    <li class="nav-item ">
-                        <a class="nav-link" href="./game_list.php">
-                            <i class="material-icons">sports_esports</i>
-                            <p>Games List</p>
+                            <p>New Event Application</p>
                         </a>
                     </li>
                     <li class="nav-item ">
@@ -138,19 +114,19 @@ The above copyright notice and this permission notice shall be included in all c
                         <a class="navbar-brand" href="javascript:;">Dashboard</a>
                     </div>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="navbar-toggler-icon icon-bar"></span>
-            <span class="navbar-toggler-icon icon-bar"></span>
-            <span class="navbar-toggler-icon icon-bar"></span>
-          </button>
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="navbar-toggler-icon icon-bar"></span>
+                        <span class="navbar-toggler-icon icon-bar"></span>
+                        <span class="navbar-toggler-icon icon-bar"></span>
+                    </button>
                     <div class="collapse navbar-collapse justify-content-end">
                         <form class="navbar-form">
                             <div class="input-group no-border">
                                 <input type="text" value="" class="form-control" placeholder="Search...">
                                 <button type="submit" class="btn btn-white btn-round btn-just-icon">
-                  <i class="material-icons">search</i>
-                  <div class="ripple-container"></div>
-                </button>
+                                    <i class="material-icons">search</i>
+                                    <div class="ripple-container"></div>
+                                </button>
                             </div>
                         </form>
                         <ul class="navbar-nav">

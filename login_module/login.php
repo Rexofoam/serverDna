@@ -29,9 +29,9 @@
 		$_SESSION["Curr_user"] = $result['id'];
 
 		if($result['is_admin'] == 1) {
-			header("Location: ../dashboard_module/dashboard.html");
+			header("Location: ../dashboard_module/dashboard.php");
 		} else {
-			header("Location: ../user_dashboard_module/dashboard.html");
+			header("Location: ../user_dashboard_module/dashboard.php");
 		}
 	}
 

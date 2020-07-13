@@ -226,7 +226,7 @@
                                                      value="<?php echo $userID ?>" required>
                                                 <br>
                                                 <div class="form-group">
-                                                    <label class="bmd-label-floating">User ID (Contact site admins to change your User ID)</label>
+                                                    <label class="bmd-label-floating">User ID (Please go to user list to change User ID)</label>
                                                     <input type="text" style="color: gray;" class="form-control" name="userid" value="<?php echo $user_id ?>" disabled>
                                                 </div>
                                             </div>

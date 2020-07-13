@@ -16,9 +16,10 @@
   $user_id = $details['user_id'];
   $mobile_number = $details['mobile_number'];
   $email = $details['email'];
-  $DoB = $details['DoB'];
-  $gender = $details['gender'];
-  $status = $details['status'];
+  $DoB = date("d F Y", strtotime($details['DoB']));
+  $gender = strtoupper($details['gender']);
+  $status = strtoupper($details['status']);
+  $last_upd = date("d F Y", strtotime($details['updated_at']));;
   $city = $details['city'];
   $state = $details['state'];
 ?>
@@ -133,7 +134,7 @@
             <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
                 <div class="container-fluid">
                     <div class="navbar-wrapper">
-                        <a class="navbar-brand" href="javascript:;">Edit user profile</a>
+                        <a class="navbar-brand" href="javascript:;">User Profile</a>
                     </div>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="sr-only">Toggle navigation</span>
@@ -201,102 +202,83 @@
                         <div class="col-md-11">
                             <div class="card">
                                 <div class="card-header card-header-primary">
-                                    <h4 class="card-title">Edit User</h4>
-                                    <p class="card-category">Fill in details below to update user profile</p>
+                                    <h4 class="card-title">My Profile</h4>
                                 </div>
+                                <br><br>
                                 <div class="card-body">
+                                    <div class="row">
+                                        <div class="card-profile col-md-3">
+                                            <div class="card-avatar">
+                                                <a href="javascript:;">
+                                                    <img class="img" src="assets/img/faces/marc.jpg"/>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <h6 class="card-category">Full Name</h6>
+                                                <label style="color: black"><?php echo $name;?></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <div class="form-group">
+                                                <h6 class="card-category">Gender</h6>
+                                                <label style="color: black"><?php echo $gender;?></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3"></div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <h6 class="card-category">User ID</h6>
+                                                <label style="color: black"><?php echo $user_id;?></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <h6 class="card-category">Date of Birth</h6>
+                                            <label style="color: black"><?php echo $DoB;?></label>
+                                        </div>
+                                    </div>
                                     <br><br>
-                                    <!-- <form action="admin_create_user_back.php" method="post"> -->
-                                    <form id="editUserForm">
-                                        <div class="row">
-                                            <div class="card-profile col-md-3">
-                                                <div class="card-avatar">
-                                                    <a href="javascript:;">
-                                                        <img class="img" src="assets/img/faces/marc.jpg" />
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-9">
-                                                <div class="form-group">
-                                                    <label class="bmd-label-floating">Full Name</label>
-                                                    <input type="text" class="form-control" name="name" 
-                                                     value="<?php echo $name ?>" required>
-                                                </div>
-                                                    <input type="hidden" name="user_id" 
-                                                     value="<?php echo $userID ?>" required>
-                                                <br>
-                                                <div class="form-group">
-                                                    <label class="bmd-label-floating">User ID (Contact site admins to change your User ID)</label>
-                                                    <input type="text" style="color: gray;" class="form-control" name="userid" value="<?php echo $user_id ?>" disabled>
-                                                </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <h6 class="card-category">Email</h6>
+                                                <label style="color: black"><?php echo $email;?></label>
                                             </div>
                                         </div>
-                                        <br>
-                                        <div class="row">
-                                            <div class="col-md-8">
-                                                <div class="form-group">
-                                                    <label class="bmd-label-floating">Date of Birth</label>
-                                                    <input placeholder="" class="form-control" type="text" onfocus="(this.type='date')" onblur="dateInputBehavior(this)" name="birthday"
-                                                    value="<?php echo $DoB ?>" required>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                Gender
-                                                <select class="select2 form-control" name="gender" required>
-                                                    <option value="male" <?php if ($gender == 'male') echo ' selected="selected"'; ?>>Male</option>
-                                                    <option value="female" <?php if ($gender == 'female') echo ' selected="selected"'; ?>>Female</option>
-                                                </select>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <h6 class="card-category">Phone Number</h6>
+                                                <label style="color: black"><?php echo $mobile_number;?></label>
                                             </div>
                                         </div>
-                                        <br>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="bmd-label-floating">Phone Number (eg 0123456789)</label>
-                                                    <input type="tel" class="form-control" name="phone" value="<?php echo $mobile_number ?>" pattern="01[0-9]{8,9}" required>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="bmd-label-floating">Email Address</label>
-                                                    <input type="email" class="form-control" name="email" value="<?php echo $email ?>" required>
-                                                </div>
+                                        <div class="col-md-5">
+                                            <div class="form-group">
+                                                <h6 class="card-category">Location</h6>
+                                                <label style="color: black"><?php echo $city.", ".$state;?></label>
                                             </div>
                                         </div>
-                                        <br>
-                                        <div class="row">
-                                            <div class="col-md-8">
-                                                <div class="form-group">
-                                                    <label class="bmd-label-floating">City</label>
-                                                    <input type="text" class="form-control" name="city" value="<?php echo $city ?>" required>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                State
-                                                <select class="select2 form-control" name="state" required>
-                                                    <option value="PERLIS" <?php if ($state == 'PERLIS') echo ' selected="selected"'; ?>>Perlis</option>
-                                                    <option value="PERAK" <?php if ($state == 'PERAK') echo ' selected="selected"'; ?>>Perak</option>
-                                                    <option value="KEDAH" <?php if ($state == 'KEDAH') echo ' selected="selected"'; ?>>Kedah</option>
-                                                    <option value="PENANG" <?php if ($state == 'PENANG') echo ' selected="selected"'; ?>>Penang</option>
-                                                    <option value="KELANTAN" <?php if ($state == 'KELANTAN') echo ' selected="selected"'; ?>>Kelantan</option>
-                                                    <option value="TERENGGANU" <?php if ($state == 'TERENGGANU') echo ' selected="selected"'; ?>>Terengganu</option>
-                                                    <option value="PAHANG" <?php if ($state == 'PAHANG') echo ' selected="selected"'; ?>>Pahang</option>
-                                                    <option value="SELANGOR" <?php if ($state == 'SELANGOR') echo ' selected="selected"'; ?>>Selangor</option>
-                                                    <option value="MELAKA" <?php if ($state == 'MELAKA') echo ' selected="selected"'; ?>>Melaka</option>
-                                                    <option value="NEGERI SEMBILAN" <?php if ($state == 'NEGERI SEMBILAN') echo ' selected="selected"'; ?>>Negeri Sembilan</option>
-                                                    <option value="JOHOR" <?php if ($state == 'JOHOR') echo ' selected="selected"'; ?>>Johor</option>
-                                                    <option value="SABAH" <?php if ($state == 'SABAH') echo ' selected="selected"'; ?>>Sabah</option>
-                                                    <option value="SARAWAK" <?php if ($state == 'SARAWAK') echo ' selected="selected"'; ?>>Sarawak</option>
-                                                    <option value="WILAYAH PERSEKUTUAN" <?php if ($state == 'WILAYAH PERSEKUTUAN') echo ' selected="selected"'; ?>>Wilayah Persekutuan</option>
-                                                </select>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-md-7">
+                                            <div class="form-group">
+                                                <h6 class="card-category">Status</h6>
+                                                <label style="color: black"><?php echo $status;?></label>
                                             </div>
                                         </div>
-                                        <br><br><br>
-                                        <span style="color: red;">* Fields are compulsory</span>
-                                        <button style="inline-block" type="submit" class="btn btn-primary pull-right" name="submitBtn">Save User</button>
-                                        <button style="inline-block" type="button" class="btn btn-warning pull-right" name="btnBack">Back</button>
-                                        <div class="clearfix"></div>
-                                    </form>
+                                        <div class="col-md-5">
+                                            <div class="form-group">
+                                                <h6 class="card-category">Last Updated</h6>
+                                                <label style="color: black"><?php echo $last_upd;?></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <button type="submit" class="btn btn-primary pull-right" onclick="edit(<?php echo $userID;?>)" name="editBtn">Edit</button>
+                                    <div class="clearfix"></div>
                                 </div>
                             </div>
                         </div>
@@ -386,81 +368,12 @@
     <!-- Material Dashboard DEMO methods, don't include it in your project! -->
     <script src="assets/demo/demo.js"></script>
     <script>
-        $(document).ready(function() {
-            $('.select2').select2({
-                minimumResultsForSearch: -1
-            });
+    function edit(id) {
+      var edit_url = "profile_edit_front.php"
 
-            $(document).on('submit', '#editUserForm', function() {
-                // do not refresh form on submit so that notifications can be shown
-                return false;
-            });
-
-            $(":button[name='btnBack']").click(function(){
-                var userid = "<?php echo $userID; ?>";
-                window.location.replace("profile_details.php?id=" + userid);
-            });
-
-            $(":button[name='submitBtn']").click(function(){
-                var user_id = $("input[name='user_id']").val();
-                var name = $("input[name='name']").val();
-                var phone = $("input[name='phone']").val();
-                var email = $("input[name='email']").val();
-                var gender = $("select[name='gender']").val()
-                var birthday = $("input[name='birthday']").val();
-                var city = $("input[name='city']").val();
-                var state = $("select[name='state']").val()
-
-                if (user_id != "" && name != "" && phone != "" && email != "" &&
-                    gender != "" && birthday != "" && city != "" && state != "") {
-                        
-                    $.ajax({
-                        url: 'profile_edit_back.php',
-                        type: 'POST',
-                        data: {user_id : user_id, name: name, phone: phone,
-                                email: email, gender: gender, birthday: birthday,
-                                city: city, state: state},
-                        success: function(res) {
-                            var data = JSON.parse(res);
-
-                            if (data['statusCode'] == 1) { //'1' is set as code for successful registration
-                                // $.notify({
-                                //     message: data['msg']
-                                // }, {
-                                //     type: 'success',
-                                //     allow_dismiss: true
-                                // });
-
-                                Swal.fire({title: 'Success!', html: data['msg'], 
-                                    type: 'success'}).then(function(){
-                                        window.location.replace("profile_details.php?id=" + user_id);
-                                    });
-                            } else {
-                                // $.notify({
-                                //     message: data['msg']
-                                // }, {
-                                //     type: 'danger',
-                                //     allow_dismiss: true
-                                // });
-
-                                Swal.fire({title: 'Error!', html: data['msg'], type: 'error'});
-                            }
-                        },
-                        error: function(res) {
-                            Swal.fire({title: 'Error!', html: 'We were unable to complete the operation.<br>Please try again later', type: 'error'});
-                        }
-                        });
-                }
-            });
-        });
-
-        function dateInputBehavior(e) {
-            if (e.value == "" || e.value == null) {
-                e.type = "text"; //Change input back to text to remove 'dd/mm/yyyy' placeholder
-            } else {
-                e.type = "date";
-            }
-        }
+      // redirect to edit page
+      window.location.replace(edit_url + "?id=" + id);
+    }
     </script>
 </body>
 

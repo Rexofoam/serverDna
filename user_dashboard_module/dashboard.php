@@ -1,3 +1,8 @@
+<?php
+  session_start();
+  $curUser = $_SESSION['Curr_user'];
+?>
+
 <!--
 =========================================================
 Material Dashboard - v2.1.2
@@ -44,7 +49,7 @@ The above copyright notice and this permission notice shall be included in all c
             <div class="sidebar-wrapper">
                 <ul class="nav">
                     <li class="nav-item active  ">
-                        <a class="nav-link" href="./dashboard.html">
+                        <a class="nav-link" href="./dashboard.php">
                             <i class="material-icons">dashboard</i>
                             <p>Dashboard</p>
                         </a>
@@ -53,6 +58,12 @@ The above copyright notice and this permission notice shall be included in all c
                         <a class="nav-link" href="./user.html">
                             <i class="material-icons">person</i>
                             <p>User Profile</p>
+                        </a>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link" href="./profile_details.php?id=<?php echo $curUser; ?>">
+                            <i class="material-icons">person</i>
+                            <p>My Profile</p>
                         </a>
                     </li>
                     <li class="nav-item ">
@@ -334,85 +345,85 @@ The above copyright notice and this permission notice shall be included in all c
                                                         <td>
                                                             <div class="form-check">
                                                                 <label class="form-check-label">
-                                  <input class="form-check-input" type="checkbox" value="" checked>
-                                  <span class="form-check-sign">
-                                    <span class="check"></span>
-                                  </span>
-                                </label>
+                                                                    <input class="form-check-input" type="checkbox" value="" checked>
+                                                                    <span class="form-check-sign">
+                                                                        <span class="check"></span>
+                                                                    </span>
+                                                                </label>
                                                             </div>
                                                         </td>
                                                         <td>Sign contract for "What are conference organizers afraid of?"</td>
                                                         <td class="td-actions text-right">
                                                             <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
-                                <i class="material-icons">edit</i>
-                              </button>
+                                                            <i class="material-icons">edit</i>
+                                                        </button>
                                                             <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-                                <i class="material-icons">close</i>
-                              </button>
+                                                            <i class="material-icons">close</i>
+                                                        </button>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td>
                                                             <div class="form-check">
                                                                 <label class="form-check-label">
-                                  <input class="form-check-input" type="checkbox" value="">
-                                  <span class="form-check-sign">
-                                    <span class="check"></span>
-                                  </span>
-                                </label>
+                                                                    <input class="form-check-input" type="checkbox" value="">
+                                                                    <span class="form-check-sign">
+                                                                        <span class="check"></span>
+                                                                    </span>
+                                                                </label>
                                                             </div>
                                                         </td>
                                                         <td>Lines From Great Russian Literature? Or E-mails From My Boss?</td>
                                                         <td class="td-actions text-right">
                                                             <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
-                                <i class="material-icons">edit</i>
-                              </button>
+                                                                <i class="material-icons">edit</i>
+                                                            </button>
                                                             <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-                                <i class="material-icons">close</i>
-                              </button>
+                                                                <i class="material-icons">close</i>
+                                                            </button>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td>
                                                             <div class="form-check">
                                                                 <label class="form-check-label">
-                                  <input class="form-check-input" type="checkbox" value="">
-                                  <span class="form-check-sign">
-                                    <span class="check"></span>
-                                  </span>
-                                </label>
+                                                                    <input class="form-check-input" type="checkbox" value="">
+                                                                    <span class="form-check-sign">
+                                                                        <span class="check"></span>
+                                                                    </span>
+                                                                </label>
                                                             </div>
                                                         </td>
                                                         <td>Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit
                                                         </td>
                                                         <td class="td-actions text-right">
                                                             <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
-                                <i class="material-icons">edit</i>
-                              </button>
+                                                            <i class="material-icons">edit</i>
+                                                        </button>
                                                             <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-                                <i class="material-icons">close</i>
-                              </button>
+                                                            <i class="material-icons">close</i>
+                                                        </button>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td>
                                                             <div class="form-check">
                                                                 <label class="form-check-label">
-                                  <input class="form-check-input" type="checkbox" value="" checked>
-                                  <span class="form-check-sign">
-                                    <span class="check"></span>
-                                  </span>
-                                </label>
+                                                                <input class="form-check-input" type="checkbox" value="" checked>
+                                                                <span class="form-check-sign">
+                                                                    <span class="check"></span>
+                                                                </span>
+                                                                </label>
                                                             </div>
                                                         </td>
                                                         <td>Create 4 Invisible User Experiences you Never Knew About</td>
                                                         <td class="td-actions text-right">
                                                             <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
-                                <i class="material-icons">edit</i>
-                              </button>
+                                                                <i class="material-icons">edit</i>
+                                                            </button>
                                                             <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-                                <i class="material-icons">close</i>
-                              </button>
+                                                                <i class="material-icons">close</i>
+                                                            </button>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -425,43 +436,43 @@ The above copyright notice and this permission notice shall be included in all c
                                                         <td>
                                                             <div class="form-check">
                                                                 <label class="form-check-label">
-                                  <input class="form-check-input" type="checkbox" value="" checked>
-                                  <span class="form-check-sign">
-                                    <span class="check"></span>
-                                  </span>
-                                </label>
+                                                                <input class="form-check-input" type="checkbox" value="" checked>
+                                                                <span class="form-check-sign">
+                                                                    <span class="check"></span>
+                                                                </span>
+                                                                </label>
                                                             </div>
                                                         </td>
                                                         <td>Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit
                                                         </td>
                                                         <td class="td-actions text-right">
                                                             <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
-                                <i class="material-icons">edit</i>
-                              </button>
+                                                                <i class="material-icons">edit</i>
+                                                            </button>
                                                             <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-                                <i class="material-icons">close</i>
-                              </button>
+                                                                <i class="material-icons">close</i>
+                                                            </button>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td>
                                                             <div class="form-check">
                                                                 <label class="form-check-label">
-                                  <input class="form-check-input" type="checkbox" value="">
-                                  <span class="form-check-sign">
-                                    <span class="check"></span>
-                                  </span>
-                                </label>
+                                                                <input class="form-check-input" type="checkbox" value="">
+                                                                <span class="form-check-sign">
+                                                                    <span class="check"></span>
+                                                                </span>
+                                                                </label>
                                                             </div>
                                                         </td>
                                                         <td>Sign contract for "What are conference organizers afraid of?"</td>
                                                         <td class="td-actions text-right">
                                                             <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
-                                <i class="material-icons">edit</i>
-                              </button>
+                                                                <i class="material-icons">edit</i>
+                                                            </button>
                                                             <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-                                <i class="material-icons">close</i>
-                              </button>
+                                                                <i class="material-icons">close</i>
+                                                            </button>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -474,64 +485,64 @@ The above copyright notice and this permission notice shall be included in all c
                                                         <td>
                                                             <div class="form-check">
                                                                 <label class="form-check-label">
-                                  <input class="form-check-input" type="checkbox" value="">
-                                  <span class="form-check-sign">
-                                    <span class="check"></span>
-                                  </span>
-                                </label>
+                                                                <input class="form-check-input" type="checkbox" value="">
+                                                                <span class="form-check-sign">
+                                                                    <span class="check"></span>
+                                                                </span>
+                                                                </label>
                                                             </div>
                                                         </td>
                                                         <td>Lines From Great Russian Literature? Or E-mails From My Boss?</td>
                                                         <td class="td-actions text-right">
                                                             <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
-                                <i class="material-icons">edit</i>
-                              </button>
+                                                                <i class="material-icons">edit</i>
+                                                            </button>
                                                             <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-                                <i class="material-icons">close</i>
-                              </button>
+                                                                <i class="material-icons">close</i>
+                                                            </button>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td>
                                                             <div class="form-check">
                                                                 <label class="form-check-label">
-                                  <input class="form-check-input" type="checkbox" value="" checked>
-                                  <span class="form-check-sign">
-                                    <span class="check"></span>
-                                  </span>
-                                </label>
+                                                                <input class="form-check-input" type="checkbox" value="" checked>
+                                                                <span class="form-check-sign">
+                                                                    <span class="check"></span>
+                                                                </span>
+                                                                </label>
                                                             </div>
                                                         </td>
                                                         <td>Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit
                                                         </td>
                                                         <td class="td-actions text-right">
                                                             <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
-                                <i class="material-icons">edit</i>
-                              </button>
+                                                                <i class="material-icons">edit</i>
+                                                            </button>
                                                             <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-                                <i class="material-icons">close</i>
-                              </button>
+                                                                <i class="material-icons">close</i>
+                                                            </button>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td>
                                                             <div class="form-check">
                                                                 <label class="form-check-label">
-                                  <input class="form-check-input" type="checkbox" value="" checked>
-                                  <span class="form-check-sign">
-                                    <span class="check"></span>
-                                  </span>
-                                </label>
+                                                                <input class="form-check-input" type="checkbox" value="" checked>
+                                                                <span class="form-check-sign">
+                                                                    <span class="check"></span>
+                                                                </span>
+                                                                </label>
                                                             </div>
                                                         </td>
                                                         <td>Sign contract for "What are conference organizers afraid of?"</td>
                                                         <td class="td-actions text-right">
                                                             <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
-                                <i class="material-icons">edit</i>
-                              </button>
+                                                                <i class="material-icons">edit</i>
+                                                            </button>
                                                             <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-                                <i class="material-icons">close</i>
-                              </button>
+                                                                <i class="material-icons">close</i>
+                                                            </button>
                                                         </td>
                                                     </tr>
                                                 </tbody>

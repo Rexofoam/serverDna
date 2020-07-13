@@ -13,8 +13,7 @@
     
     //Fetch user inputs
     $user_id = mysqli_real_escape_string($con, $_POST["user_id"]);
-    $name = mysqli_real_escape_string($con, $_POST["name"]); 
-    $userid = mysqli_real_escape_string($con, $_POST["userid"]);
+    $name = mysqli_real_escape_string($con, $_POST["name"]);
     $mobile_number = $_POST["phone"];
     $email = mysqli_real_escape_string($con, $_POST["email"]);
     $gender = $_POST["gender"];
@@ -38,7 +37,7 @@
     } else {
 
         //Add new user statement
-        $sql = "UPDATE `users` SET `full_name` = '$name', `user_id` = '$userid', `mobile_number` = '$mobile_number', `email` = '$email', `gender` = '$gender', `DoB` = '$birthday', `updated_at` = '$AccessTime', `city` = '$city', `state` = '$state' WHERE id = '$user_id'";
+        $sql = "UPDATE `users` SET `full_name` = '$name', `mobile_number` = '$mobile_number', `email` = '$email', `gender` = '$gender', `DoB` = '$birthday', `updated_at` = '$AccessTime', `city` = '$city', `state` = '$state' WHERE id = '$user_id'";
 
         if (!mysqli_query($con, $sql)) {
             $res = array(
@@ -51,7 +50,7 @@
         } else {
             $res = array(
                 "statusCode" => 1, 
-                "msg" => "Account details updated"
+                "msg" => "Your account details have been updated"
             );
             
             echo json_encode($res);

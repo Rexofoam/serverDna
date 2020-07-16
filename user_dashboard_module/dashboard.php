@@ -73,6 +73,12 @@ The above copyright notice and this permission notice shall be included in all c
                         </a>
                     </li>
                     <li class="nav-item ">
+                        <a class="nav-link" href="./team_list.php">
+                            <i class="material-icons">people_alt</i>
+                            <p>My Teams</p>
+                        </a>
+                    </li>
+                    <li class="nav-item ">
                         <a class="nav-link" href="./tables.html">
                             <i class="material-icons">content_paste</i>
                             <p>Table List</p>

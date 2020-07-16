@@ -35,38 +35,23 @@ CREATE TABLE `games` (
   `genres` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
   `created_by` int(11) NOT NULL,
   `created_at` datetime NOT NULL,
-  `updated_at` datetime
+  `updated_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `games` (`game_id`, `game_name`, `platforms`, `genres`, `created_by`, `created_at`, `updated_at`) VALUES
 (1, 'Dota 2', 'PC', 'MOBA,STRATEGY', '1', '2020-07-10', NULL);
 
--- --------------------------------------------------------
-
---
--- Table structure for table `teams`
---
-
-CREATE TABLE `teams` (
-  `id` int(11) NOT NULL,
-  `name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `created_at` datetime NOT NULL,
-  `delete_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
-
 --
 -- Table structure for table `team_game`
---
+-- Probably dont need this table since we can just put a games column in the teams table
 
-CREATE TABLE `team_game` (
-  `id` int(11) NOT NULL,
-  `team_id` int(11) NOT NULL,
-  `game_id` int(11) NOT NULL,
-  `created_at` datetime NOT NULL,
-  `delete_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+-- CREATE TABLE `team_game` (
+--   `id` int(11) NOT NULL,
+--   `team_id` int(11) NOT NULL,
+--   `game_id` int(11) NOT NULL,
+--   `created_at` datetime NOT NULL,
+--   `delete_at` datetime DEFAULT NULL
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -167,6 +152,32 @@ INSERT INTO `users` (`id`, `full_name`, `user_id`, `mobile_number`, `email`, `pa
 INSERT INTO `users` (`id`, `full_name`, `user_id`, `mobile_number`, `email`, `password`, `DoB`, `gender`, `status`, `accessed_at`, `updated_at`, `city`, `state`, `is_admin`) VALUES
 (2, 'ad', '333', '0123456710', 'ad@gmail.com', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', '0000-00-00', 'male', 'authenticated', '2020-05-08 00:00:00', '2020-06-08 20:23:58', 'Puchong', 'SELANGOR', '0');
 
+INSERT INTO `users` (`id`, `full_name`, `user_id`, `mobile_number`, `email`, `password`, `DoB`, `gender`, `status`, `accessed_at`, `updated_at`, `city`, `state`, `is_admin`) VALUES
+(3, 'ad2', '444', '0123456711', 'ad123@gmail.com', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', '0000-00-00', 'male', 'authenticated', '2020-05-08 00:00:00', '2020-06-08 20:23:58', 'Puchong', 'SELANGOR', '0');
+
+INSERT INTO `users` (`id`, `full_name`, `user_id`, `mobile_number`, `email`, `password`, `DoB`, `gender`, `status`, `accessed_at`, `updated_at`, `city`, `state`, `is_admin`) VALUES
+(4, 'ad3', '555', '0123456712', 'ad234@gmail.com', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', '0000-00-00', 'male', 'authenticated', '2020-05-08 00:00:00', '2020-06-08 20:23:58', 'Puchong', 'SELANGOR', '0');
+
+INSERT INTO `users` (`id`, `full_name`, `user_id`, `mobile_number`, `email`, `password`, `DoB`, `gender`, `status`, `accessed_at`, `updated_at`, `city`, `state`, `is_admin`) VALUES
+(5, 'ad4', '666', '0123456713', 'ad345@gmail.com', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', '0000-00-00', 'male', 'authenticated', '2020-05-08 00:00:00', '2020-06-08 20:23:58', 'Puchong', 'SELANGOR', '0');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `teams`
+--
+
+CREATE TABLE `teams` (
+  `team_id` int(11) NOT NULL,
+  `team_name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `games` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` int(11) NOT NULL,
+  `status` enum('pending','authenticated', '') COLLATE utf8_unicode_ci NOT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `delete_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 -- --------------------------------------------------------
 
 --
@@ -177,7 +188,9 @@ CREATE TABLE `user_teams` (
   `id` int(11) NOT NULL,
   `team_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `role` enum('captain','vice','player','') COLLATE utf8_unicode_ci NOT NULL,
+  `role` enum('captain','vice','player','substitute', '') COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` datetime NOT NULL,
+  `status` enum('pending', 'accepted', 'rejected', '') COLLATE utf8_unicode_ci NOT NULL,
   `delete_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -211,13 +224,13 @@ ALTER TABLE `games`
 -- Indexes for table `teams`
 --
 ALTER TABLE `teams`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`team_id`);
 
 --
 -- Indexes for table `team_game`
 --
-ALTER TABLE `team_game`
-  ADD PRIMARY KEY (`id`);
+-- ALTER TABLE `team_game`
+--   ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `events`
@@ -263,13 +276,13 @@ ALTER TABLE `games`
 -- AUTO_INCREMENT for table `teams`
 --
 ALTER TABLE `teams`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `team_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `team_game`
 --
-ALTER TABLE `team_game`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+-- ALTER TABLE `team_game`
+--   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `events`

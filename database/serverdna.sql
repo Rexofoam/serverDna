@@ -35,11 +35,12 @@ CREATE TABLE `games` (
   `genres` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
   `created_by` int(11) NOT NULL,
   `created_at` datetime NOT NULL,
-  `updated_at` datetime DEFAULT NULL
+  `updated_at` datetime DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `games` (`game_id`, `game_name`, `platforms`, `genres`, `created_by`, `created_at`, `updated_at`) VALUES
-(1, 'Dota 2', 'PC', 'MOBA,STRATEGY', '1', '2020-07-10', NULL);
+INSERT INTO `games` (`game_id`, `game_name`, `platforms`, `genres`, `created_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'Dota 2', 'PC', 'MOBA,STRATEGY', '1', '2020-07-10', NULL, NULL);
 
 --
 -- Table structure for table `team_game`

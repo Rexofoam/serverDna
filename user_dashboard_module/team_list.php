@@ -6,7 +6,7 @@
   session_start();
   $con = DatabaseConn();
 
-  $sql_teams = "SELECT `team_id`, `team_name`, `games`, `full_name`, `teams`.`status`
+  $sql_teams = "SELECT `team_id`, `team_name`, `full_name`, `teams`.`status`
                 FROM `teams` JOIN `users` ON `teams`.created_by = `users`.id";
 
   $teams = mysqli_query($con, $sql_teams);
@@ -184,7 +184,6 @@
                       <thead class="">
                         <th>Team Name</th>
                         <th>Created by</th>
-                        <th>Game(s)</th>
                         <th>Status</th>
                         <th>Action</th>
                       </thead>
@@ -194,8 +193,8 @@
                         <tr>
                           <td><span><?php echo $row1[1];?></span></td>
                           <td><span><?php echo $row1[2];?></span></td>
-                          <td><span><?php echo $row1[3];?></span></td>
-                          <td><span><?php echo $row1[4];?></span></td>
+                          <?php if ($row1[3] == 'pending') echo '<td style="color: red;"><span><b>'.strtoupper($row1[3]).'</b></span></td>'; 
+                                else echo '<td style="color: green;"><span><b>'.strtoupper($row1[3]).'</b></span></td>';?>
                           <td><button  class ="btn-primary" style="border-color: transparent;" onclick="view_team(<?php echo $row1[0];?>)">View</button>
                         </tr>
                         <?php endwhile;?>
@@ -261,10 +260,10 @@
     }
 
     function view_team(id) {
-      // var manage_url = "event_application_details.php"
+      var view_url = "team_details.php"
 
       // redirect to edit page
-      // window.location.href = manage_url + "?id=" + id;
+      window.location.href = view_url + "?id=" + id;
     }
   </script>
 

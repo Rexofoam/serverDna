@@ -3,30 +3,100 @@
 
   session_start();
   $con = DatabaseConn();
-  $userID = $_SESSION['Curr_user'];
-  $gameOptions = "";
-  $captOptions = "";
-  $userOptions = "";
+  $teamID = $_GET['id'];
 
-  //Game options
-  $sql_games = mysqli_query($con,"SELECT game_id, game_name FROM games");
-  while($row = mysqli_fetch_array($sql_games)) {
-    $gameOptions .= '<option value="'.$row['game_id'].'">'.$row['game_name'].'</option>';
+  // fetch all game details
+  $sql_games = "SELECT `game_id`, `game_name` FROM `games`";
+  $games = mysqli_fetch_all(mysqli_query($con, $sql_games), MYSQLI_ASSOC);
+
+  // fetch team details
+  $sql_detail = "SELECT t.`team_name`, t.`games`, t.`created_at`, u.`full_name`, t.`status`
+                 FROM `teams` t JOIN `users` u ON t.`created_by` = u.`id` WHERE t.`team_id` = '$teamID'";
+  $details = mysqli_fetch_array(mysqli_query($con, $sql_detail));
+
+  // assign variable
+  $team_name = $details['team_name'];
+  $games_arr = explode(",", $details['games']);
+  $created_at = date("d F Y", strtotime($details['created_at']));
+  $created_by = $details['full_name'];
+  $status = $details['status'];
+  $games_list = "";
+
+  // Transform list of games from ID list (1,4,5) to name list (Dota, LoL, CSGO)
+  foreach ($games_arr as $game) {
+    if ($games_list == "") $games_list .= $games[array_search($game, array_column($games, 'game_id'))]['game_name'];
+    else $games_list .= ", ".$games[array_search($game, array_column($games, 'game_id'))]['game_name'];
   }
 
-  //Generating options for team members
-  $users = mysqli_query($con,"SELECT id, full_name, user_id FROM users WHERE status='authenticated' AND is_admin = '0'");
-  while($row = mysqli_fetch_array($users)) {
-    $selected = "";
-    if ($row['id'] == $userID) {
-        $selected = ' selected="selected"';
-    } 
+  // fetch team member details
+  $sql_capt = "SELECT ut.`user_id`, u.`full_name`, ut.`role`, ut.`status` 
+                FROM `user_teams` ut JOIN `users` u ON ut.`user_id` = u.`id`
+                WHERE ut.`team_id` = '$teamID' AND ut.`role` = 'captain'";
+  $capt = mysqli_fetch_array(mysqli_query($con, $sql_capt));
 
-    $captOptions .= '<option value="'.$row['id'].'"'.$selected.'>'.$row['full_name'].' ('.$row['user_id'].')</option>';
-    $userOptions .= '<option value="'.$row['id'].'">'.$row['full_name'].' ('.$row['user_id'].')</option>';
+  $sql_vice = "SELECT ut.`user_id`, u.`full_name`, ut.`role`, ut.`status` 
+                FROM `user_teams` ut JOIN `users` u ON ut.`user_id` = u.`id`
+                WHERE ut.`team_id` = '$teamID' AND ut.`role` = 'vice'";
+  $vice = mysqli_fetch_array(mysqli_query($con, $sql_vice));
+
+  $sql_player = "SELECT ut.`user_id`, u.`full_name`, ut.`role`, ut.`status` 
+                FROM `user_teams` ut JOIN `users` u ON ut.`user_id` = u.`id`
+                WHERE ut.`team_id` = '$teamID' AND ut.`role` = 'player'";
+  $player = mysqli_fetch_all(mysqli_query($con, $sql_player), MYSQLI_ASSOC);
+
+  $playerCount = sizeof($player);
+  $playerHTML = generateSectionHTML($player);
+
+  $sql_sub = "SELECT ut.`user_id`, u.`full_name`, ut.`role`, ut.`status` 
+                FROM `user_teams` ut JOIN `users` u ON ut.`user_id` = u.`id`
+                WHERE ut.`team_id` = '$teamID' AND ut.`role` = 'sub'";
+  $sub = mysqli_fetch_all(mysqli_query($con, $sql_sub), MYSQLI_ASSOC);
+
+  $subCount = sizeof($sub);
+  $subHTML = generateSectionHTML($sub);
+
+  // function to generate html for a section
+  function generateSectionHTML($member_arr) {
+    $ctr = 0;
+    $memberCnt = sizeof($member_arr);
+    $html = "";
+
+    foreach($member_arr as $m) {
+        $newRow = $endRow = false;
+
+        //Print a new row for every 2 members
+        if ($ctr % 2 == 0) $html .= '<div class="row">';
+
+        $html .= generateMemberHTML($m['full_name'], $m['role'], $m['status']);
+
+        if ($ctr % 2 == 1) $html .= '</div><br><br>';
+        $ctr++;
+    }
+
+    if ($memberCnt % 2 == 1) $html .= '</div>'; //End row early if there's an odd number of members
+    
+    return $html;
   }
 
-  $help_msg = "Each member can only be assigned to one role. Only the captain and vice-captain can make changes to the team after creation.<br><br>All of the members listed below (except yourself) will receive an invitation to join the team.<br><br> Keep in the mind that new members can be invited at a later time, but all members entered here MUST accept their invitations for the team to be authenticated.";
+  // function to generate html for a single member
+  function generateMemberHTML($full_name, $role, $status) {
+    $html = "";
+    $statusText = "";
+
+    if ($status == 'pending') $statusText = ' <b style="color:red;">(PENDING INVITE)</b>';
+
+    $html .= '<div class="card-profile col-md-2">
+                    <div class="card-avatar">
+                        <img class="img" src="assets/img/faces/marc.jpg"/>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="card-category">'.strtoupper($role).'</h6>
+                    <label style="color: black">'.$full_name.$statusText.'</label>
+                </div>';
+
+    return $html;
+  }
 ?>
 
 <!DOCTYPE html>
@@ -204,72 +274,112 @@
             <div class="content">
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-4">
                             <div class="card">
                                 <div class="card-header card-header-primary">
-                                    <h4 class="card-title">New Team</h4>
-                                    <p class="card-category">Create a team and add members for convenient tournament registration!</p>
+                                    <h4 class="card-title">Team Details</h4>
                                 </div>
                                 <div class="card-body">
-                                    <br>
-                                    <form id="createTeamForm">
+                                    <div class="row">
+                                        <div class="col-md-11">
+                                            <div class="form-group">
+                                                <h6 class="card-category">Team Name</h6>
+                                                <label style="color: black"><?php echo $team_name;?></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-11">
+                                            <div class="form-group">
+                                                <h6 class="card-category">Games</h6>
+                                                <label style="color: black"><?php echo $games_list;?></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <div class="form-group">
+                                                <h6 class="card-category">Created by</h6>
+                                                <label style="color: black"><?php echo $created_by;?></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <div class="form-group">
+                                                <h6 class="card-category">Date of Creation</h6>
+                                                <label style="color: black"><?php echo $created_at;?></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-11">
+                                            <div class="form-group">
+                                                <h6 class="card-category">Status</h6>
+                                                <?php if ($status == 'pending') echo '<label style="color: red"><b>'.strtoupper($status).'</b></label>'; 
+                                                    else echo '<label style="color: green"><b>'.strtoupper($status).'</b></label>';?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-primary pull-right" onclick="edit(<?php echo $teamID;?>)" name="editBtn">Edit Team</button>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="card">
+                                    <div class="card-header card-header-primary">
+                                        <h4 class="card-title">Captains</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <br><br>
                                         <div class="row">
-                                            <div class="col-md-8">
-                                                <div class="form-group">
-                                                    <label class="bmd-label-floating">Team Name*</label>
-                                                    <input type="text" class="form-control" name="team_name" required>
+                                            <div class="card-profile col-md-2">
+                                                <div class="card-avatar">
+                                                    <img width="10" height="10" class="img" src="assets/img/faces/marc.jpg"/>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
-                                                <select class="select2 select2-game form-control" name="games" multiple="multiple">
-                                                    <?php echo $gameOptions; ?>
-                                                </select>
+                                                <h6 class="card-category">CAPTAIN</h6>
+                                                <label style="color: black"><?php echo $capt['full_name'];?></label>
                                             </div>
-                                        </div>
-                                        <br><br>
-                                        <h4 style="display: inline-block;">Team Members</h4>
-                                        <div style="display: inline-block;">
-                                            <button class="icon-button" type="button" onclick="md.showNotification('top','right', '<?php echo $help_msg; ?>')"><i class="material-icons" style="font-size:20px;">help</i></button>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                Team Captain*
-                                                <select class="select2 form-control" name="team_capt" required>
-                                                    <?php echo $captOptions; ?>
-                                                </select>
+                                            <div class="card-profile col-md-2">
+                                                <div class="card-avatar">
+                                                    <img width="10" height="10" class="img" src="assets/img/faces/marc.jpg"/>
+                                                </div>
                                             </div>
-                                            <div class="col-md-6">
-                                                Team Vice-Captain
-                                                <select class="select2 form-control" name="team_vice">
-                                                    <option value="" selected="selected">None</option>
-                                                    <?php echo $userOptions; ?>
-                                                </select>
+                                            <div class="col-md-4">
+                                                <h6 class="card-category">VICE CAPTAIN</h6>
+                                                <label style="color: black"><?php if (isset($vice) && sizeof($vice) > 0) echo $vice['full_name']; else echo 'None';?></label>
                                             </div>
                                         </div>
                                         <br>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                Players*
-                                                <select class="select2 select2-player form-control" name="team_members" multiple="multiple" required>
-                                                    <?php echo $userOptions; ?>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                Substitutes
-                                                <select class="select2 select2-sub form-control" name="team_subs" multiple="multiple">
-                                                    <?php echo $userOptions; ?>
-                                                </select>
-                                            </div>
-                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="card">
+                                    <div class="card-header card-header-primary">
+                                        <h4 class="card-title">Players</h4>
+                                        <p class="card-category">Player Count: <?php echo $playerCount; ?></p>
+                                    </div>
+                                    <div class="card-body">
                                         <br><br>
-                                        <span style="color: red;">* Fields are compulsory</span>
-                                        <button style="inline-block" type="submit" class="btn btn-primary pull-right" name="submitBtn">Create Team</button>
-                                        <button style="inline-block" type="button" class="btn btn-warning pull-right" name="btnBack">Back</button>
-                                        <div class="clearfix"></div>
-                                    </form>
+                                        <?php echo $playerHTML; ?>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="card">
+                                    <div class="card-header card-header-primary">
+                                        <h4 class="card-title">Substitutes</h4>
+                                        <p class="card-category">Sub Count: <?php echo $subCount; ?></p>
+                                    </div>
+                                    <div class="card-body">
+                                        <br><br>
+                                        <?php echo $subHTML; ?>
+                                        <br>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -359,57 +469,12 @@
     <!-- Material Dashboard DEMO methods, don't include it in your project! -->
     <script src="assets/demo/demo.js"></script>
     <script>
-        $(document).ready(function() {
-            $('.select2').select2();
+    function edit(id) {
+      var edit_url = "team_edit_front.php"
 
-            $('.select2-game').select2({
-                placeholder: 'Please select the game(s) your team plays'
-            });
-
-            $(document).on('submit', '#createTeamForm', function() {
-                // do not refresh form on submit so that notifications can be shown
-                return false;
-            });
-
-            $(":button[name='btnBack']").click(function(){
-                window.location.replace("team_list.php");
-            });
-
-            $(":button[name='submitBtn']").click(function(){
-                var team_name = $("input[name='team_name']").val();
-                var games = $("select[name='games']").val();
-                var team_capt = $("select[name='team_capt']").val();
-                var team_vice = $("select[name='team_vice']").val();
-                var team_members = $("select[name='team_members']").val();
-                var team_subs = $("select[name='team_subs']").val();
-                var created_by = '<?php echo $userID; ?>';
-
-                if (team_name != "" && team_capt != "" && team_members != "") {
-                    $.ajax({
-                        url: 'team_create_back.php',
-                        type: 'POST',
-                        data: {team_name : team_name, games: games, team_capt: team_capt,
-                               team_vice: team_vice, team_members: team_members, team_subs: team_subs,
-                               created_by: created_by},
-                        success: function(res) {
-                            var data = JSON.parse(res);
-
-                            if (data['statusCode'] == 1) { //'1' is set as code for successful registration
-                                Swal.fire({title: 'Success!', html: data['msg'], 
-                                    type: 'success'}).then(function(){
-                                        window.location.replace("team_list.php");
-                                    });
-                            } else {
-                                Swal.fire({title: 'Error!', html: data['msg'], type: 'error'});
-                            }
-                        },
-                        error: function(res) {
-                            Swal.fire({title: 'Error!', html: 'We were unable to complete the operation.<br>Please try again later', type: 'error'});
-                        }
-                        });
-                }
-            });
-        });
+      // redirect to edit page
+      window.location.replace(edit_url + "?id=" + id);
+    }
     </script>
 </body>
 

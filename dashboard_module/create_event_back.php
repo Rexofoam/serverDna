@@ -34,24 +34,24 @@
     $approved_by = $_POST["approved_by"];
     $app_id = $_POST["app_id"];
 
-    $ev_admins = "";
-    $ev_staff = "";
+    // $ev_admins = "";
+    // $ev_staff = "";
 
-    //Turning arrays into strings for event admins and staff
-    for ($ctr = 0; $ctr < sizeof($ev_admins_arr); $ctr++) {
-        if ($ctr == 0) $ev_admins .= $ev_admins_arr[$ctr];
-        else $ev_admins .= ','.$ev_admins_arr[$ctr];
-    }
+    // //Turning arrays into strings for event admins and staff
+    // for ($ctr = 0; $ctr < sizeof($ev_admins_arr); $ctr++) {
+    //     if ($ctr == 0) $ev_admins .= $ev_admins_arr[$ctr];
+    //     else $ev_admins .= ','.$ev_admins_arr[$ctr];
+    // }
 
-    for ($ctr = 0; $ctr < sizeof($ev_staff_arr); $ctr++) {
-        if ($ctr == 0) $ev_staff .= $ev_staff_arr[$ctr];
-        else $ev_staff .= ','.$ev_staff_arr[$ctr];
-    }
+    // for ($ctr = 0; $ctr < sizeof($ev_staff_arr); $ctr++) {
+    //     if ($ctr == 0) $ev_staff .= $ev_staff_arr[$ctr];
+    //     else $ev_staff .= ','.$ev_staff_arr[$ctr];
+    // }
 
     //Add new event statement
     $sql = "INSERT INTO `events` VALUES (NULL, '$ev_name', '$ev_desc', '$ev_type', '$game', 
             '$reg_type', '$reg_max', '0', '$startDate', '$endDate', '$venue', '$city', '$state', '$org', 
-            '$ev_admins', '$ev_staff', '$applied_by', '$approved_by', '$AccessTime', '$app_id', 'open',
+            '$applied_by', '$approved_by', '$AccessTime', '$app_id', 'open',
             NULL, NULL);";
 
     if (!mysqli_query($con, $sql)) {
@@ -63,17 +63,31 @@
         echo json_encode($res);
 
     } else {
-        //Update event application statement
-        $sql2 = "UPDATE `event_application` SET `status` = 'approved', `status_upd_at` = '$AccessTime', `status_upd_by` = '$approved_by' WHERE app_id = '$app_id'";
+        //Get the last inserted id
+        $ev_id = mysqli_insert_id($con);
+        $userEventStatement = "";
 
-        if (!mysqli_query($con, $sql2)) {
+        //Generate insert statements for every user
+        foreach($ev_admins_arr as $admin) {
+            $userEventStatement .= genUserEventStatement($ev_id, $admin, 'admin', $AccessTime);
+        }
+
+        if (isset($ev_staff_arr) && sizeof($ev_staff_arr) > 0) {
+            foreach($ev_staff_arr as $staff) {
+                $userEventStatement .= genUserEventStatement($ev_id, $staff, 'staff', $AccessTime);
+            }
+        }
+
+        //Add status update for event application
+        $userEventStatement .= "UPDATE `event_application` SET `status` = 'approved', `status_upd_at` = '$AccessTime', `status_upd_by` = '$approved_by' WHERE app_id = '$app_id'";
+
+        if (!mysqli_multi_query($con, $userEventStatement)) {
             $res = array(
                 "statusCode" => 0, 
-                "msg" => "Event successfully created but event application could not be updated. Please contact a site admin regarding this issue"
+                "msg" => "Event successfully created but an error was encountered with one of the following:<br>1. Assigning user permissions<br>2. Updating event application status<br><br>Please contact a site admin regarding this issue."
             );
     
             echo json_encode($res);
-
         } else {
             $res = array(
                 "statusCode" => 1, 
@@ -82,6 +96,13 @@
     
             echo json_encode($res);
         }
+    }
+
+    //=========================================================================== FUNCTIONS ==============================================================
+
+    function genUserEventStatement($ev_id, $user_id, $role, $AccessTime) {
+        $sql = "INSERT INTO `user_events` VALUES (NULL, '$ev_id', '$user_id', '$role', '$AccessTime', NULL, NULL);";
+        return $sql;
     }
 
 ?>

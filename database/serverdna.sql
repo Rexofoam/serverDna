@@ -74,8 +74,6 @@ CREATE TABLE `events` (
   `city` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `state` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `organisers` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
-  `ev_admins` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  `ev_staff` varchar(100) COLLATE utf8_unicode_ci,
   `applied_by` int(11) NOT NULL,
   `approved_by` int(11) NOT NULL,
   `approved_at` datetime NOT NULL,
@@ -200,13 +198,13 @@ CREATE TABLE `user_teams` (
 -- Table structure for table `user_tournament`
 --
 
-CREATE TABLE `user_tournament` (
+CREATE TABLE `user_events` (
   `id` int(11) NOT NULL,
+  `ev_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `tournament_id` int(11) NOT NULL,
-  `role` enum('sudoadmin','tournament_admin','staff','player') COLLATE utf8_unicode_ci NOT NULL,
+  `role` enum('admin','staff','player') COLLATE utf8_unicode_ci NOT NULL,
   `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -257,9 +255,9 @@ ALTER TABLE `user_teams`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `user_tournament`
+-- Indexes for table `user_events`
 --
-ALTER TABLE `user_tournament`
+ALTER TABLE `user_events`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -309,9 +307,9 @@ ALTER TABLE `user_teams`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `user_tournament`
+-- AUTO_INCREMENT for table `user_events`
 --
-ALTER TABLE `user_tournament`
+ALTER TABLE `user_events`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 

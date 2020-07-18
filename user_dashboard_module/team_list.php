@@ -5,9 +5,11 @@
 
   session_start();
   $con = DatabaseConn();
+  $userID = $_SESSION['Curr_user'];
 
-  $sql_teams = "SELECT `team_id`, `team_name`, `full_name`, `teams`.`status`
-                FROM `teams` JOIN `users` ON `teams`.created_by = `users`.id";
+  $sql_teams = "SELECT t.`team_id`, t.`team_name`, u.`full_name`, t.`status`
+                FROM `teams` t JOIN `user_teams` ut ON t.`team_id` = ut.`team_id` JOIN `users` u ON ut.`user_id` = u.`id`
+                WHERE ut.`user_id` = '$userID'";
 
   $teams = mysqli_query($con, $sql_teams);
 ?>

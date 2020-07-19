@@ -4,60 +4,26 @@
   session_start();
   $con = DatabaseConn();
   $userID = $_SESSION['Curr_user'];
-  $teamID = $_GET['id'];
   $gameOptions = "";
-  $captOptions = $viceOptions = $playOptions = $subOptions = "";
-
-  //Get existing team details
-  $sql_team = mysqli_fetch_array(mysqli_query($con, "SELECT team_name, games FROM teams WHERE team_id = '$teamID'"));
-  $team_name = $sql_team['team_name'];
-  $team_game = explode(",", $sql_team['games']);
-
-  $capt = mysqli_fetch_array(mysqli_query($con, "SELECT user_id FROM user_teams WHERE team_id = '$teamID' AND role = 'captain'"));
-  $vice = mysqli_fetch_array(mysqli_query($con, "SELECT user_id FROM user_teams WHERE team_id = '$teamID' AND role = 'vice'"));
-  $play = mysqli_fetch_all(mysqli_query($con, "SELECT user_id FROM user_teams WHERE team_id = '$teamID' AND role = 'player'"), MYSQLI_ASSOC);
-  $sub = mysqli_fetch_all(mysqli_query($con, "SELECT user_id FROM user_teams WHERE team_id = '$teamID' AND role = 'substitute'"), MYSQLI_ASSOC);
+  $captOptions = "";
+  $userOptions = "";
 
   //Game options
   $sql_games = mysqli_query($con,"SELECT game_id, game_name FROM games");
   while($row = mysqli_fetch_array($sql_games)) {
-    $selected = "";
-    if (in_array($row['game_id'], $team_game)) {
-        $selected = ' selected="selected"';
-    } 
-
-    $gameOptions .= '<option value="'.$row['game_id'].'"'.$selected.'>'.$row['game_name'].'</option>';
+    $gameOptions .= '<option value="'.$row['game_id'].'">'.$row['game_name'].'</option>';
   }
 
   //Generating options for team members
   $users = mysqli_query($con,"SELECT id, full_name, user_id FROM users WHERE status='authenticated' AND is_admin = '0'");
   while($row = mysqli_fetch_array($users)) {
-    $captSelected = $viceSelected = $playSelected = $subSelected = "";
-
-    if ($row['id'] == $capt['user_id']) {
-        $captSelected = ' selected="selected"';
+    $selected = "";
+    if ($row['id'] == $userID) {
+        $selected = ' selected="selected"';
     } 
 
-    if (isset($vice) && sizeof($vice) > 0) {
-        if ($row['id'] == $vice['user_id']) {
-            $viceSelected = ' selected="selected"';
-        } 
-    }
-
-    if (in_array($row['id'], array_column($play, 'user_id'))) {
-        $playSelected = ' selected="selected"';
-    }
-
-    if (isset($sub) && sizeof($sub) > 0) {
-        if (in_array($row['id'], array_column($sub, 'user_id'))) {
-            $subSelected = ' selected="selected"';
-        }
-    }
-
-    $captOptions .= '<option value="'.$row['id'].'"'.$captSelected.'>'.$row['full_name'].' ('.$row['user_id'].')</option>';
-    $viceOptions .= '<option value="'.$row['id'].'"'.$viceSelected.'>'.$row['full_name'].' ('.$row['user_id'].')</option>';
-    $playOptions .= '<option value="'.$row['id'].'"'.$playSelected.'>'.$row['full_name'].' ('.$row['user_id'].')</option>';
-    $subOptions .= '<option value="'.$row['id'].'"'.$subSelected.'>'.$row['full_name'].' ('.$row['user_id'].')</option>';
+    $captOptions .= '<option value="'.$row['id'].'"'.$selected.'>'.$row['full_name'].' ('.$row['user_id'].')</option>';
+    $userOptions .= '<option value="'.$row['id'].'">'.$row['full_name'].' ('.$row['user_id'].')</option>';
   }
 
   $help_msg = "Each member can only be assigned to one role. Only the captain and vice-captain can make changes to the team after creation.<br><br>All of the members listed below (except yourself) will receive an invitation to join the team.<br><br> Keep in the mind that new members can be invited at a later time, but all members entered here MUST accept their invitations for the team to be authenticated.";
@@ -251,7 +217,7 @@
                                             <div class="col-md-8">
                                                 <div class="form-group">
                                                     <label class="bmd-label-floating">Team Name*</label>
-                                                    <input type="text" class="form-control" name="team_name" value="<?php echo $team_name;?>" required>
+                                                    <input type="text" class="form-control" name="team_name" required>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
@@ -276,7 +242,7 @@
                                                 Team Vice-Captain
                                                 <select class="select2 form-control" name="team_vice">
                                                     <option value="" selected="selected">None</option>
-                                                    <?php echo $viceOptions; ?>
+                                                    <?php echo $userOptions; ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -285,7 +251,7 @@
                                             <div class="col-md-12">
                                                 Players*
                                                 <select class="select2 select2-player form-control" name="team_members" multiple="multiple" required>
-                                                    <?php echo $playOptions; ?>
+                                                    <?php echo $userOptions; ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -294,13 +260,13 @@
                                             <div class="col-md-12">
                                                 Substitutes
                                                 <select class="select2 select2-sub form-control" name="team_subs" multiple="multiple">
-                                                    <?php echo $subOptions; ?>
+                                                    <?php echo $userOptions; ?>
                                                 </select>
                                             </div>
                                         </div>
                                         <br><br>
                                         <span style="color: red;">* Fields are compulsory</span>
-                                        <button style="inline-block" type="submit" class="btn btn-primary pull-right" name="submitBtn">Update Team</button>
+                                        <button style="inline-block" type="submit" class="btn btn-primary pull-right" name="submitBtn">Create Team</button>
                                         <button style="inline-block" type="button" class="btn btn-warning pull-right" name="btnBack">Back</button>
                                         <div class="clearfix"></div>
                                     </form>
@@ -406,32 +372,32 @@
             });
 
             $(":button[name='btnBack']").click(function(){
-                var teamID = '<?php echo $teamID; ?>';
-                window.location.replace("team_details.php?id=" + teamID);
+                window.location.replace("team_list.php");
             });
 
             $(":button[name='submitBtn']").click(function(){
-                var team_id = '<?php echo $teamID; ?>';
                 var team_name = $("input[name='team_name']").val();
                 var games = $("select[name='games']").val();
                 var team_capt = $("select[name='team_capt']").val();
                 var team_vice = $("select[name='team_vice']").val();
                 var team_members = $("select[name='team_members']").val();
                 var team_subs = $("select[name='team_subs']").val();
+                var created_by = '<?php echo $userID; ?>';
 
                 if (team_name != "" && team_capt != "" && team_members != "") {
                     $.ajax({
-                        url: 'team_edit_back.php',
+                        url: 'team_create_back.php',
                         type: 'POST',
-                        data: {team_id: team_id, team_name : team_name, games: games, team_capt: team_capt,
-                               team_vice: team_vice, team_members: team_members, team_subs: team_subs},
+                        data: {team_name : team_name, games: games, team_capt: team_capt,
+                               team_vice: team_vice, team_members: team_members, team_subs: team_subs,
+                               created_by: created_by},
                         success: function(res) {
                             var data = JSON.parse(res);
 
                             if (data['statusCode'] == 1) { //'1' is set as code for successful registration
                                 Swal.fire({title: 'Success!', html: data['msg'], 
                                     type: 'success'}).then(function(){
-                                        window.location.replace("team_details.php?id=" + team_id);
+                                        window.location.replace("team_list.php");
                                     });
                             } else {
                                 Swal.fire({title: 'Error!', html: data['msg'], type: 'error'});

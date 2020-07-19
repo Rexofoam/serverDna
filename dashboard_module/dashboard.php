@@ -91,6 +91,12 @@ The above copyright notice and this permission notice shall be included in all c
                             </a>
                         </li>
                         <li class="nav-item ">
+                            <a class="nav-link" href="./team_list.php">
+                                <i class="material-icons">people_alt</i>
+                                <p>Team List</p>
+                            </a>
+                        </li>
+                        <li class="nav-item ">
                             <a class="nav-link" href="./game_list.php">
                                 <i class="material-icons">sports_esports</i>
                                 <p>Games List</p>

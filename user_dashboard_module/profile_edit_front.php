@@ -3,7 +3,7 @@
 
   session_start();
   $con = DatabaseConn();
-  $userID = $_GET['id'];
+  $userID = $_SESSION["Curr_user"];
 
   // fetch user id
   $sql_detail = "SELECT * FROM `users` WHERE `id` = '$userID'";
@@ -21,6 +21,7 @@
   $status = $details['status'];
   $city = $details['city'];
   $state = $details['state'];
+  $url = $details['image_url'];
 ?>
 
 <!DOCTYPE html>
@@ -32,7 +33,7 @@
     <link rel="icon" type="image/png" href="assets/img/favicon.png">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <title>
-        Material Dashboard by Creative Tim
+        Update Profile
     </title>
     <meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
     <!-- Bootstrap Select CSS -->
@@ -207,14 +208,16 @@
                                 <div class="card-body">
                                     <br><br>
                                     <!-- <form action="admin_create_user_back.php" method="post"> -->
-                                    <form id="editUserForm">
+                                    <form action="profile_edit_back.php" method="post" enctype="multipart/form-data">
                                         <div class="row">
                                             <div class="card-profile col-md-3">
                                                 <div class="card-avatar">
                                                     <a href="javascript:;">
-                                                        <img class="img" src="assets/img/faces/marc.jpg" />
+                                                        <img id="img_profile" class="img" src="<?php echo $url ?>" onerror=this.src="../public/images/default.png" />
                                                     </a>
                                                 </div>
+                                                <br>
+                                                <input type="file" id="fileToUpload" name="fileToUpload" accept="image/*" onchange="displayImg(this)">
                                             </div>
                                             <div class="col-md-9">
                                                 <div class="form-group">
@@ -386,79 +389,25 @@
     <!-- Material Dashboard DEMO methods, don't include it in your project! -->
     <script src="assets/demo/demo.js"></script>
     <script>
-        $(document).ready(function() {
-            $('.select2').select2({
-                minimumResultsForSearch: -1
-            });
-
-            $(document).on('submit', '#editUserForm', function() {
-                // do not refresh form on submit so that notifications can be shown
-                return false;
-            });
-
-            $(":button[name='btnBack']").click(function(){
-                var userid = "<?php echo $userID; ?>";
-                window.location.replace("profile_details.php?id=" + userid);
-            });
-
-            $(":button[name='submitBtn']").click(function(){
-                var user_id = $("input[name='user_id']").val();
-                var name = $("input[name='name']").val();
-                var phone = $("input[name='phone']").val();
-                var email = $("input[name='email']").val();
-                var gender = $("select[name='gender']").val()
-                var birthday = $("input[name='birthday']").val();
-                var city = $("input[name='city']").val();
-                var state = $("select[name='state']").val()
-
-                if (user_id != "" && name != "" && phone != "" && email != "" &&
-                    gender != "" && birthday != "" && city != "" && state != "") {
-                        
-                    $.ajax({
-                        url: 'profile_edit_back.php',
-                        type: 'POST',
-                        data: {user_id : user_id, name: name, phone: phone,
-                                email: email, gender: gender, birthday: birthday,
-                                city: city, state: state},
-                        success: function(res) {
-                            var data = JSON.parse(res);
-
-                            if (data['statusCode'] == 1) { //'1' is set as code for successful registration
-                                // $.notify({
-                                //     message: data['msg']
-                                // }, {
-                                //     type: 'success',
-                                //     allow_dismiss: true
-                                // });
-
-                                Swal.fire({title: 'Success!', html: data['msg'], 
-                                    type: 'success'}).then(function(){
-                                        window.location.replace("profile_details.php?id=" + user_id);
-                                    });
-                            } else {
-                                // $.notify({
-                                //     message: data['msg']
-                                // }, {
-                                //     type: 'danger',
-                                //     allow_dismiss: true
-                                // });
-
-                                Swal.fire({title: 'Error!', html: data['msg'], type: 'error'});
-                            }
-                        },
-                        error: function(res) {
-                            Swal.fire({title: 'Error!', html: 'We were unable to complete the operation.<br>Please try again later', type: 'error'});
-                        }
-                        });
-                }
-            });
-        });
-
         function dateInputBehavior(e) {
             if (e.value == "" || e.value == null) {
                 e.type = "text"; //Change input back to text to remove 'dd/mm/yyyy' placeholder
             } else {
                 e.type = "date";
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        function displayImg(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#img_profile')
+                        .attr('src', e.target.result);
+                };
+
+                reader.readAsDataURL(input.files[0]);
             }
         }
     </script>

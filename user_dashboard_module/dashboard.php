@@ -61,7 +61,7 @@ The above copyright notice and this permission notice shall be included in all c
                         </a>
                     </li>
                     <li class="nav-item ">
-                        <a class="nav-link" href="./profile_details.php?id=<?php echo $curUser; ?>">
+                        <a class="nav-link" href="./profile_details.php">
                             <i class="material-icons">person</i>
                             <p>My Profile</p>
                         </a>

@@ -3,8 +3,14 @@
 
   session_start();
   $con = DatabaseConn();
-  $userID = $_GET['id'];
+  $userID = $_SESSION["Curr_user"];
 
+  if (isset($_SESSION['update_response']) ) {
+      $response = $_SESSION['update_response'];
+      unset($_SESSION['update_response']);
+  } else {
+      $response = null;
+  }
   // fetch user id
   $sql_detail = "SELECT * FROM `users` WHERE `id` = '$userID'";
 
@@ -22,6 +28,7 @@
   $last_upd = date("d F Y", strtotime($details['updated_at']));;
   $city = $details['city'];
   $state = $details['state'];
+  $url = $details['image_url'];
 ?>
 
 <!DOCTYPE html>
@@ -53,7 +60,7 @@
     <!--===============================================================================================-->  
 </head>
 
-<body class="">
+<body class="" onload="fetchUpdateResponse()">
     <div class="wrapper ">
         <div class="sidebar" data-color="purple" data-background-color="white" data-image="assets/img/sidebar-1.jpg">
             <!--
@@ -210,7 +217,7 @@
                                         <div class="card-profile col-md-3">
                                             <div class="card-avatar">
                                                 <a href="javascript:;">
-                                                    <img class="img" src="assets/img/faces/marc.jpg"/>
+                                                    <img class="img" src="<?php echo $url ?>" onerror=this.src="../public/images/default.png" />
                                                 </a>
                                             </div>
                                         </div>
@@ -374,8 +381,13 @@
       var edit_url = "profile_edit_front.php"
 
       // redirect to edit page
-      window.location.replace(edit_url + "?id=" + id);
+      window.location.replace(edit_url);
     }
+    </script>
+    <script type="text/javascript">
+        function fetchUpdateResponse() {
+            console.log("<?php echo $response; ?>");
+        }
     </script>
 </body>
 

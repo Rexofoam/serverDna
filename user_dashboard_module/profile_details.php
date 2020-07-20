@@ -386,7 +386,18 @@
     </script>
     <script type="text/javascript">
         function fetchUpdateResponse() {
-            console.log("<?php echo $response; ?>");
+            var response = "<?php echo $response; ?>";
+            if(response == null || response == "") {
+
+            } else {
+                if(response == "success") {
+                    Swal.fire({title: 'Success!', html: "Profile has been updated !", type: 'success'});
+                } else {
+                    Swal.fire({title: 'Failed!', html: response, type: 'error'});
+                }
+            }
+
+
         }
     </script>
 </body>

@@ -400,6 +400,12 @@
     <script type="text/javascript">
         function displayImg(input) {
             if (input.files && input.files[0]) {
+                if(input.files[0].size > 2000000) {
+                    Swal.fire({title: 'Failed!', html: "Image too large. Max image size 2MB !", type: 'error'});
+
+                    return;
+                }
+
                 var reader = new FileReader();
 
                 reader.onload = function (e) {

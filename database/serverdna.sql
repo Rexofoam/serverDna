@@ -85,7 +85,7 @@ CREATE TABLE `event_application` (
 --
 
 INSERT INTO `event_application` (`app_id`, `app_name`, `app_description`, `game_id`, `team_count`, `start_datetime`, `end_datetime`, `venue`, `city`, `state`, `organiser`, `created_by`, `created_at`, `contact_method`, `contact_no`, `contact_email`, `status`, `status_upd_at`, `status_upd_by`, `deleted_at`) VALUES
-(1, 'Some Dota 2 Tournament with a randomly long name', 'Some Dota 2 Tournament with a randomly long name', 1, 16, '2020-06-11 00:00:00', '2020-06-13 00:00:00', 'Taylor\'s University', 'Petaling Jaya', 'Selangor', 'ONE Esports', 2, '2020-06-06 00:00:00', 'Email', '0186632500', 'oneesports@gmail.com', 'pending', NULL, NULL, NULL);
+(1, 'Some Dota 2 Tournament with a randomly long name', 'Some Dota 2 Tournament with a randomly long name', 1, 16, '2020-06-11 00:00:00', '2020-06-13 00:00:00', 'Taylor''s University', 'Petaling Jaya', 'Selangor', 'ONE Esports', 2, '2020-06-06 00:00:00', 'Email', '0186632500', 'oneesports@gmail.com', 'pending', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 

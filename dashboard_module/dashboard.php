@@ -55,12 +55,6 @@ The above copyright notice and this permission notice shall be included in all c
                             </a>
                         </li>
                         <li class="nav-item ">
-                            <a class="nav-link" href="./user.html">
-                                <i class="material-icons">person</i>
-                                <p>User Profile</p>
-                            </a>
-                        </li>
-                        <li class="nav-item ">
                             <a class="nav-link" href="./profile_details.php?id=<?php echo $curUser; ?>">
                                 <i class="material-icons">person</i>
                                 <p>My Profile</p>
@@ -87,7 +81,7 @@ The above copyright notice and this permission notice shall be included in all c
                         <li class="nav-item ">
                             <a class="nav-link" href="./event_application_list.php">
                                 <i class="material-icons">insert_drive_file</i>
-                                <p>Event Applications</p>
+                                <p>Event Applications List</p>
                             </a>
                         </li>
                         <li class="nav-item ">
@@ -100,42 +94,6 @@ The above copyright notice and this permission notice shall be included in all c
                             <a class="nav-link" href="./game_list.php">
                                 <i class="material-icons">sports_esports</i>
                                 <p>Games List</p>
-                            </a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link" href="./tables.html">
-                                <i class="material-icons">content_paste</i>
-                                <p>Table List</p>
-                            </a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link" href="./typography.html">
-                                <i class="material-icons">library_books</i>
-                                <p>Typography</p>
-                            </a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link" href="./icons.html">
-                                <i class="material-icons">bubble_chart</i>
-                                <p>Icons</p>
-                            </a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link" href="./map.html">
-                                <i class="material-icons">location_ons</i>
-                                <p>Maps</p>
-                            </a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link" href="./notifications.html">
-                                <i class="material-icons">notifications</i>
-                                <p>Notifications</p>
-                            </a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link" href="./rtl.html">
-                                <i class="material-icons">language</i>
-                                <p>RTL Support</p>
                             </a>
                         </li>
                         <li class="nav-item active-pro ">

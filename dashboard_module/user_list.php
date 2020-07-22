@@ -43,53 +43,53 @@
         </a></div>
       <div class="sidebar-wrapper">
         <ul class="nav">
-          <li class="nav-item  ">
-            <a class="nav-link" href="./dashboard.php">
-              <i class="material-icons">dashboard</i>
-              <p>Dashboard</p>
-            </a>
+          <li class="nav-item ">
+              <a class="nav-link" href="./dashboard.php">
+                  <i class="material-icons">dashboard</i>
+                  <p>Dashboard</p>
+              </a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link" href="./user.html">
-              <i class="material-icons">person</i>
-              <p>User Profile</p>
-            </a>
-          </li>
-          <li class="nav-item active ">
-            <a class="nav-link" href="./tables.html">
-              <i class="material-icons">content_paste</i>
-              <p>Table List</p>
-            </a>
+              <a class="nav-link" href="./profile_details.php?id=<?php echo $curUser; ?>">
+                  <i class="material-icons">person</i>
+                  <p>My Profile</p>
+              </a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link" href="./typography.html">
-              <i class="material-icons">library_books</i>
-              <p>Typography</p>
-            </a>
+              <a class="nav-link" href="./admin_create_user_front.php">
+                  <i class="material-icons">person_add</i>
+                  <p>Create New User</p>
+              </a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link" href="./icons.html">
-              <i class="material-icons">bubble_chart</i>
-              <p>Icons</p>
-            </a>
+              <a class="nav-link" href="./create_event_front.php">
+                  <i class="material-icons">emoji_events</i>
+                  <p>Create New Event</p>
+              </a>
+          </li>
+          <li class="nav-item active">
+              <a class="nav-link" href="./user_list.php">
+                  <i class="material-icons">content_paste</i>
+                  <p>Users List</p>
+              </a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link" href="./map.html">
-              <i class="material-icons">location_ons</i>
-              <p>Maps</p>
-            </a>
+              <a class="nav-link" href="./event_application_list.php">
+                  <i class="material-icons">insert_drive_file</i>
+                  <p>Event Applications List</p>
+              </a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link" href="./notifications.html">
-              <i class="material-icons">notifications</i>
-              <p>Notifications</p>
-            </a>
+              <a class="nav-link" href="./team_list.php">
+                  <i class="material-icons">people_alt</i>
+                  <p>Team List</p>
+              </a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link" href="./rtl.html">
-              <i class="material-icons">language</i>
-              <p>RTL Support</p>
-            </a>
+              <a class="nav-link" href="./game_list.php">
+                  <i class="material-icons">sports_esports</i>
+                  <p>Games List</p>
+              </a>
           </li>
           <li class="nav-item active-pro ">
             <a class="nav-link" href="./upgrade.html">

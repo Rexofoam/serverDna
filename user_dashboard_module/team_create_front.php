@@ -5,8 +5,9 @@
   $con = DatabaseConn();
   $userID = $_SESSION['Curr_user'];
   $gameOptions = "";
-  $captOptions = "";
-  $userOptions = "";
+
+  $sql_user = mysqli_fetch_array(mysqli_query($con, "SELECT email FROM users WHERE id = '$userID'"));
+  $cur_user_email = $sql_user['email'];
 
   //Game options
   $sql_games = mysqli_query($con,"SELECT game_id, game_name FROM games");
@@ -14,19 +15,7 @@
     $gameOptions .= '<option value="'.$row['game_id'].'">'.$row['game_name'].'</option>';
   }
 
-  //Generating options for team members
-  $users = mysqli_query($con,"SELECT id, full_name, user_id FROM users WHERE status='authenticated' AND is_admin = '0'");
-  while($row = mysqli_fetch_array($users)) {
-    $selected = "";
-    if ($row['id'] == $userID) {
-        $selected = ' selected="selected"';
-    } 
-
-    $captOptions .= '<option value="'.$row['id'].'"'.$selected.'>'.$row['full_name'].' ('.$row['user_id'].')</option>';
-    $userOptions .= '<option value="'.$row['id'].'">'.$row['full_name'].' ('.$row['user_id'].')</option>';
-  }
-
-  $help_msg = "Each member can only be assigned to one role. Only the captain and vice-captain can make changes to the team after creation.<br><br>All of the members listed below (except yourself) will receive an invitation to join the team.<br><br> Keep in the mind that new members can be invited at a later time, but all members entered here MUST accept their invitations for the team to be authenticated.";
+  $help_msg = "Each member can only be assigned to one role. Only the captain and vice-captain can make changes to the team after creation.<br><br>All of the members listed below (except yourself) will receive an invitation to join the team.";
 ?>
 
 <!DOCTYPE html>
@@ -231,18 +220,22 @@
                                         <div style="display: inline-block;">
                                             <button class="icon-button" type="button" onclick="md.showNotification('top','right', '<?php echo $help_msg; ?>')"><i class="material-icons" style="font-size:20px;">help</i></button>
                                         </div>
+                                        <br>
+                                        Enter the <b>EMAIL ADDRESS(ES)</b> of <b>existing</b> users in their respective roles (Captain, Vice-captain, etc..) below to invite them to the team.<br>
+                                        You can invite multiple members in the <b>Players</b> and <b>Substitutes</b> roles. Press <b>ENTER</b> or <b>SPACE</b> to finish entering an email address.<br>
+                                        All inputs are CaSe SeNsItIvE
+                                        <br><br>
                                         <div class="row">
                                             <div class="col-md-6">
                                                 Team Captain*
-                                                <select class="select2 form-control" name="team_capt" required>
-                                                    <?php echo $captOptions; ?>
+                                                <select class="select2 select2-member form-control" name="team_capt" required>
+                                                    <option value='<?php echo $cur_user_email; ?>'><?php echo $cur_user_email; ?></option>
                                                 </select>
                                             </div>
                                             <div class="col-md-6">
                                                 Team Vice-Captain
-                                                <select class="select2 form-control" name="team_vice">
-                                                    <option value="" selected="selected">None</option>
-                                                    <?php echo $userOptions; ?>
+                                                <select class="select2 select2-member form-control" name="team_vice">
+                                                    <option value=' '>None</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -250,8 +243,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 Players*
-                                                <select class="select2 select2-player form-control" name="team_members" multiple="multiple" required>
-                                                    <?php echo $userOptions; ?>
+                                                <select class="select2 select2-member form-control" name="team_members" multiple="multiple" required>
                                                 </select>
                                             </div>
                                         </div>
@@ -259,8 +251,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 Substitutes
-                                                <select class="select2 select2-sub form-control" name="team_subs" multiple="multiple">
-                                                    <?php echo $userOptions; ?>
+                                                <select class="select2 select2-member form-control" name="team_subs" multiple="multiple">
                                                 </select>
                                             </div>
                                         </div>
@@ -364,6 +355,17 @@
 
             $('.select2-game').select2({
                 placeholder: 'Please select the game(s) your team plays'
+            });
+
+            $('.select2-member').select2({
+                placeholder: 'Please enter the email address of members you wish to invite to the team',
+                tags: true,
+                tokenSeparators: [' '],
+                "language": {
+                    "noResults": function(){
+                        return "Type out the email address of members you wish to invite in this role, finish typing by pressing SPACE or ENTER.";
+                    }
+                }
             });
 
             $(document).on('submit', '#createTeamForm', function() {

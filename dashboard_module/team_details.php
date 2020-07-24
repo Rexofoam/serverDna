@@ -14,7 +14,7 @@
   $games = mysqli_fetch_all(mysqli_query($con, $sql_games), MYSQLI_ASSOC);
 
   // fetch team details
-  $sql_detail = "SELECT t.`team_name`, t.`games`, t.`created_at`, u.`full_name`, t.`status`
+  $sql_detail = "SELECT t.`team_name`, t.`games`, t.`created_at`, u.`full_name`
                  FROM `teams` t JOIN `users` u ON t.`created_by` = u.`id` WHERE t.`team_id` = '$teamID'";
   $details = mysqli_fetch_array(mysqli_query($con, $sql_detail));
 
@@ -23,7 +23,6 @@
   $games_arr = explode(",", $details['games']);
   $created_at = date("d F Y", strtotime($details['created_at']));
   $created_by = $details['full_name'];
-  $status = $details['status'];
   $games_list = "";
 
   // Transform list of games from ID list (1,4,5) to name list (Dota, LoL, CSGO)
@@ -314,15 +313,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-11">
-                                            <div class="form-group">
-                                                <h6 class="card-category">Status</h6>
-                                                <?php if ($status == 'pending') echo '<label style="color: red"><b>'.strtoupper($status).'</b></label>'; 
-                                                    else echo '<label style="color: green"><b>'.strtoupper($status).'</b></label>';?>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <br>
                                     <?php if ($canEdit) echo '<button type="button" class="btn btn-primary pull-right" onclick="edit('.$teamID.')" name="editBtn">Edit Team</button>'; ?>
                                     <div class="clearfix"></div>
                                 </div>
@@ -482,16 +473,10 @@
     <script src="assets/demo/demo.js"></script>
     <script>
     function edit(id) {
-        var status = '<?php echo $status; ?>';
+        var edit_url = "team_edit_front.php"
 
-        // if (status == 'pending') {
-        //     Swal.fire({title: 'Warning!', html: 'Team Details cannot be edited until team is authenticated!<br><br>All members must accept their invites for the team to be authenticated.', type: 'warning'});
-        // } else {
-            var edit_url = "team_edit_front.php"
-
-            // redirect to edit page
-            window.location.href = edit_url + "?id=" + id;
-        // }
+        // redirect to edit page
+        window.location.href = edit_url + "?id=" + id;
     }
     </script>
 </body>

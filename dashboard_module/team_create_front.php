@@ -5,8 +5,9 @@
   $con = DatabaseConn();
   $userID = $_SESSION['Curr_user'];
   $gameOptions = "";
-  $captOptions = "";
-  $userOptions = "";
+
+  $sql_user = mysqli_fetch_array(mysqli_query($con, "SELECT email FROM users WHERE id = '$userID'"));
+  $cur_user_email = $sql_user['email'];
 
   //Game options
   $sql_games = mysqli_query($con,"SELECT game_id, game_name FROM games");
@@ -14,19 +15,7 @@
     $gameOptions .= '<option value="'.$row['game_id'].'">'.$row['game_name'].'</option>';
   }
 
-  //Generating options for team members
-  $users = mysqli_query($con,"SELECT id, full_name, user_id FROM users WHERE status='authenticated' AND is_admin = '0'");
-  while($row = mysqli_fetch_array($users)) {
-    $selected = "";
-    if ($row['id'] == $userID) {
-        $selected = ' selected="selected"';
-    } 
-
-    $captOptions .= '<option value="'.$row['id'].'"'.$selected.'>'.$row['full_name'].' ('.$row['user_id'].')</option>';
-    $userOptions .= '<option value="'.$row['id'].'">'.$row['full_name'].' ('.$row['user_id'].')</option>';
-  }
-
-  $help_msg = "Each member can only be assigned to one role. Only the captain and vice-captain can make changes to the team after creation.<br><br>All of the members listed below (except yourself) will receive an invitation to join the team.<br><br> Keep in the mind that new members can be invited at a later time, but all members entered here MUST accept their invitations for the team to be authenticated.";
+  $help_msg = "Each member can only be assigned to one role. Only the captain and vice-captain can make changes to the team after creation.<br><br>All of the members listed below (except yourself) will receive an invitation to join the team.";
 ?>
 
 <!DOCTYPE html>
@@ -71,52 +60,58 @@
         </a></div>
             <div class="sidebar-wrapper">
                 <ul class="nav">
-                    <li class="nav-item ">
+                    <li class="nav-item  ">
                         <a class="nav-link" href="./dashboard.php">
                             <i class="material-icons">dashboard</i>
                             <p>Dashboard</p>
                         </a>
                     </li>
-                    <li class="nav-item ">
-                        <a class="nav-link" href="./profile_details.php?id=<?php echo $curUser; ?>">
+                    <li class="nav-item">
+                        <a class="nav-link" href="./user.html">
                             <i class="material-icons">person</i>
-                            <p>My Profile</p>
+                            <p>User Profile</p>
                         </a>
                     </li>
-                    <li class="nav-item ">
+                    <li class="nav-item active">
                         <a class="nav-link" href="./admin_create_user_front.php">
                             <i class="material-icons">person_add</i>
                             <p>Create New User</p>
                         </a>
                     </li>
                     <li class="nav-item ">
-                        <a class="nav-link" href="./create_event_front.php">
-                            <i class="material-icons">emoji_events</i>
-                            <p>Create New Event</p>
-                        </a>
-                    </li>
-                    <li class="nav-item ">
-                        <a class="nav-link" href="./user_list.php">
+                        <a class="nav-link" href="./tables.html">
                             <i class="material-icons">content_paste</i>
-                            <p>Users List</p>
+                            <p>Table List</p>
                         </a>
                     </li>
                     <li class="nav-item ">
-                        <a class="nav-link" href="./event_application_list.php">
-                            <i class="material-icons">insert_drive_file</i>
-                            <p>Event Applications List</p>
-                        </a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="./team_list.php">
-                            <i class="material-icons">people_alt</i>
-                            <p>Team List</p>
+                        <a class="nav-link" href="./typography.html">
+                            <i class="material-icons">library_books</i>
+                            <p>Typography</p>
                         </a>
                     </li>
                     <li class="nav-item ">
-                        <a class="nav-link" href="./game_list.php">
-                            <i class="material-icons">sports_esports</i>
-                            <p>Games List</p>
+                        <a class="nav-link" href="./icons.html">
+                            <i class="material-icons">bubble_chart</i>
+                            <p>Icons</p>
+                        </a>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link" href="./map.html">
+                            <i class="material-icons">location_ons</i>
+                            <p>Maps</p>
+                        </a>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link" href="./notifications.html">
+                            <i class="material-icons">notifications</i>
+                            <p>Notifications</p>
+                        </a>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link" href="./rtl.html">
+                            <i class="material-icons">language</i>
+                            <p>RTL Support</p>
                         </a>
                     </li>
                     <li class="nav-item active-pro ">
@@ -225,18 +220,22 @@
                                         <div style="display: inline-block;">
                                             <button class="icon-button" type="button" onclick="md.showNotification('top','right', '<?php echo $help_msg; ?>')"><i class="material-icons" style="font-size:20px;">help</i></button>
                                         </div>
+                                        <br>
+                                        Enter the <b>EMAIL ADDRESS(ES)</b> of <b>existing</b> users in their respective roles (Captain, Vice-captain, etc..) below to invite them to the team.<br>
+                                        You can invite multiple members in the <b>Players</b> and <b>Substitutes</b> roles. Press <b>ENTER</b> or <b>SPACE</b> to finish entering an email address.<br>
+                                        All inputs are CaSe SeNsItIvE
+                                        <br><br>
                                         <div class="row">
                                             <div class="col-md-6">
                                                 Team Captain*
-                                                <select class="select2 form-control" name="team_capt" required>
-                                                    <?php echo $captOptions; ?>
+                                                <select class="select2 select2-member form-control" name="team_capt" required>
+                                                    <option value='<?php echo $cur_user_email; ?>'><?php echo $cur_user_email; ?></option>
                                                 </select>
                                             </div>
                                             <div class="col-md-6">
                                                 Team Vice-Captain
-                                                <select class="select2 form-control" name="team_vice">
-                                                    <option value="" selected="selected">None</option>
-                                                    <?php echo $userOptions; ?>
+                                                <select class="select2 select2-member form-control" name="team_vice">
+                                                    <option value=' '>None</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -244,8 +243,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 Players*
-                                                <select class="select2 select2-player form-control" name="team_members" multiple="multiple" required>
-                                                    <?php echo $userOptions; ?>
+                                                <select class="select2 select2-member form-control" name="team_members" multiple="multiple" required>
                                                 </select>
                                             </div>
                                         </div>
@@ -253,8 +251,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 Substitutes
-                                                <select class="select2 select2-sub form-control" name="team_subs" multiple="multiple">
-                                                    <?php echo $userOptions; ?>
+                                                <select class="select2 select2-member form-control" name="team_subs" multiple="multiple">
                                                 </select>
                                             </div>
                                         </div>
@@ -358,6 +355,17 @@
 
             $('.select2-game').select2({
                 placeholder: 'Please select the game(s) your team plays'
+            });
+
+            $('.select2-member').select2({
+                placeholder: 'Please enter the email address of members you wish to invite to the team',
+                tags: true,
+                tokenSeparators: [' '],
+                "language": {
+                    "noResults": function(){
+                        return "Type out the email address of members you wish to invite in this role, finish typing by pressing SPACE or ENTER.";
+                    }
+                }
             });
 
             $(document).on('submit', '#createTeamForm', function() {

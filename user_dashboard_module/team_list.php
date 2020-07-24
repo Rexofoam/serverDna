@@ -7,7 +7,7 @@
   $con = DatabaseConn();
   $userID = $_SESSION['Curr_user'];
 
-  $sql_teams = "SELECT t.`team_id`, t.`team_name`, u.`full_name`, t.`status`
+  $sql_teams = "SELECT t.`team_id`, t.`team_name`, u.`full_name`
                 FROM `teams` t JOIN `user_teams` ut ON t.`team_id` = ut.`team_id` JOIN `users` u ON ut.`user_id` = u.`id`
                 WHERE ut.`user_id` = '$userID'";
 
@@ -186,7 +186,6 @@
                       <thead class="">
                         <th>Team Name</th>
                         <th>Created by</th>
-                        <th>Status</th>
                         <th>Action</th>
                       </thead>
                       <tbody>
@@ -195,8 +194,6 @@
                         <tr>
                           <td><span><?php echo $row1[1];?></span></td>
                           <td><span><?php echo $row1[2];?></span></td>
-                          <?php if ($row1[3] == 'pending') echo '<td style="color: red;"><span><b>'.strtoupper($row1[3]).'</b></span></td>'; 
-                                else echo '<td style="color: green;"><span><b>'.strtoupper($row1[3]).'</b></span></td>';?>
                           <td><button  class ="btn-primary" style="border-color: transparent;" onclick="view_team(<?php echo $row1[0];?>)">View</button>
                         </tr>
                         <?php endwhile;?>

@@ -123,7 +123,6 @@ CREATE TABLE `teams` (
   `games` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` datetime NOT NULL,
   `created_by` int(11) NOT NULL,
-  `status` enum('pending','authenticated','') COLLATE utf8_unicode_ci NOT NULL,
   `updated_at` datetime DEFAULT NULL,
   `delete_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -132,8 +131,8 @@ CREATE TABLE `teams` (
 -- Dumping data for table `teams`
 --
 
-INSERT INTO `teams` (`team_id`, `team_name`, `games`, `created_at`, `created_by`, `status`, `updated_at`, `delete_at`) VALUES
-(1, '123', '1', '2020-07-21 21:04:37', 58, 'pending', NULL, NULL);
+INSERT INTO `teams` (`team_id`, `team_name`, `games`, `created_at`, `created_by`, `updated_at`, `delete_at`) VALUES
+(1, '123', '1', '2020-07-21 21:04:37', 58, NULL, NULL);
 
 -- --------------------------------------------------------
 

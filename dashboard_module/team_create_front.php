@@ -222,8 +222,7 @@
                                         </div>
                                         <br>
                                         Enter the <b>EMAIL ADDRESS(ES)</b> of <b>existing</b> users in their respective roles (Captain, Vice-captain, etc..) below to invite them to the team.<br>
-                                        You can invite multiple members in the <b>Players</b> and <b>Substitutes</b> roles. Press <b>ENTER</b> or <b>SPACE</b> to finish entering an email address.<br>
-                                        All inputs are CaSe SeNsItIvE
+                                        You can invite multiple members in the <b>Players</b> and <b>Substitutes</b> roles. Press <b>ENTER</b> or <b>SPACE</b> to finish entering an email address.
                                         <br><br>
                                         <div class="row">
                                             <div class="col-md-6">

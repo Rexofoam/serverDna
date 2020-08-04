@@ -244,8 +244,7 @@
                                         </div>
                                         <br>
                                         Enter the <b>EMAIL ADDRESS(ES)</b> of <b>existing</b> users in their respective roles (Captain, Vice-captain, etc..) below to invite them to the team.<br>
-                                        You can invite multiple members in the <b>Players</b> and <b>Substitutes</b> roles. Press <b>ENTER</b> or <b>SPACE</b> to finish entering an email address.<br>
-                                        All inputs are CaSe SeNsItIvE<br><br>
+                                        You can invite multiple members in the <b>Players</b> and <b>Substitutes</b> roles. Press <b>ENTER</b> or <b>SPACE</b> to finish entering an email address.<br><br>
                                         <b>BE CAREFUL:</b> Removing any of the team's current members from this form <b>WILL REMOVE</b> them from the team, and they will have to be re-invited to rejoin the team.
                                         <br><br>
                                         <div class="row">

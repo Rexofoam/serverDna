@@ -80,8 +80,13 @@
 
     } else {
 
-        //Add new user statement
-        $sql = "UPDATE `users` SET `full_name` = '$name', `mobile_number` = '$mobile_number', `email` = '$email', `gender` = '$gender', `DoB` = '$birthday', `updated_at` = '$AccessTime', `city` = '$city', `state` = '$state', `image_url` = '$fileDestination' WHERE id = '$user_id'";
+        if(strlen($fileDestination) < 1) {
+            $sql = "UPDATE `users` SET `full_name` = '$name', `mobile_number` = '$mobile_number', `email` = '$email', `gender` = '$gender', `DoB` = '$birthday', `updated_at` = '$AccessTime', `city` = '$city', `state` = '$state' WHERE id = '$user_id'";
+        }
+        else {
+            $sql = "UPDATE `users` SET `full_name` = '$name', `mobile_number` = '$mobile_number', `email` = '$email', `gender` = '$gender', `DoB` = '$birthday', `updated_at` = '$AccessTime', `city` = '$city', `state` = '$state', `image_url` = '$fileDestination' WHERE id = '$user_id'";
+        }
+        
 
         if (!mysqli_query($con, $sql)) {
 

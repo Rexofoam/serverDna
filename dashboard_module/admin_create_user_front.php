@@ -9,7 +9,16 @@ Coded by Creative Tim
 
 =========================================================
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. -->
-<?php session_start(); ?>
+<?php session_start(); 
+        
+  if (isset($_SESSION['update_response']) ) {
+      $response = $_SESSION['update_response'];
+      unset($_SESSION['update_response']);
+  } else {
+      $response = null;
+  }
+
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -53,7 +62,7 @@ The above copyright notice and this permission notice shall be included in all c
     session_destroy();*/
 ?>
 
-<body class="">
+<body class="" onload="fetchUpdateResponse()">
     <div class="wrapper ">
         <div class="sidebar" data-color="purple" data-background-color="white" data-image="assets/img/sidebar-1.jpg">
             <!--
@@ -201,24 +210,21 @@ The above copyright notice and this permission notice shall be included in all c
                                 </div>
                                 <div class="card-body">
                                     <br><br>
-                                    <!-- <form action="admin_create_user_back.php" method="post"> -->
-                                    <form id="createUserForm">
+                                    <form action="admin_create_user_back.php" method="post" enctype="multipart/form-data">
                                         <div class="row">
                                             <div class="card-profile col-md-3">
                                                 <div class="card-avatar">
                                                     <a href="javascript:;">
-                                                        <img class="img" src="assets/img/faces/marc.jpg" />
+                                                        <img id="img_profile" class="img" src="../public/images/default.png"/>
                                                     </a>
                                                 </div>
-                                                    <a style="margin-top: -50px; margin-left: 100px;" href="javascript:;" 
-                                                        class="btn btn-round btn-just-icon">
-                                                        <i class="material-icons md-light">camera_alt</i>
-                                                    </a>
+                                                    <br>
+                                                <input type="file" id="fileToUpload" name="fileToUpload" accept="image/*" onchange="displayImg(this)">
                                             </div>
                                             <div class="col-md-9">
                                                 <div class="form-group">
                                                     <label class="bmd-label-floating">Full Name*</label>
-                                                    <input type="text" class="form-control" name="name" required>
+                                                    <input type="text" class="form-control" name="name">
                                                 </div>
                                                 <br>
                                                 <div class="form-group">
@@ -450,94 +456,45 @@ The above copyright notice and this permission notice shall be included in all c
     <script src="assets/js/material-dashboard.js?v=2.1.2" type="text/javascript"></script>
     <!-- Material Dashboard DEMO methods, don't include it in your project! -->
     <script src="assets/demo/demo.js"></script>
-    <script>
-        function manage(id) {
-            console.log(id);
-        }
-    </script>
-    <script>
-        function auth(id) {
-            console.log(id);
-        }
-    </script>
-    <script>
-        function remove(id) {
-            console.log(id);
-        }
-    </script>
-    <script>
-        $(document).ready(function() {
-            $('.select2').select2({
-                minimumResultsForSearch: -1
-            });
+    <script type="text/javascript">
+        function displayImg(input) {
+            if (input.files && input.files[0]) {
+                if(input.files[0].size > 2000000) {
+                    Swal.fire({title: 'Failed!', html: "Image too large. Max image size 2MB !", type: 'error'});
 
-            $(document).on('submit', '#createUserForm', function() {
-                // do not refresh form on submit so that notifications can be shown
-                return false;
-            });
-
-            $(":button[name='submitBtn']").click(function(){
-                var name = $("input[name='name']").val();
-                var userid = $("input[name='userid']").val();
-                var phone = $("input[name='phone']").val();
-                var email = $("input[name='email']").val();
-                var gender = $("select[name='gender']").val()
-                var birthday = $("input[name='birthday']").val();
-                var address = "";
-                var city = $("input[name='city']").val();
-                var state = $("select[name='state']").val()
-
-                if (name != "" && userid != "" && phone != "" && email != "" &&
-                    gender != "" && birthday != "" && city != "" && state != "") {
-                        
-                    $.ajax({
-                        url: 'admin_create_user_back.php',
-                        type: 'POST',
-                        data: {name: name, userid: userid, phone: phone,
-                                email: email, gender: gender, birthday: birthday,
-                                address: address, city: city, state: state},
-                        success: function(res) {
-                            var data = JSON.parse(res);
-
-                            if (data['statusCode'] == 1) { //'1' is set as code for successful registration
-                                // $.notify({
-                                //     message: data['msg']
-                                // }, {
-                                //     type: 'success',
-                                //     allow_dismiss: true
-                                // });
-
-                                Swal.fire({title: 'Success!', html: data['msg'], type: 'success'});
-                            } else {
-                                // $.notify({
-                                //     message: data['msg']
-                                // }, {
-                                //     type: 'danger',
-                                //     allow_dismiss: true
-                                // });
-
-                                Swal.fire({title: 'Error!', html: data['msg'], type: 'error'});
-                            }
-                            
-                            if (data['statusCode'] == 1) { //Only reset the form if success code is returned
-                                $('#createUserForm').trigger('reset'); //Empty all the form fields
-                                $('[name="birthday"]').prop('type', 'text'); //Remove 'dd/mm/yyyy' placeholder from date of birth
-                            }
-                        },
-                        error: function(res) {
-                            Swal.fire({title: 'Error!', html: 'We were unable to complete the operation.<br>Please try again later', type: 'error'});
-                        }
-                        });
+                    return;
                 }
-            });
-        });
 
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#img_profile')
+                        .attr('src', e.target.result);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+    <script>
         function dateInputBehavior(e) {
             if (e.value == "" || e.value == null) {
                 e.type = "text"; //Change input back to text to remove 'dd/mm/yyyy' placeholder
             } else {
                 e.type = "date";
             }
+        }
+    </script>
+    <script type="text/javascript">
+        function fetchUpdateResponse() {
+            var response = "<?php echo $response; ?>";
+            if(response == null || response == "") {
+
+            } else {
+                Swal.fire({title: 'Failed!', html: response, type: 'error'});
+            }
+
+
         }
     </script>
 </body>

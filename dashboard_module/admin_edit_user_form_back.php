@@ -3,6 +3,17 @@
     include '../public/DBconnect.php';
     session_start();
 
+    //file upload variables
+    $target_dir = "../public/images/";
+    $file = $_FILES['fileToUpload'];
+
+    $fileName = $_FILES['fileToUpload']['name'];
+    $fileTmpName = $_FILES['fileToUpload']['tmp_name'];
+    $fileSize = $_FILES['fileToUpload']['size'];
+    $fileError = $_FILES['fileToUpload']['error'];
+    $fileType = $_FILES['fileToUpload']['type'];
+    $fileDestination = "";
+
     //Connection to database
     $con = DatabaseConn();
 
@@ -30,31 +41,61 @@
 
     if($val_result[0] > 0){
         
-        $res = array(
-                "statusCode" => 0, 
-                "msg" => "Failed to save changes.<br>Another user exists with the same email or mobile number"
-            );
-        echo json_encode($res);
+        $_SESSION['update_response'] = "This email or mobile number is currently in-use!";
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+
     } else {
 
-        //Add new user statement
-        $sql = "UPDATE `users` SET `full_name` = '$name', `user_id` = '$userid', `mobile_number` = '$mobile_number', `email` = '$email', `gender` = '$gender', `DoB` = '$birthday', `updated_at` = '$AccessTime', `city` = '$city', `state` = '$state' WHERE id = '$user_id'";
+        // Image Upload script
+
+        $fileExt = explode('.', $fileName);
+        $fileActualExt = strtolower(end($fileExt));
+
+        $allowed = array('jpg', 'jpeg', 'png');
+
+        if (in_array($fileActualExt, $allowed)) {
+            if ($fileError === 0) {
+                if ($fileSize < 2000000) {
+
+                    // change image name to micro-second naming
+                    $fileNameNew = uniqid('', true) . "." . $fileActualExt;
+                    $fileDestination = '../public/images/' . $fileNameNew;
+                    move_uploaded_file($fileTmpName, $fileDestination);
+
+                } else {
+                    $_SESSION['update_response'] = "Image upload size to large !";
+                    header('Location: ' . $_SERVER['HTTP_REFERER']);
+                    
+
+                }
+            } else {
+                $_SESSION['update_response'] = "Unknown image upload issue !";
+                header('Location: ' . $_SERVER['HTTP_REFERER']);
+              
+
+            }
+        } else {
+            $_SESSION['update_response'] = "Incorrect image extension !";
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+        }
+
+    // End of image upload
+
+        // update image path only if there is a new image
+        if(strlen($fileDestination) < 1) {
+            $sql = "UPDATE `users` SET `full_name` = '$name', `user_id` = '$userid', `mobile_number` = '$mobile_number', `email` = '$email', `gender` = '$gender', `DoB` = '$birthday', `updated_at` = '$AccessTime', `city` = '$city', `state` = '$state' WHERE id = '$user_id'";
+        } else {
+            $sql = "UPDATE `users` SET `full_name` = '$name', `user_id` = '$userid', `mobile_number` = '$mobile_number', `email` = '$email', `gender` = '$gender', `DoB` = '$birthday', `updated_at` = '$AccessTime', `city` = '$city', `state` = '$state', `image_url` = '$fileDestination' WHERE id = '$user_id'";
+        }
+        
 
         if (!mysqli_query($con, $sql)) {
-            $res = array(
-                "statusCode" => 0, 
-                "msg" => "We were unable to perform the operation.<br>Please try again later"
-            );
-            
-            echo json_encode($res);
+            $_SESSION['update_response'] = "Unknown error occured. Please try again later !";
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
             
         } else {
-            $res = array(
-                "statusCode" => 1, 
-                "msg" => "Account details updated"
-            );
-            
-            echo json_encode($res);
+            $_SESSION['update_response'] = "User account updated successfully";
+            header('Location: user_list.php');
             
         } 
         

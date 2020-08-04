@@ -10,6 +10,17 @@
     
     session_start();
 
+    //file upload variables
+    $target_dir = "../public/images/";
+    $file = $_FILES['fileToUpload'];
+
+    $fileName = $_FILES['fileToUpload']['name'];
+    $fileTmpName = $_FILES['fileToUpload']['tmp_name'];
+    $fileSize = $_FILES['fileToUpload']['size'];
+    $fileError = $_FILES['fileToUpload']['error'];
+    $fileType = $_FILES['fileToUpload']['type'];
+    $fileDestination = "";
+
     //Connection to database
     $con = DatabaseConn();
 
@@ -36,26 +47,51 @@
     $val_result = mysqli_fetch_array($return_val);
 
     if($val_result[0] > 0){
-        $res = array(
-                "statusCode" => 0, 
-                "msg" => "User creation failed!<br>This email OR phone number is already in use."
-            );
-            
-            echo json_encode($res);
+        $_SESSION['update_response'] = "Email or mobile number already in use";
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
     } else {
 
+        // Image Upload script
+
+        $fileExt = explode('.', $fileName);
+        $fileActualExt = strtolower(end($fileExt));
+
+        $allowed = array('jpg', 'jpeg', 'png');
+
+        if (in_array($fileActualExt, $allowed)) {
+            if ($fileError === 0) {
+                if ($fileSize < 2000000) {
+
+                    // change image name to micro-second naming
+                    $fileNameNew = uniqid('', true) . "." . $fileActualExt;
+                    $fileDestination = '../public/images/' . $fileNameNew;
+                    move_uploaded_file($fileTmpName, $fileDestination);
+
+                } else {
+                    $_SESSION['update_response'] = "Image upload size to large !";
+                    header('Location: ' . $_SERVER['HTTP_REFERER']);
+                    
+
+                }
+            } else {
+                $_SESSION['update_response'] = "Unknown image upload issue !";
+                header('Location: ' . $_SERVER['HTTP_REFERER']);
+              
+
+            }
+        } else {
+            $_SESSION['update_response'] = "Invalid image extension !";
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+        }
+
+    // End of image upload
+
         //Add new user statement
-        $sql = "INSERT INTO `users` VALUES (NULL, '$name', '$userid', '$mobile_number', '$email', 
-                    '$password', '$birthday', '$gender', 'created', NULL, 
-                    '$AccessTime', '$city', '$state', 0);";
+        $sql = "INSERT INTO `users` VALUES (NULL, '$name', '$userid', '$mobile_number', '$email', '$password', '$birthday', '$gender', 'created', NULL, '$AccessTime', '$city', '$state', 0, '$fileDestination');";
 
         if (!mysqli_query($con, $sql)) {
-            $res = array(
-                "statusCode" => 0, 
-                "msg" => "We were unable to perform the operation.<br>Please try again later"
-            );
-            
-            echo json_encode($res);
+            $_SESSION['update_response'] = "Unknown error occured. Please try again later !";
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
             
         } else {
             $fallbackURL = getCreateUserAccount($con->insert_id);
@@ -85,34 +121,24 @@
                 $mail->AddAddress($email);
 
                 $mail->Send();
+                $_SESSION['update_response'] = "Account succesfully created !";
+                header('Location: user_list.php');
             }
             catch (Exception $e){
-            $res = array(
-                "statusCode" => 0, 
-                "msg" => "Registration Failed!<br>Please try again later !"
-            );
-            
-            echo json_encode($res);
-            }
+                $_SESSION['update_response'] = "Unknown error occured. Please try again later !";
+                header('Location: ' . $_SERVER['HTTP_REFERER']);
 
             if(!$mail->Send()) {
-            $res = array(
-                "statusCode" => 0, 
-                "msg" => "Registration Failed!<br>Please try again later !"
-            );
+                $_SESSION['update_response'] = "Unknown error occured. Please try again later !";
+                header('Location: ' . $_SERVER['HTTP_REFERER']);
             
-            echo json_encode($res);
+        
             } else {
-
-            $res = array(
-                "statusCode" => 1, 
-                "msg" => "New user successfully registered!<br>An authentication email has been sent to the registered email address for authentication"
-            );
-            
-            echo json_encode($res);
-          
+                $_SESSION['update_response'] = "Unknown error occured. Please try again later !";
+                header('Location: ' . $_SERVER['HTTP_REFERER']);
             } 
         
+        }
     }
 }
 

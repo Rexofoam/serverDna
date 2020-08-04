@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 21, 2020 at 03:08 PM
+-- Generation Time: Aug 04, 2020 at 06:08 PM
 -- Server version: 10.4.13-MariaDB
 -- PHP Version: 7.4.7
 
@@ -85,7 +85,7 @@ CREATE TABLE `event_application` (
 --
 
 INSERT INTO `event_application` (`app_id`, `app_name`, `app_description`, `game_id`, `team_count`, `start_datetime`, `end_datetime`, `venue`, `city`, `state`, `organiser`, `created_by`, `created_at`, `contact_method`, `contact_no`, `contact_email`, `status`, `status_upd_at`, `status_upd_by`, `deleted_at`) VALUES
-(1, 'Some Dota 2 Tournament with a randomly long name', 'Some Dota 2 Tournament with a randomly long name', 1, 16, '2020-06-11 00:00:00', '2020-06-13 00:00:00', 'Taylor''s University', 'Petaling Jaya', 'Selangor', 'ONE Esports', 2, '2020-06-06 00:00:00', 'Email', '0186632500', 'oneesports@gmail.com', 'pending', NULL, NULL, NULL);
+(1, 'Some Dota 2 Tournament with a randomly long name', 'Some Dota 2 Tournament with a randomly long name', 1, 16, '2020-06-11 00:00:00', '2020-06-13 00:00:00', 'Taylor\'s University', 'Petaling Jaya', 'Selangor', 'ONE Esports', 2, '2020-06-06 00:00:00', 'Email', '0186632500', 'oneesports@gmail.com', 'pending', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -123,6 +123,7 @@ CREATE TABLE `teams` (
   `games` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` datetime NOT NULL,
   `created_by` int(11) NOT NULL,
+  `status` enum('pending','authenticated','') COLLATE utf8_unicode_ci NOT NULL,
   `updated_at` datetime DEFAULT NULL,
   `delete_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -131,8 +132,8 @@ CREATE TABLE `teams` (
 -- Dumping data for table `teams`
 --
 
-INSERT INTO `teams` (`team_id`, `team_name`, `games`, `created_at`, `created_by`, `updated_at`, `delete_at`) VALUES
-(1, '123', '1', '2020-07-21 21:04:37', 58, NULL, NULL);
+INSERT INTO `teams` (`team_id`, `team_name`, `games`, `created_at`, `created_by`, `status`, `updated_at`, `delete_at`) VALUES
+(1, '123', '1', '2020-07-21 21:04:37', 58, 'pending', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -168,7 +169,8 @@ INSERT INTO `users` (`id`, `full_name`, `user_id`, `mobile_number`, `email`, `pa
 (3, 'ad2', '444', '0123456711', 'ad123@gmail.com', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', '0000-00-00', 'male', 'authenticated', '2020-05-08 00:00:00', '2020-06-08 20:23:58', 'Puchong', 'SELANGOR', 0, NULL),
 (4, 'ad3', '555', '0123456712', 'ad234@gmail.com', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', '0000-00-00', 'male', 'authenticated', '2020-05-08 00:00:00', '2020-06-08 20:23:58', 'Puchong', 'SELANGOR', 0, NULL),
 (5, 'ad4', '666', '0123456713', 'ad345@gmail.com', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', '0000-00-00', 'male', 'authenticated', '2020-05-08 00:00:00', '2020-06-08 20:23:58', 'Puchong', 'SELANGOR', 0, NULL),
-(58, 'Jonathan Foong', 'Rexofoam', '0147355823', 'jonathanfoong1997@gmail.com', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', '1997-09-20', 'male', 'authenticated', NULL, '2020-07-21 00:57:44', 'Petaling Jaya', 'SELANGOR', 0, '../public/images/5f15cd082a7ae3.02525813.jpg');
+(58, 'Jonathan Foong', 'Rexofoam', '0147355823', 'jonathanfoong1997@gmail.com', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', '1997-09-20', 'male', 'authenticated', NULL, '2020-08-05 00:08:00', 'Petaling Jaya', 'SELANGOR', 0, '../public/images/5f15cd082a7ae3.02525813.jpg'),
+(63, 'Tiffany Tan', 'Tiff', '0123093882', 'tiffanytan1995@gmail.com', '209cc77e095e2064e5c1f38817b602f69fb872a1', '2020-08-12', 'male', 'created', NULL, '2020-08-05 00:05:19', 'Petaling Jaya', 'SELANGOR', 0, '../public/images/5f29873ac263b2.28353785.jpg');
 
 -- --------------------------------------------------------
 
@@ -289,7 +291,7 @@ ALTER TABLE `teams`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
 
 --
 -- AUTO_INCREMENT for table `user_events`

@@ -6,6 +6,13 @@
   session_start();
   $con = DatabaseConn();
 
+  if (isset($_SESSION['update_response']) ) {
+      $response = $_SESSION['update_response'];
+      unset($_SESSION['update_response']);
+  } else {
+      $response = null;
+  }
+
   $sql_auth = "SELECT `full_name`,`email`,`mobile_number`,`city`,`state`,`id` FROM `users` WHERE `status` = 'authenticated'";
   $sql_created = "SELECT `full_name`,`email`,`mobile_number`,`city`,`state`,`id` FROM `users` WHERE `status` = 'created'";
 
@@ -30,7 +37,7 @@
   <link href="assets/demo/demo.css" rel="stylesheet" />
 </head>
 
-<body class="">
+<body class="" onload="fetchUpdateResponse()">
   <div class="wrapper ">
     <div class="sidebar" data-color="purple" data-background-color="white" data-image="assets/img/sidebar-1.jpg">
       <!--
@@ -299,6 +306,18 @@
       window.location.replace(edit_url + "?id=" + id);
     }
   </script>
+  <script type="text/javascript">
+        function fetchUpdateResponse() {
+            var response = "<?php echo $response; ?>";
+            if(response == null || response == "") {
+
+            } else {
+                Swal.fire({title: 'Success!', html: response, type: 'success'});
+            }
+
+
+        }
+    </script>
 
 </body>
 

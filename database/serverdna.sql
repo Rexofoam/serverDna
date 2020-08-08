@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 04, 2020 at 06:08 PM
+-- Generation Time: Aug 08, 2020 at 02:36 PM
 -- Server version: 10.4.13-MariaDB
 -- PHP Version: 7.4.7
 
@@ -110,6 +110,24 @@ CREATE TABLE `games` (
 
 INSERT INTO `games` (`game_id`, `game_name`, `platforms`, `genres`, `created_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 'Dota 2', 'PC', 'MOBA,STRATEGY', 1, '2020-07-10 00:00:00', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notification`
+--
+
+CREATE TABLE `notification` (
+  `id` int(11) NOT NULL,
+  `title` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `description` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `type` enum('teamInvite','teamBroadcast','sudoBroadcast','adminBroadcast','eventAlert') COLLATE utf8_unicode_ci NOT NULL,
+  `from_user_id` int(11) NOT NULL,
+  `to_user_id` int(11) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `read_at` datetime DEFAULT NULL,
+  `delete_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -236,6 +254,12 @@ ALTER TABLE `games`
   ADD PRIMARY KEY (`game_id`);
 
 --
+-- Indexes for table `notification`
+--
+ALTER TABLE `notification`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `teams`
 --
 ALTER TABLE `teams`
@@ -280,6 +304,12 @@ ALTER TABLE `event_application`
 --
 ALTER TABLE `games`
   MODIFY `game_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `notification`
+--
+ALTER TABLE `notification`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `teams`

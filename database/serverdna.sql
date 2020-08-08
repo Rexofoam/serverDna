@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 08, 2020 at 02:36 PM
+-- Generation Time: Aug 08, 2020 at 05:17 PM
 -- Server version: 10.4.13-MariaDB
 -- PHP Version: 7.4.7
 
@@ -129,6 +129,16 @@ CREATE TABLE `notification` (
   `delete_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `notification`
+--
+
+INSERT INTO `notification` (`id`, `title`, `description`, `type`, `from_user_id`, `to_user_id`, `created_at`, `read_at`, `delete_at`) VALUES
+(8, 'Pending team invitation.', 'You are invited to team, Notification Test as a captain. Do accept my invitation !', 'teamInvite', 58, 3, '2020-08-08 23:15:19', NULL, NULL),
+(9, 'Pending team invitation.', 'You are invited to team, Notification Test as a vice. Do accept my invitation !', 'teamInvite', 58, 5, '2020-08-08 23:15:19', NULL, NULL),
+(10, 'Pending team invitation.', 'You are invited to team, Notification Test as a player. Do accept my invitation !', 'teamInvite', 58, 63, '2020-08-08 23:15:19', NULL, NULL),
+(11, 'Pending team invitation.', 'You are invited to team, Notification Test as a substitute. Do accept my invitation !', 'teamInvite', 58, 4, '2020-08-08 23:15:19', NULL, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -151,7 +161,8 @@ CREATE TABLE `teams` (
 --
 
 INSERT INTO `teams` (`team_id`, `team_name`, `games`, `created_at`, `created_by`, `status`, `updated_at`, `delete_at`) VALUES
-(1, '123', '1', '2020-07-21 21:04:37', 58, 'pending', NULL, NULL);
+(1, '123', '1', '2020-07-21 21:04:37', 58, 'pending', NULL, NULL),
+(12, 'Notification Test', '1', '2020-08-08 23:15:19', 58, 'pending', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -229,7 +240,12 @@ CREATE TABLE `user_teams` (
 INSERT INTO `user_teams` (`id`, `team_id`, `user_id`, `role`, `created_at`, `status`, `delete_at`) VALUES
 (1, 1, 58, 'captain', '2020-07-21 21:04:37', 'pending', NULL),
 (2, 1, 3, 'player', '2020-07-21 21:04:37', 'pending', NULL),
-(3, 1, 5, 'substitute', '2020-07-21 21:04:37', 'pending', NULL);
+(3, 1, 5, 'substitute', '2020-07-21 21:04:37', 'pending', NULL),
+(38, 12, 3, 'captain', '2020-08-08 23:15:19', 'pending', NULL),
+(39, 12, 5, 'vice', '2020-08-08 23:15:19', 'pending', NULL),
+(40, 12, 58, 'player', '2020-08-08 23:15:19', 'pending', NULL),
+(41, 12, 63, 'player', '2020-08-08 23:15:19', 'pending', NULL),
+(42, 12, 4, 'substitute', '2020-08-08 23:15:19', 'pending', NULL);
 
 --
 -- Indexes for dumped tables
@@ -309,13 +325,13 @@ ALTER TABLE `games`
 -- AUTO_INCREMENT for table `notification`
 --
 ALTER TABLE `notification`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `teams`
 --
 ALTER TABLE `teams`
-  MODIFY `team_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `team_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -333,7 +349,7 @@ ALTER TABLE `user_events`
 -- AUTO_INCREMENT for table `user_teams`
 --
 ALTER TABLE `user_teams`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

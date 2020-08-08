@@ -1,6 +1,11 @@
 <?php
+  include '../public/DBconnect.php';
   session_start();
   $curUser = $_SESSION['Curr_user'];
+
+  $con = DatabaseConn();
+
+  $sql_auth = "SELECT `notification`.`id`, `notification`.`title`, `notification`.`description`, `notification`.`type`, `users`.`full_name` FROM `notifications` JOIN `users` ON `users`.`id` = `notification`.`from_user_id`  WHERE `notification`.`read_at` = null AND `notification`.`to_user_id` = '$curUser' ORDER BY id desc LIMIT 5";
 ?>
 
 <!--

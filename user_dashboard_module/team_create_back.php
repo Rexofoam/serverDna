@@ -92,39 +92,45 @@
                 }
             
                 //Add new team statement
-                $sql = "INSERT INTO `teams` VALUES (NULL, '$team_name', '$games', '$AccessTime', '$created_by', 
+                $sql = "INSERT INTO `teams` VALUES (NULL, '$team_name', '$games', '$AccessTime', '$created_by', 'pending', 
                         NULL, NULL);";
             
                 if (!mysqli_query($con, $sql)) {
                     $res = array(
                         "statusCode" => 0, 
-                        "msg" => "We were unable to submit your team details.<br>Please try again later"
+                        "msg" => $sql
                     );
             
                     echo json_encode($res);
             
                 } else {
                     //Get the last inserted id
+                    $notification_type = "teamInvite";
                     $team_id = mysqli_insert_id($con);
                     $userTeamStatement = "";
+                    $notification_sql = "";
 
                     //Generate insert statements for every user
                     $userTeamStatement .= genUserTeamStatement($team_id, $team_capt, 'captain', $AccessTime, 'pending');
+                    $userTeamStatement .= genTeamInvNotification($created_by, $team_capt, $AccessTime, $team_name, 'captain');
                     
                     if (isset($team_vice) && $team_vice != "") {
                         $userTeamStatement .= genUserTeamStatement($team_id, $team_vice, 'vice', $AccessTime, 'pending');
+                        $userTeamStatement .= genTeamInvNotification($created_by, $team_vice, $AccessTime, $team_name, 'vice');
                     }
 
                     foreach($team_member_arr as $player) {
                         $userTeamStatement .= genUserTeamStatement($team_id, $player, 'player', $AccessTime, 'pending');
+                        $userTeamStatement .= genTeamInvNotification($created_by, $player, $AccessTime, $team_name, 'player');
                     }
 
                     if (isset($team_sub_arr) && sizeof($team_sub_arr) > 0) {
                         foreach($team_sub_arr as $sub) {
                             $userTeamStatement .= genUserTeamStatement($team_id, $sub, 'substitute', $AccessTime, 'pending');
+                            $userTeamStatement .= genTeamInvNotification($created_by, $sub, $AccessTime, $team_name, 'substitute');
                         }
                     }
-            
+                    
                     if (!mysqli_multi_query($con, $userTeamStatement)) {
                         $res = array(
                             "statusCode" => 0, 
@@ -133,7 +139,7 @@
                 
                         echo json_encode($res);
             
-                    } else {
+                    }  else {
                         $res = array(
                             "statusCode" => 1, 
                             "msg" => "Your team details have been successfully submitted and invitations have been sent to all team members.<br><br>Team creation will be completed once all members have accepted their invitations."
@@ -182,6 +188,19 @@
 
     function genUserTeamStatement($team_id, $user_id, $role, $AccessTime, $status) {
         $sql = "INSERT INTO `user_teams` VALUES (NULL, '$team_id', '$user_id', '$role', '$AccessTime', '$status', NULL);";
+        return $sql;
+    }
+
+    function genTeamInvNotification($created_by, $to_user_id, $created_datetime, $team_name, $role) {
+
+        $title = "Pending team invitation.";
+        $description = "You are invited to team, " . $team_name . " as a " . $role . ". Do accept my invitation !";
+
+        if($created_by == $to_user_id) 
+            return "";
+        else
+            $sql = "INSERT INTO `notification` VALUES (NULL, '$title', '$description', 'teamInvite', '$created_by', '$to_user_id', '$created_datetime', NULL, NULL);";
+
         return $sql;
     }
 

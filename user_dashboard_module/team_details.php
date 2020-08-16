@@ -29,17 +29,25 @@
   }
 
   // fetch team member details
-  $sql_capt = "SELECT ut.`user_id`, u.`full_name`, ut.`role`, ut.`status` 
+  $sql_capt = "SELECT ut.`user_id`, u.`full_name`, u.`image_url`,ut.`role`, ut.`status` 
                 FROM `user_teams` ut JOIN `users` u ON ut.`user_id` = u.`id`
                 WHERE ut.`team_id` = '$teamID' AND ut.`role` = 'captain'";
   $capt = mysqli_fetch_array(mysqli_query($con, $sql_capt));
 
-  $sql_vice = "SELECT ut.`user_id`, u.`full_name`, ut.`role`, ut.`status` 
+  if($capt['image_url'] == null) {
+    $capt['image_url'] = "../public/images/default.png";
+  }
+
+  $sql_vice = "SELECT ut.`user_id`, u.`full_name`, u.`image_url`, ut.`role`, ut.`status` 
                 FROM `user_teams` ut JOIN `users` u ON ut.`user_id` = u.`id`
                 WHERE ut.`team_id` = '$teamID' AND ut.`role` = 'vice'";
   $vice = mysqli_fetch_array(mysqli_query($con, $sql_vice));
 
-  $sql_player = "SELECT ut.`user_id`, u.`full_name`, ut.`role`, ut.`status` 
+  if($vice['image_url'] == null) {
+    $vice['image_url'] = "../public/images/default.png";
+  }
+
+  $sql_player = "SELECT ut.`user_id`, u.`full_name`, u.`image_url`, ut.`role`, ut.`status` 
                 FROM `user_teams` ut JOIN `users` u ON ut.`user_id` = u.`id`
                 WHERE ut.`team_id` = '$teamID' AND ut.`role` = 'player'";
   $player = mysqli_fetch_all(mysqli_query($con, $sql_player), MYSQLI_ASSOC);
@@ -47,7 +55,7 @@
   $playerCount = sizeof($player);
   $playerHTML = generateSectionHTML($player);
 
-  $sql_sub = "SELECT ut.`user_id`, u.`full_name`, ut.`role`, ut.`status` 
+  $sql_sub = "SELECT ut.`user_id`, u.`full_name`, u.`image_url`, ut.`role`, ut.`status` 
                 FROM `user_teams` ut JOIN `users` u ON ut.`user_id` = u.`id`
                 WHERE ut.`team_id` = '$teamID' AND ut.`role` = 'substitute'";
   $sub = mysqli_fetch_all(mysqli_query($con, $sql_sub), MYSQLI_ASSOC);
@@ -73,7 +81,7 @@
         //Print a new row for every 2 members
         if ($ctr % 2 == 0) $html .= '<div class="row">';
 
-        $html .= generateMemberHTML($m['full_name'], $m['role'], $m['status']);
+        $html .= generateMemberHTML($m['full_name'], $m['role'], $m['status'], $m['image_url']);
 
         if ($ctr % 2 == 1) $html .= '</div><br><br>';
         $ctr++;
@@ -85,7 +93,7 @@
   }
 
   // function to generate html for a single member
-  function generateMemberHTML($full_name, $role, $status) {
+  function generateMemberHTML($full_name, $role, $status, $image) {
     $html = "";
     $statusText = "";
 
@@ -93,7 +101,7 @@
 
     $html .= '<div class="card-profile col-md-2">
                     <div class="card-avatar">
-                        <img class="img" src="assets/img/faces/marc.jpg"/>
+                        <img class="img" src="' . $image_url = ($image == null ? '../public/images/default.png' : $image)  . '"/>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -333,7 +341,7 @@
                                         <div class="row">
                                             <div class="card-profile col-md-2">
                                                 <div class="card-avatar">
-                                                    <img width="10" height="10" class="img" src="assets/img/faces/marc.jpg"/>
+                                                    <img width="10" height="10" class="img" src="<?php echo $capt['image_url'] ?>" onerror=this.src="../public/images/default.png"/>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
@@ -342,7 +350,7 @@
                                             </div>
                                             <div class="card-profile col-md-2">
                                                 <div class="card-avatar">
-                                                    <img width="10" height="10" class="img" src="assets/img/faces/marc.jpg"/>
+                                                    <img width="10" height="10" class="img" src="<?php echo $vice['image_url'] ?>" onerror=this.src="../public/images/default.png"/>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">

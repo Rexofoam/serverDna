@@ -5,7 +5,8 @@
 
   $con = DatabaseConn();
 
-  $sql_auth = "SELECT `notification`.`id`, `notification`.`title`, `notification`.`description`, `notification`.`type`, `users`.`full_name` FROM `notifications` JOIN `users` ON `users`.`id` = `notification`.`from_user_id`  WHERE `notification`.`read_at` = null AND `notification`.`to_user_id` = '$curUser' ORDER BY id desc LIMIT 5";
+  $sql_notification = "SELECT `notification`.`id`, `notification`.`title`, `notification`.`description`, `notification`.`type`, `users`.`full_name` FROM `notification` JOIN `users` ON `users`.`id` = `notification`.`to_user_id`  WHERE `notification`.`read_at` is null AND `notification`.`to_user_id` = '$curUser' ORDER BY id desc LIMIT 5";
+  $notifications = mysqli_query($con, $sql_notification);
 ?>
 
 <!--
@@ -169,11 +170,11 @@ The above copyright notice and this permission notice shall be included in all c
                                     </p>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                                    <a class="dropdown-item" href="#">Mike John responded to your email</a>
-                                    <a class="dropdown-item" href="#">You have 5 new tasks</a>
-                                    <a class="dropdown-item" href="#">You're now friend with Andrew</a>
-                                    <a class="dropdown-item" href="#">Another Notification</a>
-                                    <a class="dropdown-item" href="#">Another One</a>
+                                    <?php if ($notifications) { ?>
+                                        <?php while($row1 = mysqli_fetch_array($notifications)):;?>
+                                        <a class="dropdown-item" href='../notification/<?php echo $row1[0];?>'><?php echo $row1[1];?></a>
+                                        <?php endwhile;?>
+                                    <?php } ?>
                                 </div>
                             </li>
                             <li class="nav-item dropdown">

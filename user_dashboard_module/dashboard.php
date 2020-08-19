@@ -172,7 +172,7 @@ The above copyright notice and this permission notice shall be included in all c
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                                     <?php if ($notifications) { ?>
                                         <?php while($row1 = mysqli_fetch_array($notifications)):;?>
-                                        <a class="dropdown-item" href='../notification/<?php echo $row1[0];?>'><?php echo $row1[1];?></a>
+                                        <a class="dropdown-item" href='notification.php?notification=<?php echo $row1[0];?>'><?php echo $row1[1];?></a>
                                         <?php endwhile;?>
                                     <?php } ?>
                                 </div>

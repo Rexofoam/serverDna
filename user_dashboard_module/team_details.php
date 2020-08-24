@@ -3,7 +3,21 @@
 
   session_start();
   $con = DatabaseConn();
+  if (isset($_SESSION['Curr_user'])) {
+    // do nothing
+  } else {
+    header("Location: ../login_module/index.php");
+  }
+
   $userID = $_SESSION['Curr_user'];
+
+  // for notification header
+  $sql_notification = "SELECT `notification`.`id`, `notification`.`title`, `notification`.`description`, `notification`.`type`, `users`.`full_name` FROM `notification` JOIN `users` ON `users`.`id` = `notification`.`to_user_id`  WHERE `notification`.`read_at` is null AND `notification`.`to_user_id` = '$userID' ORDER BY id desc LIMIT 5";
+  $notifications = mysqli_query($con, $sql_notification);
+  $notification_count = 0; // default display in no notification
+
+  // End of notification module
+  
   $teamID = $_GET['id'];
 
   // fetch all game details
@@ -150,63 +164,33 @@
 
         Tip 2: you can also add an image using data-image tag
     -->
-            <div class="logo"><a href="http://www.creative-tim.com" class="simple-text logo-normal">
-          Creative Tim
-        </a></div>
+        <div class="logo"><a href="http://www.creative-tim.com" class="simple-text logo-normal">
+          ServerDNA
+      </a></div>
             <div class="sidebar-wrapper">
                 <ul class="nav">
-                    <li class="nav-item  ">
+                    <li class="nav-item ">
                         <a class="nav-link" href="./dashboard.php">
                             <i class="material-icons">dashboard</i>
                             <p>Dashboard</p>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="./user.html">
+                    <li class="nav-item ">
+                        <a class="nav-link" href="./profile_details.php">
                             <i class="material-icons">person</i>
-                            <p>User Profile</p>
-                        </a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="./admin_create_user_front.php">
-                            <i class="material-icons">person_add</i>
-                            <p>Create New User</p>
+                            <p>My Profile</p>
                         </a>
                     </li>
                     <li class="nav-item ">
-                        <a class="nav-link" href="./tables.html">
-                            <i class="material-icons">content_paste</i>
-                            <p>Table List</p>
+                        <a class="nav-link" href="./create_event_application_front.php">
+                            <i class="material-icons">insert_drive_file</i>
+                            <p>New Event Application</p>
                         </a>
                     </li>
-                    <li class="nav-item ">
-                        <a class="nav-link" href="./typography.html">
-                            <i class="material-icons">library_books</i>
-                            <p>Typography</p>
-                        </a>
-                    </li>
-                    <li class="nav-item ">
-                        <a class="nav-link" href="./icons.html">
-                            <i class="material-icons">bubble_chart</i>
-                            <p>Icons</p>
-                        </a>
-                    </li>
-                    <li class="nav-item ">
-                        <a class="nav-link" href="./map.html">
-                            <i class="material-icons">location_ons</i>
-                            <p>Maps</p>
-                        </a>
-                    </li>
-                    <li class="nav-item ">
-                        <a class="nav-link" href="./notifications.html">
-                            <i class="material-icons">notifications</i>
-                            <p>Notifications</p>
-                        </a>
-                    </li>
-                    <li class="nav-item ">
-                        <a class="nav-link" href="./rtl.html">
-                            <i class="material-icons">language</i>
-                            <p>RTL Support</p>
+                    <li class="nav-item active  ">
+                        <a class="nav-link" href="./team_list.php">
+                            <i class="material-icons">people_alt</i>
+                            <p>My Teams</p>
                         </a>
                     </li>
                     <li class="nav-item active-pro ">
@@ -253,17 +237,17 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="material-icons">notifications</i>
-                                    <span class="notification">5</span>
+                                    <span class="notification"></span>
                                     <p class="d-lg-none d-md-block">
                                         Some Actions
                                     </p>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                                    <a class="dropdown-item" href="#">Mike John responded to your email</a>
-                                    <a class="dropdown-item" href="#">You have 5 new tasks</a>
-                                    <a class="dropdown-item" href="#">You're now friend with Andrew</a>
-                                    <a class="dropdown-item" href="#">Another Notification</a>
-                                    <a class="dropdown-item" href="#">Another One</a>
+                                    <?php if ($notifications) { ?>
+                                        <?php while($row1 = mysqli_fetch_array($notifications)):;?>
+                                        <a class="dropdown-item" href='notification.php?notification=<?php echo $row1[0];?>'><?php echo $row1[1]; $notification_count ++;?></a>
+                                        <?php endwhile;?>
+                                    <?php } if($notification_count == 0) { echo "  No notification.";} ?>
                                 </div>
                             </li>
                             <li class="nav-item dropdown">
@@ -274,10 +258,9 @@
                                     </p>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile">
-                                    <a class="dropdown-item" href="#">Profile</a>
-                                    <a class="dropdown-item" href="#">Settings</a>
+                                    <a class="dropdown-item" href="profile_details.php">Profile</a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Log out</a>
+                                    <a class="dropdown-item" href="../login_module/logout.php">Log out</a>
                                 </div>
                             </li>
                         </ul>

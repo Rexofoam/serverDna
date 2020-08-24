@@ -1,25 +1,20 @@
 <?php
   include '../public/DBconnect.php';
   session_start();
-  $curUser = $_SESSION['Curr_user'];
 
+  if (isset($_SESSION['Curr_user'])) {
+    // do nothing
+  } else {
+    header("Location: ../login_module/index.php");
+  }
+
+  $curUser = $_SESSION['Curr_user'];
   $con = DatabaseConn();
 
   $sql_notification = "SELECT `notification`.`id`, `notification`.`title`, `notification`.`description`, `notification`.`type`, `users`.`full_name` FROM `notification` JOIN `users` ON `users`.`id` = `notification`.`to_user_id`  WHERE `notification`.`read_at` is null AND `notification`.`to_user_id` = '$curUser' ORDER BY id desc LIMIT 5";
   $notifications = mysqli_query($con, $sql_notification);
+  $notification_count = 0; // default display in no notification
 ?>
-
-<!--
-=========================================================
-Material Dashboard - v2.1.2
-=========================================================
-
-Product Page: https://www.creative-tim.com/product/material-dashboard
-Copyright 2020 Creative Tim (https://www.creative-tim.com)
-Coded by Creative Tim
-
-=========================================================
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -44,26 +39,15 @@ The above copyright notice and this permission notice shall be included in all c
 <body class="">
     <div class="wrapper ">
         <div class="sidebar" data-color="purple" data-background-color="white" data-image="assets/img/sidebar-1.jpg">
-            <!--
-        Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
-
-        Tip 2: you can also add an image using data-image tag
-    -->
             <div class="logo"><a href="http://www.creative-tim.com" class="simple-text logo-normal">
-          Creative Tim
-        </a></div>
+          ServerDNA
+      </a></div>
             <div class="sidebar-wrapper">
                 <ul class="nav">
                     <li class="nav-item active  ">
                         <a class="nav-link" href="./dashboard.php">
                             <i class="material-icons">dashboard</i>
                             <p>Dashboard</p>
-                        </a>
-                    </li>
-                    <li class="nav-item ">
-                        <a class="nav-link" href="./user.html">
-                            <i class="material-icons">person</i>
-                            <p>User Profile</p>
                         </a>
                     </li>
                     <li class="nav-item ">
@@ -82,42 +66,6 @@ The above copyright notice and this permission notice shall be included in all c
                         <a class="nav-link" href="./team_list.php">
                             <i class="material-icons">people_alt</i>
                             <p>My Teams</p>
-                        </a>
-                    </li>
-                    <li class="nav-item ">
-                        <a class="nav-link" href="./tables.html">
-                            <i class="material-icons">content_paste</i>
-                            <p>Table List</p>
-                        </a>
-                    </li>
-                    <li class="nav-item ">
-                        <a class="nav-link" href="./typography.html">
-                            <i class="material-icons">library_books</i>
-                            <p>Typography</p>
-                        </a>
-                    </li>
-                    <li class="nav-item ">
-                        <a class="nav-link" href="./icons.html">
-                            <i class="material-icons">bubble_chart</i>
-                            <p>Icons</p>
-                        </a>
-                    </li>
-                    <li class="nav-item ">
-                        <a class="nav-link" href="./map.html">
-                            <i class="material-icons">location_ons</i>
-                            <p>Maps</p>
-                        </a>
-                    </li>
-                    <li class="nav-item ">
-                        <a class="nav-link" href="./notifications.html">
-                            <i class="material-icons">notifications</i>
-                            <p>Notifications</p>
-                        </a>
-                    </li>
-                    <li class="nav-item ">
-                        <a class="nav-link" href="./rtl.html">
-                            <i class="material-icons">language</i>
-                            <p>RTL Support</p>
                         </a>
                     </li>
                     <li class="nav-item active-pro ">
@@ -164,7 +112,7 @@ The above copyright notice and this permission notice shall be included in all c
                             <li class="nav-item dropdown">
                                 <a class="nav-link" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="material-icons">notifications</i>
-                                    <span class="notification">5</span>
+                                    <span class="notification"></span>
                                     <p class="d-lg-none d-md-block">
                                         Some Actions
                                     </p>
@@ -172,9 +120,9 @@ The above copyright notice and this permission notice shall be included in all c
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                                     <?php if ($notifications) { ?>
                                         <?php while($row1 = mysqli_fetch_array($notifications)):;?>
-                                        <a class="dropdown-item" href='notification.php?notification=<?php echo $row1[0];?>'><?php echo $row1[1];?></a>
+                                        <a class="dropdown-item" href='notification.php?notification=<?php echo $row1[0];?>'><?php echo $row1[1]; $notification_count ++;?></a>
                                         <?php endwhile;?>
-                                    <?php } ?>
+                                    <?php } if($notification_count == 0) { echo "  No notification.";} ?>
                                 </div>
                             </li>
                             <li class="nav-item dropdown">
@@ -185,10 +133,9 @@ The above copyright notice and this permission notice shall be included in all c
                                     </p>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile">
-                                    <a class="dropdown-item" href="#">Profile</a>
-                                    <a class="dropdown-item" href="#">Settings</a>
+                                    <a class="dropdown-item" href="profile_details.php">Profile</a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Log out</a>
+                                    <a class="dropdown-item" href="../login_module/logout.php">Log out</a>
                                 </div>
                             </li>
                         </ul>

@@ -15,7 +15,7 @@
   $userID = $_SESSION['Curr_user'];
 
   // for notification header
-  $sql_notification = "SELECT `notification`.`id`, `notification`.`title`, `notification`.`description`, `notification`.`type`, `users`.`full_name` FROM `notification` JOIN `users` ON `users`.`id` = `notification`.`to_user_id`  WHERE `notification`.`read_at` is null AND `notification`.`to_user_id` = '$userID' ORDER BY id desc LIMIT 5";
+  $sql_notification = "SELECT `notification`.`id`, `notification`.`title`, `notification`.`description`, `notification`.`type`, `users`.`full_name` FROM `notification` JOIN `users` ON `users`.`id` = `notification`.`to_user_id`  WHERE `notification`.`read_at` is null AND `notification`.`to_user_id` = '$userID' AND `notification`.`delete_at` is NULL ORDER BY id desc LIMIT 5";
   $notifications = mysqli_query($con, $sql_notification);
   $notification_count = 0; // default display in no notification
 

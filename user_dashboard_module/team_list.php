@@ -15,7 +15,7 @@
   $userID = $_SESSION['Curr_user'];
 
   // for notification header
-  $sql_notification = "SELECT `notification`.`id`, `notification`.`title`, `notification`.`description`, `notification`.`type`, `users`.`full_name` FROM `notification` JOIN `users` ON `users`.`id` = `notification`.`to_user_id`  WHERE `notification`.`read_at` is null AND `notification`.`to_user_id` = '$userID' ORDER BY id desc LIMIT 5";
+  $sql_notification = "SELECT `notification`.`id`, `notification`.`title`, `notification`.`description`, `notification`.`type`, `users`.`full_name` FROM `notification` JOIN `users` ON `users`.`id` = `notification`.`to_user_id`  WHERE `notification`.`read_at` is null AND `notification`.`to_user_id` = '$userID' AND `notification`.`delete_at` is NULL ORDER BY id desc LIMIT 5";
   $notifications = mysqli_query($con, $sql_notification);
   $notification_count = 0; // default display in no notification
 
@@ -26,6 +26,13 @@
                 WHERE ut.`user_id` = '$userID'";
 
   $teams = mysqli_query($con, $sql_teams);
+
+  if (isset($_SESSION['update_response']) ) {
+      $response = $_SESSION['update_response'];
+      unset($_SESSION['update_response']);
+  } else {
+      $response = null;
+  }
 ?>
 <head>
   <meta charset="utf-8" />
@@ -45,7 +52,7 @@
   <link href="assets/demo/demo.css" rel="stylesheet" />
 </head>
 
-<body class="">
+<body class="" onload="fetchUpdateResponse()">
   <div class="wrapper ">
     <div class="sidebar" data-color="purple" data-background-color="white" data-image="assets/img/sidebar-1.jpg">
       <!--
@@ -254,6 +261,22 @@
       window.location.href = view_url + "?id=" + id;
     }
   </script>
+  <script type="text/javascript">
+        function fetchUpdateResponse() {
+            var response = "<?php echo $response; ?>";
+            if(response == null || response == "") {
+
+            } else {
+                if(response == "success") {
+                    Swal.fire({title: 'Success!', html: "Accepted team invitation !", type: 'success'});
+                } else {
+                    Swal.fire({title: 'Success!', html: response, type: 'success'});
+                }
+            }
+
+
+        }
+    </script>
 
 </body>
 

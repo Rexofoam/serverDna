@@ -7,7 +7,7 @@
 
   $notification_id = $_GET['notification'];
   // fetch user id
-  $sql_notification = "SELECT * FROM `notification` WHERE `to_user_id` = '$userID'";
+  $sql_notification = "SELECT * FROM `notification` WHERE `to_user_id` = '$userID' AND `id` = '$notification_id'";
 
   $notification_details = mysqli_query($con, $sql_notification);
   $details = mysqli_fetch_array($notification_details);
@@ -32,6 +32,13 @@
   $city = $acc_details['city'];
   $state = $acc_details['state'];
   $url = $acc_details['image_url'];
+
+
+  // notification session
+  $reference = explode("</b>", $description);
+  $teamTextName = explode("<b>", $reference[0]);
+  $_SESSION["teamName"] = $teamTextName[1];
+  $_SESSION["notification_id"] = $notification_id;
 ?>
 
 <!DOCTYPE html>
@@ -63,7 +70,7 @@
     <!--===============================================================================================-->  
 </head>
 
-<body class="" onload="fetchUpdateResponse()">
+<body class="" onload="fetchType()">
     <div class="wrapper ">
         <div class="sidebar" data-color="purple" data-background-color="white" data-image="assets/img/sidebar-1.jpg">
             <!--
@@ -284,8 +291,8 @@
                                     </div>
                                     <br>
                                     <br>
-                                    <button type="" class="btn btn-danger pull-right" onclick="edit(<?php echo $userID;?>)" name="editBtn">Accept</button>
-                                    <button type="" class="btn btn-danger pull-right" onclick="edit(<?php echo $userID;?>)" name="editBtn">Decline</button>
+                                    <button type="" class="btn btn-danger pull-right" onclick="acceptTeamInv()" id="teamInv" name="editBtn">Accept</button>
+                                    <button type="" class="btn btn-danger pull-right" onclick="declineTeamInv()" id="teamInv2" name="editBtn">Decline</button>
                                     <div class="clearfix"></div>
                                 </div>
                             </div>
@@ -376,26 +383,28 @@
     <!-- Material Dashboard DEMO methods, don't include it in your project! -->
     <script src="assets/demo/demo.js"></script>
     <script>
-    function edit(id) {
-      var edit_url = "profile_edit_front.php"
+    function acceptTeamInv() {
+      var edit_url = "accept_team_invite.php"
+
+      // redirect to edit page
+      window.location.replace(edit_url);
+    }
+    </script>
+    <script>
+    function declineTeamInv() {
+      var edit_url = "reject_team_invite.php"
 
       // redirect to edit page
       window.location.replace(edit_url);
     }
     </script>
     <script type="text/javascript">
-        function fetchUpdateResponse() {
-            var response = "<?php echo $response; ?>";
-            if(response == null || response == "") {
-
-            } else {
-                if(response == "success") {
-                    Swal.fire({title: 'Success!', html: "Profile has been updated !", type: 'success'});
-                } else {
-                    Swal.fire({title: 'Failed!', html: response, type: 'error'});
-                }
+        function fetchType() {
+            var response = "<?php echo $type; ?>";
+            if(response != "teamInvite") {
+                teamInv.style.display = "none";
+                teamInv2.style.display = "none";
             }
-
 
         }
     </script>

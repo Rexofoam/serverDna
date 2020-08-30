@@ -194,7 +194,7 @@
     function genTeamInvNotification($created_by, $to_user_id, $created_datetime, $team_name, $role) {
 
         $title = "Pending team invitation.";
-        $description = "You are invited to team, " . $team_name . " as a " . $role . ". Do accept my invitation !";
+        $description = "You are invited to team, <b>" . $team_name . "</b> as a " . $role . ". Do accept my invitation !";
 
         if($created_by == $to_user_id) 
             return "";

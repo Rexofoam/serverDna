@@ -1,6 +1,40 @@
 <?php
-  session_start();
-  $curUser = $_SESSION['Curr_user'];
+    include '../public/DBconnect.php';
+
+    session_start();
+    $con = DatabaseConn();
+    $curUser = $_SESSION['Curr_user'];
+
+    $date = new DateTime();
+	$date->add(new DateInterval('PT06H'));
+    $AccessTime = $date->format('Y-m-d');
+
+    $admin_count = mysqli_fetch_array(mysqli_query($con, "SELECT COUNT(*) FROM `users` WHERE `is_admin` = '1' AND `status` = 'authenticated'"));
+    $admin_list = mysqli_query($con, "SELECT `full_name`,`user_id`, `email`,`mobile_number` FROM `users` WHERE `is_admin` = '1' AND `status` = 'authenticated'");
+
+    $sql_users = "SELECT COUNT(*) FROM `users` WHERE `is_admin` = '0' AND `status` = 'authenticated'";
+    $sql_pending_users = "SELECT COUNT(*) FROM `users` WHERE `is_admin` = '0' AND `status` != 'authenticated'";
+    $sql_admin = "SELECT COUNT(*) FROM `users` WHERE `is_admin` = '1'";
+
+    $sql_app = "SELECT COUNT(*) FROM `event_application` WHERE `status` = 'approved'";
+    $sql_pending_app = "SELECT COUNT(*) FROM `event_application` WHERE `status` = 'pending'";
+
+    $sql_event = "SELECT COUNT(*) FROM `events`";
+
+    $sql_teams = "SELECT COUNT(*) FROM `teams` WHERE `status` = 'authenticated'";
+    $sql_pending_teams = "SELECT COUNT(*) FROM `teams` WHERE `status` = 'pending'";
+    
+    $user_total = mysqli_fetch_array(mysqli_query($con, $sql_users));
+    $user_pending_total = mysqli_fetch_array(mysqli_query($con, $sql_pending_users));
+    $admin_total = mysqli_fetch_array(mysqli_query($con, $sql_admin));
+
+    $app_total = mysqli_fetch_array(mysqli_query($con, $sql_app));
+    $app_pending_total = mysqli_fetch_array(mysqli_query($con, $sql_pending_app));
+
+    $event_total = mysqli_fetch_array(mysqli_query($con, $sql_event));
+
+    $teams_total = mysqli_fetch_array(mysqli_query($con, $sql_teams));
+    $teams_pending_total = mysqli_fetch_array(mysqli_query($con, $sql_pending_teams));
 ?>
 
     <!--
@@ -113,19 +147,19 @@ The above copyright notice and this permission notice shall be included in all c
                             <a class="navbar-brand" href="javascript:;">Dashboard</a>
                         </div>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="navbar-toggler-icon icon-bar"></span>
-            <span class="navbar-toggler-icon icon-bar"></span>
-            <span class="navbar-toggler-icon icon-bar"></span>
-          </button>
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="navbar-toggler-icon icon-bar"></span>
+                            <span class="navbar-toggler-icon icon-bar"></span>
+                            <span class="navbar-toggler-icon icon-bar"></span>
+                        </button>
                         <div class="collapse navbar-collapse justify-content-end">
                             <form class="navbar-form">
                                 <div class="input-group no-border">
                                     <input type="text" value="" class="form-control" placeholder="Search...">
                                     <button type="submit" class="btn btn-white btn-round btn-just-icon">
-                  <i class="material-icons">search</i>
-                  <div class="ripple-container"></div>
-                </button>
+                                        <i class="material-icons">search</i>
+                                        <div class="ripple-container"></div>
+                                    </button>
                                 </div>
                             </form>
                             <ul class="navbar-nav">
@@ -179,18 +213,18 @@ The above copyright notice and this permission notice shall be included in all c
                                 <div class="card card-stats">
                                     <div class="card-header card-header-warning card-header-icon">
                                         <div class="card-icon">
-                                            <i class="material-icons">content_copy</i>
+                                            <i class="material-icons">person</i>
                                         </div>
-                                        <p class="card-category">Used Space</p>
-                                        <h3 class="card-title">49/50
-                                            <small>GB</small>
-                                        </h3>
+                                        <p class="card-category">Total Registered Users</p>
+                                        <h3 class="card-title"><?php echo $user_total[0] + $user_pending_total[0]; ?></h3>
                                     </div>
                                     <div class="card-footer">
-                                        <div class="stats">
-                                            <i class="material-icons text-danger">warning</i>
-                                            <a href="javascript:;">Get More Space...</a>
-                                        </div>
+                                        <i class="material-icons text-success">person</i>
+                                        <div>Authenticated Users: <b style="color: green;"><?php echo $teams_total[0]; ?></b></div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <i class="material-icons text-danger">person</i>
+                                        <div>Users Pending Authentication: <b style="color: red;"><?php echo $teams_pending_total[0]; ?></b></div>
                                     </div>
                                 </div>
                             </div>
@@ -198,31 +232,18 @@ The above copyright notice and this permission notice shall be included in all c
                                 <div class="card card-stats">
                                     <div class="card-header card-header-success card-header-icon">
                                         <div class="card-icon">
-                                            <i class="material-icons">store</i>
+                                            <i class="material-icons">insert_drive_file</i>
                                         </div>
-                                        <p class="card-category">Revenue</p>
-                                        <h3 class="card-title">$34,245</h3>
+                                        <p class="card-category">Total Event Applications</p>
+                                        <h3 class="card-title"><?php echo $app_total[0] + $app_pending_total[0]; ?></h3>
                                     </div>
                                     <div class="card-footer">
-                                        <div class="stats">
-                                            <i class="material-icons">date_range</i> Last 24 Hours
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6">
-                                <div class="card card-stats">
-                                    <div class="card-header card-header-danger card-header-icon">
-                                        <div class="card-icon">
-                                            <i class="material-icons">info_outline</i>
-                                        </div>
-                                        <p class="card-category">Fixed Issues</p>
-                                        <h3 class="card-title">75</h3>
+                                        <i class="material-icons text-success">insert_drive_file</i>
+                                        <div>Approved Applications: <b style="color: green;"><?php echo $teams_total[0]; ?></b></div>
                                     </div>
                                     <div class="card-footer">
-                                        <div class="stats">
-                                            <i class="material-icons">local_offer</i> Tracked from Github
-                                        </div>
+                                        <i class="material-icons text-danger">insert_drive_file</i>
+                                        <div>Applications Pending Approval: <b style="color: red;"><?php echo $teams_pending_total[0]; ?></b></div>
                                     </div>
                                 </div>
                             </div>
@@ -230,15 +251,37 @@ The above copyright notice and this permission notice shall be included in all c
                                 <div class="card card-stats">
                                     <div class="card-header card-header-info card-header-icon">
                                         <div class="card-icon">
-                                            <i class="fa fa-twitter"></i>
+                                            <i class="material-icons">emoji_events</i>
                                         </div>
-                                        <p class="card-category">Followers</p>
-                                        <h3 class="card-title">+245</h3>
+                                        <p class="card-category">Total Events</p>
+                                        <h3 class="card-title"><?php echo $event_total[0]; ?></h3>
                                     </div>
                                     <div class="card-footer">
-                                        <div class="stats">
-                                            <i class="material-icons">update</i> Just Updated
+                                        <i class="material-icons text-success">emoji_events</i>
+                                        <div>Active Events: <b style="color: green;"><?php echo $teams_total[0]; ?></b></div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <i class="material-icons text-danger">emoji_events</i>
+                                        <div>Inactive Events: <b style="color: red;"><?php echo $teams_pending_total[0]; ?></b></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                                <div class="card card-stats">
+                                    <div class="card-header card-header-danger card-header-icon">
+                                        <div class="card-icon">
+                                            <i class="material-icons">people_alt</i>
                                         </div>
+                                        <p class="card-category">Total Teams</p>
+                                        <h3 class="card-title"><?php echo $teams_total[0] + $teams_pending_total[0]; ?></h3>
+                                    </div>
+                                    <div class="card-footer">
+                                        <i class="material-icons text-success">people_alt</i>
+                                        <div>Authenticated Teams: <b style="color: green;"><?php echo $teams_total[0]; ?></b></div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <i class="material-icons text-danger">people_alt</i>
+                                        <div>Teams Pending Authentication: <b style="color: red;"><?php echo $teams_pending_total[0]; ?></b></div>
                                     </div>
                                 </div>
                             </div>
@@ -250,7 +293,7 @@ The above copyright notice and this permission notice shall be included in all c
                                         <div class="ct-chart" id="dailySalesChart"></div>
                                     </div>
                                     <div class="card-body">
-                                        <h4 class="card-title">Daily Sales</h4>
+                                        <h4 class="card-title">User Registrations</h4>
                                         <p class="card-category">
                                             <span class="text-success"><i class="fa fa-long-arrow-up"></i> 55% </span> increase in today sales.</p>
                                     </div>
@@ -267,7 +310,7 @@ The above copyright notice and this permission notice shall be included in all c
                                         <div class="ct-chart" id="websiteViewsChart"></div>
                                     </div>
                                     <div class="card-body">
-                                        <h4 class="card-title">Email Subscriptions</h4>
+                                        <h4 class="card-title">Event Population</h4>
                                         <p class="card-category">Last Campaign Performance</p>
                                     </div>
                                     <div class="card-footer">
@@ -295,6 +338,7 @@ The above copyright notice and this permission notice shall be included in all c
                             </div>
                         </div>
                         <div class="row">
+                        <!--
                             <div class="col-lg-6 col-md-12">
                                 <div class="card">
                                     <div class="card-header card-header-tabs card-header-primary">
@@ -333,85 +377,85 @@ The above copyright notice and this permission notice shall be included in all c
                                                             <td>
                                                                 <div class="form-check">
                                                                     <label class="form-check-label">
-                                  <input class="form-check-input" type="checkbox" value="" checked>
-                                  <span class="form-check-sign">
-                                    <span class="check"></span>
-                                  </span>
-                                </label>
+                                                                        <input class="form-check-input" type="checkbox" value="" checked>
+                                                                        <span class="form-check-sign">
+                                                                            <span class="check"></span>
+                                                                        </span>
+                                                                    </label>
                                                                 </div>
                                                             </td>
                                                             <td>Sign contract for "What are conference organizers afraid of?"</td>
                                                             <td class="td-actions text-right">
                                                                 <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
-                                <i class="material-icons">edit</i>
-                              </button>
+                                                                    <i class="material-icons">edit</i>
+                                                                </button>
                                                                 <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-                                <i class="material-icons">close</i>
-                              </button>
+                                                                    <i class="material-icons">close</i>
+                                                                </button>
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td>
                                                                 <div class="form-check">
                                                                     <label class="form-check-label">
-                                  <input class="form-check-input" type="checkbox" value="">
-                                  <span class="form-check-sign">
-                                    <span class="check"></span>
-                                  </span>
-                                </label>
+                                                                        <input class="form-check-input" type="checkbox" value="">
+                                                                        <span class="form-check-sign">
+                                                                            <span class="check"></span>
+                                                                        </span>
+                                                                    </label>
                                                                 </div>
                                                             </td>
                                                             <td>Lines From Great Russian Literature? Or E-mails From My Boss?</td>
                                                             <td class="td-actions text-right">
                                                                 <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
-                                <i class="material-icons">edit</i>
-                              </button>
+                                                                    <i class="material-icons">edit</i>
+                                                                </button>
                                                                 <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-                                <i class="material-icons">close</i>
-                              </button>
+                                                                    <i class="material-icons">close</i>
+                                                                </button>
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td>
                                                                 <div class="form-check">
                                                                     <label class="form-check-label">
-                                  <input class="form-check-input" type="checkbox" value="">
-                                  <span class="form-check-sign">
-                                    <span class="check"></span>
-                                  </span>
-                                </label>
+                                                                        <input class="form-check-input" type="checkbox" value="">
+                                                                        <span class="form-check-sign">
+                                                                            <span class="check"></span>
+                                                                        </span>
+                                                                    </label>
                                                                 </div>
                                                             </td>
                                                             <td>Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit
                                                             </td>
                                                             <td class="td-actions text-right">
                                                                 <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
-                                <i class="material-icons">edit</i>
-                              </button>
+                                                                    <i class="material-icons">edit</i>
+                                                                </button>
                                                                 <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-                                <i class="material-icons">close</i>
-                              </button>
+                                                                    <i class="material-icons">close</i>
+                                                                </button>
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td>
                                                                 <div class="form-check">
                                                                     <label class="form-check-label">
-                                  <input class="form-check-input" type="checkbox" value="" checked>
-                                  <span class="form-check-sign">
-                                    <span class="check"></span>
-                                  </span>
-                                </label>
+                                                                        <input class="form-check-input" type="checkbox" value="" checked>
+                                                                        <span class="form-check-sign">
+                                                                            <span class="check"></span>
+                                                                        </span>
+                                                                    </label>
                                                                 </div>
                                                             </td>
                                                             <td>Create 4 Invisible User Experiences you Never Knew About</td>
                                                             <td class="td-actions text-right">
                                                                 <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
-                                <i class="material-icons">edit</i>
-                              </button>
+                                                                    <i class="material-icons">edit</i>
+                                                                </button>
                                                                 <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-                                <i class="material-icons">close</i>
-                              </button>
+                                                                    <i class="material-icons">close</i>
+                                                                </button>
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -424,43 +468,43 @@ The above copyright notice and this permission notice shall be included in all c
                                                             <td>
                                                                 <div class="form-check">
                                                                     <label class="form-check-label">
-                                  <input class="form-check-input" type="checkbox" value="" checked>
-                                  <span class="form-check-sign">
-                                    <span class="check"></span>
-                                  </span>
-                                </label>
+                                                                        <input class="form-check-input" type="checkbox" value="" checked>
+                                                                        <span class="form-check-sign">
+                                                                            <span class="check"></span>
+                                                                        </span>
+                                                                    </label>
                                                                 </div>
                                                             </td>
                                                             <td>Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit
                                                             </td>
                                                             <td class="td-actions text-right">
                                                                 <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
-                                <i class="material-icons">edit</i>
-                              </button>
+                                                                    <i class="material-icons">edit</i>
+                                                                </button>
                                                                 <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-                                <i class="material-icons">close</i>
-                              </button>
+                                                                    <i class="material-icons">close</i>
+                                                                </button>
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td>
                                                                 <div class="form-check">
                                                                     <label class="form-check-label">
-                                  <input class="form-check-input" type="checkbox" value="">
-                                  <span class="form-check-sign">
-                                    <span class="check"></span>
-                                  </span>
-                                </label>
+                                                                        <input class="form-check-input" type="checkbox" value="">
+                                                                        <span class="form-check-sign">
+                                                                            <span class="check"></span>
+                                                                        </span>
+                                                                    </label>
                                                                 </div>
                                                             </td>
                                                             <td>Sign contract for "What are conference organizers afraid of?"</td>
                                                             <td class="td-actions text-right">
                                                                 <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
-                                <i class="material-icons">edit</i>
-                              </button>
+                                                                    <i class="material-icons">edit</i>
+                                                                </button>
                                                                 <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-                                <i class="material-icons">close</i>
-                              </button>
+                                                                    <i class="material-icons">close</i>
+                                                                </button>
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -473,64 +517,64 @@ The above copyright notice and this permission notice shall be included in all c
                                                             <td>
                                                                 <div class="form-check">
                                                                     <label class="form-check-label">
-                                  <input class="form-check-input" type="checkbox" value="">
-                                  <span class="form-check-sign">
-                                    <span class="check"></span>
-                                  </span>
-                                </label>
+                                                                        <input class="form-check-input" type="checkbox" value="">
+                                                                        <span class="form-check-sign">
+                                                                            <span class="check"></span>
+                                                                        </span>
+                                                                    </label>
                                                                 </div>
                                                             </td>
                                                             <td>Lines From Great Russian Literature? Or E-mails From My Boss?</td>
                                                             <td class="td-actions text-right">
                                                                 <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
-                                <i class="material-icons">edit</i>
-                              </button>
+                                                                    <i class="material-icons">edit</i>
+                                                                </button>
                                                                 <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-                                <i class="material-icons">close</i>
-                              </button>
+                                                                    <i class="material-icons">close</i>
+                                                                </button>
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td>
                                                                 <div class="form-check">
                                                                     <label class="form-check-label">
-                                  <input class="form-check-input" type="checkbox" value="" checked>
-                                  <span class="form-check-sign">
-                                    <span class="check"></span>
-                                  </span>
-                                </label>
+                                                                        <input class="form-check-input" type="checkbox" value="" checked>
+                                                                        <span class="form-check-sign">
+                                                                            <span class="check"></span>
+                                                                        </span>
+                                                                    </label>
                                                                 </div>
                                                             </td>
                                                             <td>Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit
                                                             </td>
                                                             <td class="td-actions text-right">
                                                                 <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
-                                <i class="material-icons">edit</i>
-                              </button>
+                                                                    <i class="material-icons">edit</i>
+                                                                </button>
                                                                 <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-                                <i class="material-icons">close</i>
-                              </button>
+                                                                    <i class="material-icons">close</i>
+                                                                </button>
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td>
                                                                 <div class="form-check">
                                                                     <label class="form-check-label">
-                                  <input class="form-check-input" type="checkbox" value="" checked>
-                                  <span class="form-check-sign">
-                                    <span class="check"></span>
-                                  </span>
-                                </label>
+                                                                        <input class="form-check-input" type="checkbox" value="" checked>
+                                                                        <span class="form-check-sign">
+                                                                            <span class="check"></span>
+                                                                        </span>
+                                                                    </label>
                                                                 </div>
                                                             </td>
                                                             <td>Sign contract for "What are conference organizers afraid of?"</td>
                                                             <td class="td-actions text-right">
                                                                 <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
-                                <i class="material-icons">edit</i>
-                              </button>
+                                                                    <i class="material-icons">edit</i>
+                                                                </button>
                                                                 <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-                                <i class="material-icons">close</i>
-                              </button>
+                                                                    <i class="material-icons">close</i>
+                                                                </button>
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -540,45 +584,36 @@ The above copyright notice and this permission notice shall be included in all c
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-6 col-md-12">
+                            !-->
+                            <div class="col-lg-12 col-md-12">
                                 <div class="card">
-                                    <div class="card-header card-header-warning">
-                                        <h4 class="card-title">Employees Stats</h4>
-                                        <p class="card-category">New employees on 15th September, 2016</p>
+                                    <div class="card-header card-header-info">
+                                        <h4 class="card-title">Site Admins</h4>
+                                        <p class="card-category">Current details of all Site Admins. Total Site Administrators: <?php echo $admin_total[0]; ?></p>
                                     </div>
                                     <div class="card-body table-responsive">
                                         <table class="table table-hover">
-                                            <thead class="text-warning">
-                                                <th>ID</th>
+                                            <thead class="text-info">
+                                                <th>No.</th>
                                                 <th>Name</th>
-                                                <th>Salary</th>
-                                                <th>Country</th>
+                                                <th>User ID</th>
+                                                <th>Mobile Number</th>
+                                                <th>Email Address</th>
                                             </thead>
                                             <tbody>
+                                            <tr>
+                                                <?php $ctr = 1;
+                                                while($row = mysqli_fetch_array($admin_list)):;?>
                                                 <tr>
-                                                    <td>1</td>
-                                                    <td>Dakota Rice</td>
-                                                    <td>$36,738</td>
-                                                    <td>Niger</td>
+                                                <td><span><?php echo $ctr;?></span></td>
+                                                <td><span><?php echo $row[0];?></span></td>
+                                                <td><span><?php echo $row[1];?></span></td>
+                                                <td><span><?php echo $row[2];?></span></td>
+                                                <td><span><?php echo $row[3];?></span></td>
                                                 </tr>
-                                                <tr>
-                                                    <td>2</td>
-                                                    <td>Minerva Hooper</td>
-                                                    <td>$23,789</td>
-                                                    <td>Curaçao</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>3</td>
-                                                    <td>Sage Rodriguez</td>
-                                                    <td>$56,142</td>
-                                                    <td>Netherlands</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>4</td>
-                                                    <td>Philip Chaney</td>
-                                                    <td>$38,735</td>
-                                                    <td>Korea, South</td>
-                                                </tr>
+                                                <?php $ctr++;
+                                                endwhile;?>
+                                            </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -593,23 +628,23 @@ The above copyright notice and this permission notice shall be included in all c
                             <ul>
                                 <li>
                                     <a href="https://www.creative-tim.com">
-                  Creative Tim
-                </a>
+                                        Creative Tim
+                                    </a>
                                 </li>
                                 <li>
                                     <a href="https://creative-tim.com/presentation">
-                  About Us
-                </a>
+                                        About Us
+                                    </a>
                                 </li>
                                 <li>
                                     <a href="http://blog.creative-tim.com">
-                  Blog
-                </a>
+                                        Blog
+                                    </a>
                                 </li>
                                 <li>
                                     <a href="https://www.creative-tim.com/license">
-                  Licenses
-                </a>
+                                        Licenses
+                                    </a>
                                 </li>
                             </ul>
                         </nav>
@@ -669,15 +704,15 @@ The above copyright notice and this permission notice shall be included in all c
                         <a href="https://www.creative-tim.com/product/material-dashboard" target="_blank" class="btn btn-primary btn-block">Free Download</a>
                     </li>
                     <!-- <li class="header-title">Want more components?</li>
-            <li class="button-container">
-                <a href="https://www.creative-tim.com/product/material-dashboard-pro" target="_blank" class="btn btn-warning btn-block">
-                  Get the pro version
-                </a>
-            </li> -->
+                    <li class="button-container">
+                        <a href="https://www.creative-tim.com/product/material-dashboard-pro" target="_blank" class="btn btn-warning btn-block">
+                        Get the pro version
+                        </a>
+                    </li> -->
                     <li class="button-container">
                         <a href="https://demos.creative-tim.com/material-dashboard/docs/2.1/getting-started/introduction.html" target="_blank" class="btn btn-default btn-block">
-            View Documentation
-          </a>
+                            View Documentation
+                        </a>
                     </li>
                     <li class="button-container github-star">
                         <a class="github-button" href="https://github.com/creativetimofficial/material-dashboard" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star ntkme/github-buttons on GitHub">Star</a>
@@ -732,7 +767,7 @@ The above copyright notice and this permission notice shall be included in all c
         <!--  Notifications Plugin    -->
         <script src="assets/js/plugins/bootstrap-notify.js"></script>
         <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-        <script src="assets/js/material-dashboard.js?v=2.1.2" type="text/javascript"></script>
+        <script src="assets/js/material-dashboard.js" type="text/javascript"></script>
         <!-- Material Dashboard DEMO methods, don't include it in your project! -->
         <script src="assets/demo/demo.js"></script>
         <script>
@@ -909,7 +944,104 @@ The above copyright notice and this permission notice shall be included in all c
         <script>
             $(document).ready(function() {
                 // Javascript method's body can be found in assets/js/demos.js
-                md.initDashboardPageCharts();
+                //md.initDashboardPageCharts();
+
+                if ($('#dailySalesChart').length != 0 || $('#completedTasksChart').length != 0 || $('#websiteViewsChart').length != 0) {
+                /* ----------==========     Daily Sales Chart initialization    ==========---------- */
+
+                dataDailySalesChart = {
+                    labels: ['Y', 'T', 'W', 'T', 'F', 'S', 'S'],
+                    series: [
+                        [0, 17, 7, 17, 23, 18, 38]
+                    ]
+                };
+
+                optionsDailySalesChart = {
+                    lineSmooth: Chartist.Interpolation.cardinal({
+                        tension: 0
+                    }),
+                    low: 0,
+                    high: 100, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+                    chartPadding: {
+                        top: 0,
+                        right: 0,
+                        bottom: 0,
+                        left: 0
+                    },
+                }
+
+                var dailySalesChart = new Chartist.Line('#dailySalesChart', dataDailySalesChart, optionsDailySalesChart);
+
+                md.startAnimationForLineChart(dailySalesChart);
+
+
+
+                /* ----------==========     Completed Tasks Chart initialization    ==========---------- */
+
+                dataCompletedTasksChart = {
+                    labels: ['12p', '3p', '6p', '9p', '12p', '3a', '6a', '9a'],
+                    series: [
+                        [230, 750, 450, 300, 280, 240, 200, 190]
+                    ]
+                };
+
+                optionsCompletedTasksChart = {
+                    lineSmooth: Chartist.Interpolation.cardinal({
+                        tension: 0
+                    }),
+                    low: 0,
+                    high: 1000, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+                    chartPadding: {
+                        top: 0,
+                        right: 0,
+                        bottom: 0,
+                        left: 0
+                    }
+                }
+
+                var completedTasksChart = new Chartist.Line('#completedTasksChart', dataCompletedTasksChart, optionsCompletedTasksChart);
+
+                // start animation for the Completed Tasks Chart - Line Chart
+                md.startAnimationForLineChart(completedTasksChart);
+
+
+                /* ----------==========     Emails Subscription Chart initialization    ==========---------- */
+
+                var dataWebsiteViewsChart = {
+                    labels: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
+                    series: [
+                        [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895]
+
+                    ]
+                };
+                var optionsWebsiteViewsChart = {
+                    axisX: {
+                        showGrid: false
+                    },
+                    low: 0,
+                    high: 1000,
+                    chartPadding: {
+                        top: 0,
+                        right: 5,
+                        bottom: 0,
+                        left: 0
+                    }
+                };
+                var responsiveOptions = [
+                    ['screen and (max-width: 640px)', {
+                        seriesBarDistance: 5,
+                        axisX: {
+                            labelInterpolationFnc: function(value) {
+                                return value[0];
+                            }
+                        }
+                    }]
+                ];
+                var websiteViewsChart = Chartist.Bar('#websiteViewsChart', dataWebsiteViewsChart, optionsWebsiteViewsChart, responsiveOptions);
+
+                //start animation for the Emails Subscription Chart
+                md.startAnimationForBarChart(websiteViewsChart);
+                }
 
             });
         </script>

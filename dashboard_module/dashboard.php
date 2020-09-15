@@ -55,6 +55,8 @@
         array_push($userRegTot, $month_reg_tot[0]);
     }
 
+    $maxUserReg = max($userRegTot);
+
     //Total Events
     $eventTot = array();
     for ($ctr = 0; $ctr < 6; $ctr++) {
@@ -65,6 +67,8 @@
         array_push($eventTot, $event_tot[0]);
     }
 
+    $maxEvent = max($eventTot);
+
     //Total Teams
     $teamTot = array();
     for ($ctr = 0; $ctr < 6; $ctr++) {
@@ -74,6 +78,8 @@
 
         array_push($teamTot, $team_tot[0]);
     }
+
+    $maxTeam = max($teamTot);
 ?>
 
     <!--
@@ -987,6 +993,10 @@ The above copyright notice and this permission notice shall be included in all c
                 var eventArray = <?php echo json_encode($eventTot); ?>;
                 var teamArray = <?php echo json_encode($teamTot); ?>;
 
+                var maxUser = <?php echo $maxUserReg; ?>;
+                var maxEvent = <?php echo $maxEvent; ?>;
+                var maxTeam = <?php echo $maxTeam; ?>;
+
                 if ($('#totalUserChart').length != 0 || $('#totalTeamChart').length != 0 || $('#totalEventChart').length != 0) {
                 /* ----------==========     Total User Registrations Chart initialization    ==========---------- */
 
@@ -1002,7 +1012,7 @@ The above copyright notice and this permission notice shall be included in all c
                         tension: 0
                     }),
                     low: 0,
-                    high: 20, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+                    high: maxUser + 10, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
                     chartPadding: {
                         top: 0,
                         right: 0,
@@ -1031,7 +1041,7 @@ The above copyright notice and this permission notice shall be included in all c
                         tension: 0
                     }),
                     low: 0,
-                    high: 20, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+                    high: maxTeam + 5, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
                     chartPadding: {
                         top: 0,
                         right: 0,
@@ -1059,7 +1069,7 @@ The above copyright notice and this permission notice shall be included in all c
                         showGrid: false
                     },
                     low: 0,
-                    high: 50,
+                    high: maxEvent + 10,
                     chartPadding: {
                         top: 0,
                         right: 5,

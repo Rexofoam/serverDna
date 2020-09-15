@@ -9,6 +9,7 @@
 	$date->add(new DateInterval('PT06H'));
     $AccessTime = $date->format('Y-m-d');
 
+    //Data for top section (total users, applications, teams, etc) -------------------------------------------------------------------------------------------------
     $admin_count = mysqli_fetch_array(mysqli_query($con, "SELECT COUNT(*) FROM `users` WHERE `is_admin` = '1' AND `status` = 'authenticated'"));
     $admin_list = mysqli_query($con, "SELECT `full_name`,`user_id`, `email`,`mobile_number` FROM `users` WHERE `is_admin` = '1' AND `status` = 'authenticated'");
 
@@ -35,6 +36,44 @@
 
     $teams_total = mysqli_fetch_array(mysqli_query($con, $sql_teams));
     $teams_pending_total = mysqli_fetch_array(mysqli_query($con, $sql_pending_teams));
+
+    //Data for charts -----------------------------------------------------------------------------------------------------------------------------------------------
+    $first  = strtotime('first day this month');
+    $months = array();
+
+    for ($i = 0; $i < 6; $i++) {
+        array_push($months, date('M', strtotime("-$i month", $first)));
+    }
+    
+    //Total User Registrations
+    $userRegTot = array();
+    for ($ctr = 0; $ctr < 6; $ctr++) {
+        $month_reg_tot = mysqli_fetch_array(mysqli_query($con, "SELECT COUNT(*) FROM `users`
+                                WHERE YEAR(`created_at`) = YEAR(CURRENT_DATE - INTERVAL ".$ctr." MONTH)
+                                AND MONTH(`created_at`) = MONTH(CURRENT_DATE - INTERVAL ".$ctr." MONTH)"));
+
+        array_push($userRegTot, $month_reg_tot[0]);
+    }
+
+    //Total Events
+    $eventTot = array();
+    for ($ctr = 0; $ctr < 6; $ctr++) {
+        $event_tot = mysqli_fetch_array(mysqli_query($con, "SELECT COUNT(*) FROM `events`
+                                WHERE YEAR(`approved_at`) = YEAR(CURRENT_DATE - INTERVAL ".$ctr." MONTH)
+                                AND MONTH(`approved_at`) = MONTH(CURRENT_DATE - INTERVAL ".$ctr." MONTH)"));
+
+        array_push($eventTot, $event_tot[0]);
+    }
+
+    //Total Teams
+    $teamTot = array();
+    for ($ctr = 0; $ctr < 6; $ctr++) {
+        $team_tot = mysqli_fetch_array(mysqli_query($con, "SELECT COUNT(*) FROM `teams`
+                                WHERE YEAR(`created_at`) = YEAR(CURRENT_DATE - INTERVAL ".$ctr." MONTH)
+                                AND MONTH(`created_at`) = MONTH(CURRENT_DATE - INTERVAL ".$ctr." MONTH)"));
+
+        array_push($teamTot, $team_tot[0]);
+    }
 ?>
 
     <!--
@@ -290,16 +329,16 @@ The above copyright notice and this permission notice shall be included in all c
                             <div class="col-md-4">
                                 <div class="card card-chart">
                                     <div class="card-header card-header-success">
-                                        <div class="ct-chart" id="dailySalesChart"></div>
+                                        <div class="ct-chart" id="totalUserChart"></div>
                                     </div>
                                     <div class="card-body">
                                         <h4 class="card-title">User Registrations</h4>
                                         <p class="card-category">
-                                            <span class="text-success"><i class="fa fa-long-arrow-up"></i> 55% </span> increase in today sales.</p>
+                                            Total User Registrations in the last 6 months</p>
                                     </div>
                                     <div class="card-footer">
                                         <div class="stats">
-                                            <i class="material-icons">access_time</i> updated 4 minutes ago
+                                            <i class="material-icons">access_time</i> just updated
                                         </div>
                                     </div>
                                 </div>
@@ -307,15 +346,15 @@ The above copyright notice and this permission notice shall be included in all c
                             <div class="col-md-4">
                                 <div class="card card-chart">
                                     <div class="card-header card-header-warning">
-                                        <div class="ct-chart" id="websiteViewsChart"></div>
+                                        <div class="ct-chart" id="totalEventChart"></div>
                                     </div>
                                     <div class="card-body">
-                                        <h4 class="card-title">Event Population</h4>
-                                        <p class="card-category">Last Campaign Performance</p>
+                                        <h4 class="card-title">Total Events</h4>
+                                        <p class="card-category">Total Events Added and Approved in the last 6 months</p>
                                     </div>
                                     <div class="card-footer">
                                         <div class="stats">
-                                            <i class="material-icons">access_time</i> campaign sent 2 days ago
+                                            <i class="material-icons">access_time</i> just updated
                                         </div>
                                     </div>
                                 </div>
@@ -323,15 +362,15 @@ The above copyright notice and this permission notice shall be included in all c
                             <div class="col-md-4">
                                 <div class="card card-chart">
                                     <div class="card-header card-header-danger">
-                                        <div class="ct-chart" id="completedTasksChart"></div>
+                                        <div class="ct-chart" id="totalTeamChart"></div>
                                     </div>
                                     <div class="card-body">
-                                        <h4 class="card-title">Completed Tasks</h4>
-                                        <p class="card-category">Last Campaign Performance</p>
+                                        <h4 class="card-title">Total Teams</h4>
+                                        <p class="card-category">Last Teams Created in the last 6 months</p>
                                     </div>
                                     <div class="card-footer">
                                         <div class="stats">
-                                            <i class="material-icons">access_time</i> campaign sent 2 days ago
+                                            <i class="material-icons">access_time</i> just updated
                                         </div>
                                     </div>
                                 </div>
@@ -943,25 +982,27 @@ The above copyright notice and this permission notice shall be included in all c
         </script>
         <script>
             $(document).ready(function() {
-                // Javascript method's body can be found in assets/js/demos.js
-                //md.initDashboardPageCharts();
+                var months = <?php echo json_encode($months); ?>;
+                var userArray = <?php echo json_encode($userRegTot); ?>;
+                var eventArray = <?php echo json_encode($eventTot); ?>;
+                var teamArray = <?php echo json_encode($teamTot); ?>;
 
-                if ($('#dailySalesChart').length != 0 || $('#completedTasksChart').length != 0 || $('#websiteViewsChart').length != 0) {
-                /* ----------==========     Daily Sales Chart initialization    ==========---------- */
+                if ($('#totalUserChart').length != 0 || $('#totalTeamChart').length != 0 || $('#totalEventChart').length != 0) {
+                /* ----------==========     Total User Registrations Chart initialization    ==========---------- */
 
-                dataDailySalesChart = {
-                    labels: ['Y', 'T', 'W', 'T', 'F', 'S', 'S'],
+                dataTotalUserChart = {
+                    labels: [months[5], months[4], months[3], months[2], months[1], months[0]],
                     series: [
-                        [0, 17, 7, 17, 23, 18, 38]
+                        [userArray[5], userArray[4], userArray[3], userArray[2], userArray[1], userArray[0]]
                     ]
                 };
 
-                optionsDailySalesChart = {
+                optionsTotalUserChart = {
                     lineSmooth: Chartist.Interpolation.cardinal({
                         tension: 0
                     }),
                     low: 0,
-                    high: 100, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+                    high: 20, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
                     chartPadding: {
                         top: 0,
                         right: 0,
@@ -970,27 +1011,27 @@ The above copyright notice and this permission notice shall be included in all c
                     },
                 }
 
-                var dailySalesChart = new Chartist.Line('#dailySalesChart', dataDailySalesChart, optionsDailySalesChart);
+                var totalUserChart = new Chartist.Line('#totalUserChart', dataTotalUserChart, optionsTotalUserChart);
 
-                md.startAnimationForLineChart(dailySalesChart);
+                md.startAnimationForLineChart(totalUserChart);
 
 
 
-                /* ----------==========     Completed Tasks Chart initialization    ==========---------- */
+                /* ----------==========     Total Teams Chart initialization    ==========---------- */
 
-                dataCompletedTasksChart = {
-                    labels: ['12p', '3p', '6p', '9p', '12p', '3a', '6a', '9a'],
+                dataTotalTeamChart = {
+                    labels: [months[5], months[4], months[3], months[2], months[1], months[0]],
                     series: [
-                        [230, 750, 450, 300, 280, 240, 200, 190]
+                        [teamArray[5], teamArray[4], teamArray[3], teamArray[2], teamArray[1], teamArray[0]]
                     ]
                 };
 
-                optionsCompletedTasksChart = {
+                optionsTotalTeamChart = {
                     lineSmooth: Chartist.Interpolation.cardinal({
                         tension: 0
                     }),
                     low: 0,
-                    high: 1000, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+                    high: 20, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
                     chartPadding: {
                         top: 0,
                         right: 0,
@@ -999,27 +1040,26 @@ The above copyright notice and this permission notice shall be included in all c
                     }
                 }
 
-                var completedTasksChart = new Chartist.Line('#completedTasksChart', dataCompletedTasksChart, optionsCompletedTasksChart);
+                var totalTeamChart = new Chartist.Line('#totalTeamChart', dataTotalTeamChart, optionsTotalTeamChart);
 
                 // start animation for the Completed Tasks Chart - Line Chart
-                md.startAnimationForLineChart(completedTasksChart);
+                md.startAnimationForLineChart(totalTeamChart);
 
 
-                /* ----------==========     Emails Subscription Chart initialization    ==========---------- */
+                /* ----------==========     Total Events Chart initialization    ==========---------- */
 
-                var dataWebsiteViewsChart = {
-                    labels: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
+                var dataTotalEventChart = {
+                    labels: [months[5], months[4], months[3], months[2], months[1], months[0]],
                     series: [
-                        [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895]
-
+                        [eventArray[5], eventArray[4], eventArray[3], eventArray[2], eventArray[1], eventArray[0]]
                     ]
                 };
-                var optionsWebsiteViewsChart = {
+                var optionsTotalEventChart = {
                     axisX: {
                         showGrid: false
                     },
                     low: 0,
-                    high: 1000,
+                    high: 50,
                     chartPadding: {
                         top: 0,
                         right: 5,
@@ -1037,10 +1077,10 @@ The above copyright notice and this permission notice shall be included in all c
                         }
                     }]
                 ];
-                var websiteViewsChart = Chartist.Bar('#websiteViewsChart', dataWebsiteViewsChart, optionsWebsiteViewsChart, responsiveOptions);
+                var totalEventChart = Chartist.Bar('#totalEventChart', dataTotalEventChart, optionsTotalEventChart, responsiveOptions);
 
                 //start animation for the Emails Subscription Chart
-                md.startAnimationForBarChart(websiteViewsChart);
+                md.startAnimationForBarChart(totalEventChart);
                 }
 
             });

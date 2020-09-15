@@ -180,6 +180,7 @@ CREATE TABLE `users` (
   `DoB` date NOT NULL,
   `gender` enum('male','female') COLLATE utf8_unicode_ci NOT NULL,
   `status` enum('created','authenticated','inactive','') COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` datetime NOT NULL,
   `accessed_at` datetime DEFAULT NULL,
   `updated_at` datetime NOT NULL,
   `city` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
@@ -192,14 +193,14 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `full_name`, `user_id`, `mobile_number`, `email`, `password`, `DoB`, `gender`, `status`, `accessed_at`, `updated_at`, `city`, `state`, `is_admin`, `image_url`) VALUES
-(1, 'sudoadmin', '222', '0123456789', 'sudo@serverdna.com', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', '0000-00-00', 'male', 'authenticated', '2020-05-08 00:00:00', '2020-06-08 20:23:58', 'Petaling Jaya', 'SARAWAK', 1, NULL),
-(2, 'ad', '333', '0123456710', 'ad@gmail.com', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', '0000-00-00', 'male', 'authenticated', '2020-05-08 00:00:00', '2020-06-08 20:23:58', 'Puchong', 'SELANGOR', 0, NULL),
-(3, 'ad2', '444', '0123456711', 'ad123@gmail.com', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', '0000-00-00', 'male', 'authenticated', '2020-05-08 00:00:00', '2020-06-08 20:23:58', 'Puchong', 'SELANGOR', 0, NULL),
-(4, 'ad3', '555', '0123456712', 'ad234@gmail.com', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', '0000-00-00', 'male', 'authenticated', '2020-05-08 00:00:00', '2020-06-08 20:23:58', 'Puchong', 'SELANGOR', 0, NULL),
-(5, 'ad4', '666', '0123456713', 'ad345@gmail.com', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', '0000-00-00', 'male', 'authenticated', '2020-05-08 00:00:00', '2020-06-08 20:23:58', 'Puchong', 'SELANGOR', 0, NULL),
-(58, 'Jonathan Foong', 'Rexofoam', '0147355823', 'jonathanfoong1997@gmail.com', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', '1997-09-20', 'male', 'authenticated', NULL, '2020-08-05 00:08:00', 'Petaling Jaya', 'SELANGOR', 0, '../public/images/5f15cd082a7ae3.02525813.jpg'),
-(63, 'Tiffany Tan', 'Tiff', '0123093882', 'tiffanytan1995@gmail.com', '209cc77e095e2064e5c1f38817b602f69fb872a1', '2020-08-12', 'male', 'created', NULL, '2020-08-05 00:05:19', 'Petaling Jaya', 'SELANGOR', 0, '../public/images/5f29873ac263b2.28353785.jpg');
+INSERT INTO `users` (`id`, `full_name`, `user_id`, `mobile_number`, `email`, `password`, `DoB`, `gender`, `status`, `created_at`, `accessed_at`, `updated_at`, `city`, `state`, `is_admin`, `image_url`) VALUES
+(1, 'sudoadmin', '222', '0123456789', 'sudo@serverdna.com', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', '0000-00-00', 'male', 'authenticated', '2020-05-08 00:00:00', '2020-05-08 00:00:00', '2020-06-08 20:23:58', 'Petaling Jaya', 'SARAWAK', 1, NULL),
+(2, 'ad', '333', '0123456710', 'ad@gmail.com', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', '0000-00-00', 'male', 'authenticated', '2020-05-08 00:00:00', '2020-05-08 00:00:00', '2020-06-08 20:23:58', 'Puchong', 'SELANGOR', 0, NULL),
+(3, 'ad2', '444', '0123456711', 'ad123@gmail.com', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', '0000-00-00', 'male', 'authenticated', '2020-05-08 00:00:00', '2020-05-08 00:00:00', '2020-06-08 20:23:58', 'Puchong', 'SELANGOR', 0, NULL),
+(4, 'ad3', '555', '0123456712', 'ad234@gmail.com', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', '0000-00-00', 'male', 'authenticated', '2020-05-08 00:00:00', '2020-05-08 00:00:00', '2020-06-08 20:23:58', 'Puchong', 'SELANGOR', 0, NULL),
+(5, 'ad4', '666', '0123456713', 'ad345@gmail.com', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', '0000-00-00', 'male', 'authenticated', '2020-05-08 00:00:00', '2020-05-08 00:00:00', '2020-06-08 20:23:58', 'Puchong', 'SELANGOR', 0, NULL),
+(58, 'Jonathan Foong', 'Rexofoam', '0147355823', 'jonathanfoong1997@gmail.com', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', '1997-09-20', 'male', 'authenticated', '2020-08-05 00:08:00', NULL, '2020-08-05 00:08:00', 'Petaling Jaya', 'SELANGOR', 0, '../public/images/5f15cd082a7ae3.02525813.jpg'),
+(63, 'Tiffany Tan', 'Tiff', '0123093882', 'tiffanytan1995@gmail.com', '209cc77e095e2064e5c1f38817b602f69fb872a1', '2020-08-12', 'male', 'created', '2020-08-05 00:08:00', NULL, '2020-08-05 00:05:19', 'Petaling Jaya', 'SELANGOR', 0, '../public/images/5f29873ac263b2.28353785.jpg');
 
 -- --------------------------------------------------------
 

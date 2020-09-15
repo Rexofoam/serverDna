@@ -44,7 +44,7 @@
 
     } else {
 
-    $sql = "INSERT INTO `users` VALUES (NULL, '$name', '$userId', '$mobile_number', '$email', '$password', '$birthday', '$gender','created', NULL, '$AccessTime', '$city', '$state', 0);";
+    $sql = "INSERT INTO `users` VALUES (NULL, '$name', '$userId', '$mobile_number', '$email', '$password', '$birthday', '$gender','created', '$AccessTime', NULL, '$AccessTime', '$city', '$state', 0);";
 
         if(!mysqli_query($con,$sql))
         {

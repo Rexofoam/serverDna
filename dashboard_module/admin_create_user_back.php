@@ -87,7 +87,7 @@
     // End of image upload
 
         //Add new user statement
-        $sql = "INSERT INTO `users` VALUES (NULL, '$name', '$userid', '$mobile_number', '$email', '$password', '$birthday', '$gender', 'created', NULL, '$AccessTime', '$city', '$state', 0, '$fileDestination');";
+        $sql = "INSERT INTO `users` VALUES (NULL, '$name', '$userid', '$mobile_number', '$email', '$password', '$birthday', '$gender', 'created', '$AccessTime', NULL, '$AccessTime', '$city', '$state', 0, '$fileDestination');";
 
         if (!mysqli_query($con, $sql)) {
             $_SESSION['update_response'] = "Unknown error occured. Please try again later !";

@@ -372,7 +372,7 @@ The above copyright notice and this permission notice shall be included in all c
                                     </div>
                                     <div class="card-body">
                                         <h4 class="card-title">Total Teams</h4>
-                                        <p class="card-category">Last Teams Created in the last 6 months</p>
+                                        <p class="card-category">Total Teams Created in the last 6 months</p>
                                     </div>
                                     <div class="card-footer">
                                         <div class="stats">

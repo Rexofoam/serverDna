@@ -15,6 +15,11 @@
 
   $sql_auth = "SELECT `full_name`,`email`,`mobile_number`,`city`,`state`,`id` FROM `users` WHERE `status` = 'authenticated'";
 
+  if (isset($_GET['query'])) { //If user has entered search query, page has refreshed to generate new results
+    $query = strtoupper($_GET['query']);
+    $sql_auth .= " AND (UPPER(`full_name`) LIKE '%".$query."%') OR (UPPER(`email`) LIKE '%".$query."%')"; //Search by username or email
+  }
+
   $authenticated_account = mysqli_query($con, $sql_auth);
 ?>
 <head>
@@ -119,11 +124,11 @@
             <span class="navbar-toggler-icon icon-bar"></span>
           </button>
           <div class="collapse navbar-collapse justify-content-end">
-            <form class="navbar-form">
+            <form class="navbar-form" method="GET" action="user_list.php">
               <div class="input-group no-border">
-                <input type="text" value="" class="form-control" placeholder="Search...">
+                <input type="text" value="" class="form-control" name="query" placeholder="Search user/email...">
                 <button type="submit" class="btn btn-white btn-round btn-just-icon">
-                  <i class="material-icons">search</i>
+                  <i class="material-icons md-light">search</i>
                   <div class="ripple-container"></div>
                 </button>
               </div>
@@ -175,7 +180,10 @@
       <div class="content">
         <div class="container-fluid">
           <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
+              <button type="button" class="btn btn-primary pull-left" onclick="clearSearch()" id="clear_search">Clear Search Results</button>
+            </div>
+            <div class="col-md-6">
               <button type="button" class="btn btn-primary pull-right" onclick="goUnauthList()" name="unauthBtn">Go to Unauthenticated Users List</button>
             </div>
           </div>
@@ -184,7 +192,7 @@
               <div class="card card-plain">
                 <div class="card-header card-header-primary">
                   <h4 class="card-title mt-0"> Authenticated Users List </h4>
-                  <p class="card-category">The following list consists of all registered and <b>authenticated</b> user accounts</p>
+                  <p class="card-category" id="subtitle">The following list consists of all registered and <b>authenticated</b> user accounts</p>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
@@ -264,11 +272,27 @@
   <!-- Material Dashboard DEMO methods, don't include it in your project! -->
   <script src="assets/demo/demo.js"></script>
   <script>
+    $(document).ready(function() {
+      var query = '<?php if (isset($_GET['query'])) echo $_GET['query'] ?>'; //If screen is displaying a search query
+      
+      if (query != '') {
+        $('#subtitle').text("Displaying search results for query: \""+query+"\""); //Change subtitle to show query
+        $('#clear_search').show(); //Show the 'clear search results' button
+      } else {
+        $('#clear_search').hide();
+      }
+    });
+
     function manage(id) {
       var edit_url = "admin_edit_user_form_front.php"
 
       // redirect to edit page
       window.location.replace(edit_url + "?id=" + id);
+    }
+
+    function clearSearch() {
+      //refresh page without parameters
+      window.location.href = "user_list.php";
     }
 
     function goUnauthList() {

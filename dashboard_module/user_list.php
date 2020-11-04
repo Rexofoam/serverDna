@@ -14,10 +14,8 @@
   }
 
   $sql_auth = "SELECT `full_name`,`email`,`mobile_number`,`city`,`state`,`id` FROM `users` WHERE `status` = 'authenticated'";
-  $sql_created = "SELECT `full_name`,`email`,`mobile_number`,`city`,`state`,`id` FROM `users` WHERE `status` = 'created'";
 
   $authenticated_account = mysqli_query($con, $sql_auth);
-  $created_account = mysqli_query($con, $sql_created);
 ?>
 <head>
   <meta charset="utf-8" />
@@ -178,10 +176,15 @@
         <div class="container-fluid">
           <div class="row">
             <div class="col-md-12">
+              <button type="button" class="btn btn-primary pull-right" onclick="goUnauthList()" name="unauthBtn">Go to Unauthenticated Users List</button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
               <div class="card card-plain">
                 <div class="card-header card-header-primary">
-                  <h4 class="card-title mt-0"> Authenticated Accounts </h4>
-                  <p class="card-category">Accounts that are email authenticated</p>
+                  <h4 class="card-title mt-0"> Authenticated Users List </h4>
+                  <p class="card-category">The following list consists of all registered and <b>authenticated</b> user accounts</p>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
@@ -212,44 +215,6 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-12">
-              <div class="card">
-                <div class="card-header card-header-primary">
-                  <h4 class="card-title ">Unauthenticated Accounts</h4>
-                  <p class="card-category">Accounts that are not yet email authenticated</p>
-                </div>
-                <div class="card-body">
-                  <div class="table-responsive">
-                    <table class="table">
-                      <thead class=" text-primary">
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Mobile Number</th>
-                        <th>City</th>
-                        <th>State</th>
-                        <th>Action</th>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <?php while($row2 = mysqli_fetch_array($created_account)):;?>
-                        <tr>
-                          <td><span><?php echo $row2[0];?></span></td>
-                          <td><span><?php echo $row2[1];?></span></td>
-                          <td><span><?php echo $row2[2];?></span></td>
-                          <td><span><?php echo $row2[3];?></span></td>
-                          <td><span><?php echo $row2[4];?></span></td>
-                          <td style="max-width: 75px;"><button style="border-color: transparent;" class ="btn-primary" onclick="manage(<?php echo $row2[5];?>)">Manage</button>
-                          </td>
-                        </tr>
-                        <?php endwhile;?>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
           </div>
         </div>
       </div>
@@ -304,6 +269,11 @@
 
       // redirect to edit page
       window.location.replace(edit_url + "?id=" + id);
+    }
+
+    function goUnauthList() {
+      //redirect to unauthenticated users list
+      window.location.href = "user_list_unauthenticated.php";
     }
   </script>
   <script type="text/javascript">

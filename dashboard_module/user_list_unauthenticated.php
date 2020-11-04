@@ -5,12 +5,17 @@
 
   session_start();
   $con = DatabaseConn();
-  $userID = $_SESSION['Curr_user'];
 
-  $sql_teams = "SELECT t.`team_id`, t.`team_name`, u.`full_name`
-                FROM `teams` t JOIN `users` u ON t.`created_by` = u.`id`";
+  if (isset($_SESSION['update_response']) ) {
+      $response = $_SESSION['update_response'];
+      unset($_SESSION['update_response']);
+  } else {
+      $response = null;
+  }
 
-  $teams = mysqli_query($con, $sql_teams);
+  $sql_created = "SELECT `full_name`,`email`,`mobile_number`,`city`,`state`,`id` FROM `users` WHERE `status` = 'created'";
+
+  $created_account = mysqli_query($con, $sql_created);
 ?>
 <head>
   <meta charset="utf-8" />
@@ -30,7 +35,7 @@
   <link href="assets/demo/demo.css" rel="stylesheet" />
 </head>
 
-<body class="">
+<body class="" onload="fetchUpdateResponse()">
   <div class="wrapper ">
     <div class="sidebar" data-color="purple" data-background-color="white" data-image="assets/img/sidebar-1.jpg">
       <!--
@@ -67,7 +72,7 @@
                   <p>Create New Event</p>
               </a>
           </li>
-          <li class="nav-item ">
+          <li class="nav-item active">
               <a class="nav-link" href="./user_list.php">
                   <i class="material-icons">content_paste</i>
                   <p>Users List</p>
@@ -79,7 +84,7 @@
                   <p>Event Applications List</p>
               </a>
           </li>
-          <li class="nav-item active">
+          <li class="nav-item ">
               <a class="nav-link" href="./team_list.php">
                   <i class="material-icons">people_alt</i>
                   <p>Team List</p>
@@ -105,7 +110,7 @@
       <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
         <div class="container-fluid">
           <div class="navbar-wrapper">
-            <a class="navbar-brand" href="javascript:;">Teams</a>
+            <a class="navbar-brand" href="javascript:;">User Accounts</a>
           </div>
           <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
             <span class="sr-only">Toggle navigation</span>
@@ -169,42 +174,50 @@
       <!-- End Navbar -->
       <div class="content">
         <div class="container-fluid">
-        <div class="row">
-          <div class="col-md-12">
-            <button type="button" class="btn btn-primary pull-right" onclick="goCreatePage()" name="newTeamBtn">Create New Team</button>
+          <div class="row">
+            <div class="col-md-12">
+              <button type="button" class="btn btn-primary pull-right" onclick="goAuthList()" name="AuthBtn">Go to Authenticated Users List</button>
+            </div>
           </div>
-        </div>
           <div class="row">
             <div class="col-md-12">
               <div class="card card-plain">
                 <div class="card-header card-header-primary">
-                  <h4 class="card-title mt-0"> Team List </h4>
+                  <h4 class="card-title ">Unauthenticated Users List</h4>
+                  <p class="card-category">The following list consists of all registered and <b>unauthenticated</b> user accounts</p>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
-                    <!-- PHP list of event applications -->
-                    <table class="table table-hover">
-                      <thead class="">
-                        <th>Team Name</th>
-                        <th>Created by</th>
+                    <table class="table">
+                      <thead class=" text-primary">
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Mobile Number</th>
+                        <th>City</th>
+                        <th>State</th>
                         <th>Action</th>
                       </thead>
                       <tbody>
-                        <?php if ($teams) { ?>
-                        <?php while($row1 = mysqli_fetch_array($teams)):;?>
                         <tr>
-                          <td><span><?php echo $row1[1];?></span></td>
-                          <td><span><?php echo $row1[2];?></span></td>
-                          <td><button  class ="btn-primary" style="border-color: transparent;" onclick="view_team(<?php echo $row1[0];?>)">View</button>
+                          <?php while($row2 = mysqli_fetch_array($created_account)):;?>
+                        <tr>
+                          <td><span><?php echo $row2[0];?></span></td>
+                          <td><span><?php echo $row2[1];?></span></td>
+                          <td><span><?php echo $row2[2];?></span></td>
+                          <td><span><?php echo $row2[3];?></span></td>
+                          <td><span><?php echo $row2[4];?></span></td>
+                          <td style="max-width: 75px;"><button style="border-color: transparent;" class ="btn-primary" onclick="manage(<?php echo $row2[5];?>)">Manage</button>
+                          </td>
                         </tr>
                         <?php endwhile;?>
-                        <?php } ?>
+                        </tr>
                       </tbody>
                     </table>
                   </div>
                 </div>
               </div>
             </div>
+            
           </div>
         </div>
       </div>
@@ -254,18 +267,30 @@
   <!-- Material Dashboard DEMO methods, don't include it in your project! -->
   <script src="assets/demo/demo.js"></script>
   <script>
-    function goCreatePage() {
-      //redirect to new team page
-      window.location.href = "team_create_front.php";
-    }
-
-    function view_team(id) {
-      var view_url = "team_details.php"
+    function manage(id) {
+      var edit_url = "admin_edit_user_form_front.php"
 
       // redirect to edit page
-      window.location.href = view_url + "?id=" + id;
+      window.location.replace(edit_url + "?id=" + id);
+    }
+
+    function goAuthList() {
+      //redirect to authenticated users list
+      window.location.href = "user_list.php";
     }
   </script>
+  <script type="text/javascript">
+        function fetchUpdateResponse() {
+            var response = "<?php echo $response; ?>";
+            if(response == null || response == "") {
+
+            } else {
+                Swal.fire({title: 'Success!', html: response, type: 'success'});
+            }
+
+
+        }
+    </script>
 
 </body>
 

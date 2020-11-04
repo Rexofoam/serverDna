@@ -5,12 +5,13 @@
 
   session_start();
   $con = DatabaseConn();
-  $userID = $_SESSION['Curr_user'];
 
-  $sql_teams = "SELECT t.`team_id`, t.`team_name`, u.`full_name`
-                FROM `teams` t JOIN `users` u ON t.`created_by` = u.`id`";
+  $sql_approved = "SELECT app.`app_name`,g.`game_name`,app.`organiser`,app.`start_datetime`,app.`end_datetime`,u.`full_name`,approved.`full_name`,app.`status`,ev.`ev_id`
+                  FROM `event_application` app JOIN `users` u ON app.`created_by` = u.`id` JOIN `events` ev ON app.`app_id` = ev.`app_id` JOIN `games` g ON app.`game_id` = g.`game_id`
+                    JOIN (SELECT app.`app_id`, u.`full_name` FROM `event_application` app JOIN `users` u ON app.`status_upd_by` = u.`id`) approved ON app.`app_id` = approved.`app_id`
+                  WHERE app.`status` = 'approved'";
 
-  $teams = mysqli_query($con, $sql_teams);
+  $approved_applications = mysqli_query($con, $sql_approved);
 ?>
 <head>
   <meta charset="utf-8" />
@@ -44,53 +45,53 @@
       <div class="sidebar-wrapper">
         <ul class="nav">
           <li class="nav-item ">
-              <a class="nav-link" href="./dashboard.php">
-                  <i class="material-icons">dashboard</i>
-                  <p>Dashboard</p>
-              </a>
-          </li>
-          <li class="nav-item ">
-              <a class="nav-link" href="./profile_details.php?id=<?php echo $curUser; ?>">
-                  <i class="material-icons">person</i>
-                  <p>My Profile</p>
-              </a>
-          </li>
-          <li class="nav-item ">
-              <a class="nav-link" href="./admin_create_user_front.php">
-                  <i class="material-icons">person_add</i>
-                  <p>Create New User</p>
-              </a>
-          </li>
-          <li class="nav-item ">
-              <a class="nav-link" href="./create_event_front.php">
-                  <i class="material-icons">emoji_events</i>
-                  <p>Create New Event</p>
-              </a>
-          </li>
-          <li class="nav-item ">
-              <a class="nav-link" href="./user_list.php">
-                  <i class="material-icons">content_paste</i>
-                  <p>Users List</p>
-              </a>
-          </li>
-          <li class="nav-item ">
-              <a class="nav-link" href="./event_application_list.php">
-                  <i class="material-icons">insert_drive_file</i>
-                  <p>Event Applications List</p>
-              </a>
-          </li>
-          <li class="nav-item active">
-              <a class="nav-link" href="./team_list.php">
-                  <i class="material-icons">people_alt</i>
-                  <p>Team List</p>
-              </a>
-          </li>
-          <li class="nav-item ">
-              <a class="nav-link" href="./game_list.php">
-                  <i class="material-icons">sports_esports</i>
-                  <p>Games List</p>
-              </a>
-          </li>
+                <a class="nav-link" href="./dashboard.php">
+                    <i class="material-icons">dashboard</i>
+                    <p>Dashboard</p>
+                </a>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link" href="./profile_details.php?id=<?php echo $curUser; ?>">
+                    <i class="material-icons">person</i>
+                    <p>My Profile</p>
+                </a>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link" href="./admin_create_user_front.php">
+                    <i class="material-icons">person_add</i>
+                    <p>Create New User</p>
+                </a>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link" href="./create_event_front.php">
+                    <i class="material-icons">emoji_events</i>
+                    <p>Create New Event</p>
+                </a>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link" href="./user_list.php">
+                    <i class="material-icons">content_paste</i>
+                    <p>Users List</p>
+                </a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="./event_application_list.php">
+                    <i class="material-icons">insert_drive_file</i>
+                    <p>Event Applications List</p>
+                </a>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link" href="./team_list.php">
+                    <i class="material-icons">people_alt</i>
+                    <p>Team List</p>
+                </a>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link" href="./game_list.php">
+                    <i class="material-icons">sports_esports</i>
+                    <p>Games List</p>
+                </a>
+            </li>
           <li class="nav-item active-pro ">
             <a class="nav-link" href="./upgrade.html">
               <i class="material-icons">unarchive</i>
@@ -105,7 +106,7 @@
       <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
         <div class="container-fluid">
           <div class="navbar-wrapper">
-            <a class="navbar-brand" href="javascript:;">Teams</a>
+            <a class="navbar-brand" href="javascript:;">Event Applications</a>
           </div>
           <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
             <span class="sr-only">Toggle navigation</span>
@@ -169,40 +170,50 @@
       <!-- End Navbar -->
       <div class="content">
         <div class="container-fluid">
-        <div class="row">
-          <div class="col-md-12">
-            <button type="button" class="btn btn-primary pull-right" onclick="goCreatePage()" name="newTeamBtn">Create New Team</button>
-          </div>
-        </div>
           <div class="row">
             <div class="col-md-12">
-              <div class="card card-plain">
+              <button type="button" class="btn btn-primary pull-right" onclick="goPending()" name="pendingBtn">Go to Pending Event Applications List</button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
                 <div class="card-header card-header-primary">
-                  <h4 class="card-title mt-0"> Team List </h4>
+                  <h4 class="card-title ">Approved Event Applications</h4>
+                  <p class="card-category">Click on 'View' to see the completed event page</p>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
                     <!-- PHP list of event applications -->
                     <table class="table table-hover">
                       <thead class="">
-                        <th>Team Name</th>
+                        <th>Event Name</th>
+                        <th>Game</th>
+                        <th>Organiser</th>
+                        <th>Date(s)</th>
                         <th>Created by</th>
+                        <th>Approved by</th>
+                        <th>Status</th>
                         <th>Action</th>
                       </thead>
                       <tbody>
-                        <?php if ($teams) { ?>
-                        <?php while($row1 = mysqli_fetch_array($teams)):;?>
+                        <?php if ($approved_applications) { ?>
+                        <?php while($row1 = mysqli_fetch_array($approved_applications)):;?>
                         <tr>
+                          <td><span><?php echo $row1[0];?></span></td>
                           <td><span><?php echo $row1[1];?></span></td>
                           <td><span><?php echo $row1[2];?></span></td>
-                          <td><button  class ="btn-primary" style="border-color: transparent;" onclick="view_team(<?php echo $row1[0];?>)">View</button>
+                          <td><span><?php echo date("d F Y", strtotime($row1[3])).' - '.date("d F Y", strtotime($row1[4]));?></span></td>
+                          <td><span><?php echo $row1[5];?></span></td>
+                          <td><span><?php echo $row1[6];?></span></td>
+                          <td style="color: green; font-weight: bold;"><span>Approved</span></td>
+                          <td><button  class ="btn-primary" style="border-color: transparent;" onclick="view(<?php echo $row1[8];?>)">View</button>
                         </tr>
                         <?php endwhile;?>
                         <?php } ?>
                       </tbody>
                     </table>
                   </div>
-                </div>
               </div>
             </div>
           </div>
@@ -254,16 +265,26 @@
   <!-- Material Dashboard DEMO methods, don't include it in your project! -->
   <script src="assets/demo/demo.js"></script>
   <script>
-    function goCreatePage() {
-      //redirect to new team page
-      window.location.href = "team_create_front.php";
+    //TODO Add redirection to event application page
+    function goPending() {
+      //redirect to pending event applications list
+      window.location.href = "event_application_list.php";
     }
 
-    function view_team(id) {
-      var view_url = "team_details.php"
+    function manage_app(id) {
+      var manage_url = "event_application_details.php"
 
       // redirect to edit page
-      window.location.href = view_url + "?id=" + id;
+      window.location.href = manage_url + "?id=" + id;
+    }
+
+    //TODO Add redirection to event page
+    function view(id) {
+      alert("This should go to an event page :3");
+      //var event_url = ""
+
+      // redirect to edit page
+      //window.location.href = edit_url + "?id=" + id;
     }
   </script>
 

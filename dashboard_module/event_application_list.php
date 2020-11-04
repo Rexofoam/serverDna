@@ -10,13 +10,7 @@
                   FROM `event_application` app JOIN `users` u ON app.`created_by` = u.`id` JOIN `games` g ON app.`game_id` = g.`game_id`
                   WHERE app.`status` = 'pending'";
 
-  $sql_approved = "SELECT app.`app_name`,g.`game_name`,app.`organiser`,app.`start_datetime`,app.`end_datetime`,u.`full_name`,approved.`full_name`,app.`status`,ev.`ev_id`
-                  FROM `event_application` app JOIN `users` u ON app.`created_by` = u.`id` JOIN `events` ev ON app.`app_id` = ev.`app_id` JOIN `games` g ON app.`game_id` = g.`game_id`
-                    JOIN (SELECT app.`app_id`, u.`full_name` FROM `event_application` app JOIN `users` u ON app.`status_upd_by` = u.`id`) approved ON app.`app_id` = approved.`app_id`
-                  WHERE app.`status` = 'approved'";
-
   $pending_applications = mysqli_query($con, $sql_pending);
-  $approved_applications = mysqli_query($con, $sql_approved);
 ?>
 <head>
   <meta charset="utf-8" />
@@ -111,7 +105,7 @@
       <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
         <div class="container-fluid">
           <div class="navbar-wrapper">
-            <a class="navbar-brand" href="javascript:;">User Accounts</a>
+            <a class="navbar-brand" href="javascript:;">Event Applications</a>
           </div>
           <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
             <span class="sr-only">Toggle navigation</span>
@@ -177,9 +171,14 @@
         <div class="container-fluid">
           <div class="row">
             <div class="col-md-12">
-              <div class="card card-plain">
+              <button type="button" class="btn btn-primary pull-right" onclick="goApproved()" name="apprBtn">Go to Approved Event Applications List</button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
                 <div class="card-header card-header-primary">
-                  <h4 class="card-title mt-0"> Event Applications </h4>
+                  <h4 class="card-title mt-0"> Pending Event Applications </h4>
                   <p class="card-category">Please click on 'Manage' to view event details and approve/reject the event</p>
                 </div>
                 <div class="card-body">
@@ -213,46 +212,6 @@
                     </table>
                   </div>
                 </div>
-              </div>
-            </div>
-            <div class="col-md-12">
-              <div class="card">
-                <div class="card-header card-header-primary">
-                  <h4 class="card-title ">Approved Event Applications</h4>
-                  <p class="card-category">Click on 'View' to see the completed event page</p>
-                </div>
-                <div class="card-body">
-                  <div class="table-responsive">
-                    <!-- PHP list of event applications -->
-                    <table class="table table-hover">
-                      <thead class="">
-                        <th>Event Name</th>
-                        <th>Game</th>
-                        <th>Organiser</th>
-                        <th>Date(s)</th>
-                        <th>Created by</th>
-                        <th>Approved by</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                      </thead>
-                      <tbody>
-                        <?php if ($approved_applications) { ?>
-                        <?php while($row1 = mysqli_fetch_array($approved_applications)):;?>
-                        <tr>
-                          <td><span><?php echo $row1[0];?></span></td>
-                          <td><span><?php echo $row1[1];?></span></td>
-                          <td><span><?php echo $row1[2];?></span></td>
-                          <td><span><?php echo date("d F Y", strtotime($row1[3])).' - '.date("d F Y", strtotime($row1[4]));?></span></td>
-                          <td><span><?php echo $row1[5];?></span></td>
-                          <td><span><?php echo $row1[6];?></span></td>
-                          <td style="color: green; font-weight: bold;"><span>Approved</span></td>
-                          <td><button  class ="btn-primary" style="border-color: transparent;" onclick="view(<?php echo $row1[8];?>)">View</button>
-                        </tr>
-                        <?php endwhile;?>
-                        <?php } ?>
-                      </tbody>
-                    </table>
-                  </div>
               </div>
             </div>
           </div>
@@ -305,6 +264,11 @@
   <script src="assets/demo/demo.js"></script>
   <script>
     //TODO Add redirection to event application page
+    function goApproved() {
+      //redirect to approved event applications list
+      window.location.href = "event_application_list_approved.php";
+    }
+
     function manage_app(id) {
       var manage_url = "event_application_details.php"
 
